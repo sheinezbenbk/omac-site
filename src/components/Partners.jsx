@@ -1,25 +1,28 @@
 import React, { useEffect, useRef } from 'react';
 import './Partners.css';
 
-// Logos des partenaires
 import torcyLogo from '../assets/torcy-logo.png';
-import republicLogo from '../assets/republic-logo.png';
-import anctLogo from '../assets/anct-logo.png';
-import valleeLogo from '../assets/vallee-logo.png';
-import omacLogo from '../assets/omac-logo.png';
-import feduBoisLogo from '../assets/fedu-bois-logo.png';
+import caf from '../assets/caf.png';
+import republic from '../assets/republic-logo.png';
+import anct from '../assets/anct.png';
+import centre from '../assets/centre.png';
+import vallee from '../assets/vallee.png';
+import fete from '../assets/fete.png';
+import ferme from '../assets/ferme.png'; 
 
 const Partners = () => {
   const sliderRef = useRef(null);
   
-  // Liste des logos (à personnaliser avec vos vrais logos)
+  // Liste des logos avec des placeholders au lieu des images réelles
   const logos = [
-    { id: 1, src: torcyLogo, alt: 'Torcy' },
-    { id: 2, src: republicLogo, alt: 'République Française' },
-    { id: 3, src: anctLogo, alt: 'ANCT' },
-    { id: 4, src: valleeLogo, alt: 'Vallée de la Marne' },
-    { id: 5, src: omacLogo, alt: 'OMAC' },
-    { id: 6, src: feduBoisLogo, alt: 'Fête du Bois' }
+    { id: 1, src:torcyLogo, alt: 'Torcy' },
+    { id: 3, src:republic, alt: 'République Française' },
+    { id: 2, src: caf, alt: 'caf' },
+    { id: 4, src:anct, alt: 'ANCT' },
+    { id: 5, src:vallee,  alt: 'Vallée de la Marne' },
+    { id: 6, src:centre, alt:'centre'  },
+    { id: 7, src: fete, alt: 'Fête ' },
+    {id:8, src:ferme, alt:'ferme'}
   ];
   
   // Effet pour l'animation
@@ -60,6 +63,42 @@ const Partners = () => {
         ))}
         
         {/* Deuxième série pour effet infini */}
+        {logos.map(logo => (
+          <img 
+            key={`duplicate-${logo.id}`} 
+            src={logo.src} 
+            alt={logo.alt} 
+            className="partner-logo" 
+          />
+        ))}
+
+        {logos.map(logo => (
+          <img 
+            key={`duplicate-${logo.id}`} 
+            src={logo.src} 
+            alt={logo.alt} 
+            className="partner-logo" 
+          />
+        ))}
+
+        {logos.map(logo => (
+          <img 
+            key={`duplicate-${logo.id}`} 
+            src={logo.src} 
+            alt={logo.alt} 
+            className="partner-logo" 
+          />
+        ))}
+
+        {logos.map(logo => (
+          <img 
+            key={`duplicate-${logo.id}`} 
+            src={logo.src} 
+            alt={logo.alt} 
+            className="partner-logo" 
+          />
+        ))}
+
         {logos.map(logo => (
           <img 
             key={`duplicate-${logo.id}`} 

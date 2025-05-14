@@ -1,11 +1,13 @@
 import React from 'react';
 import './Header.css';
+import logoOmac from '../assets/omac-logo.png';
+import admin from '../assets/admin.png'; 
 
 const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <img src="/logo-omac.png" alt="Logo OMAC" />
+        <img src={logoOmac} alt="Logo OMAC" />
       </div>
       <nav className="nav">
         <a href="#" className="nav-link">Accueil</a>
@@ -14,8 +16,8 @@ const Header = () => {
         <a href="#" className="nav-link">Actualités</a>
         <a href="#" className="nav-link">Contact</a>
       </nav>
-      <div className="profile-icon">
-        <span className="profile-dot"></span>
+     <div className="admin">
+        <img src={admin} alt="admin" />
       </div>
     </header>
   );
