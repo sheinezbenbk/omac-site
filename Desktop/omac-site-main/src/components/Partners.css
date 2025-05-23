@@ -1,0 +1,39 @@
+/* Partners.css */
+.partners {
+  padding: 20px 0;
+  background-color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+.partners-slider {
+  display: flex;
+  gap: 80px;
+  animation: scroll 30s linear infinite;
+  white-space: nowrap;
+  align-items: center;
+}
+
+.partner-logo {
+  height: 60px;
+  object-fit: contain;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-150px * 6 - 50px * 6));
+  }
+}
+
+@media (max-width: 768px) {
+  .partners-slider {
+    gap: 30px;
+  }
+  
+  .partner-logo {
+    height: 50px;
+  }
+}
