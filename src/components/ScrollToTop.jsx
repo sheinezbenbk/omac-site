@@ -21,11 +21,8 @@ const ScrollToTop = () => {
     });
   };
 
-  // Ajouter un écouteur d'événement pour le défilement
   useEffect(() => {
     window.addEventListener('scroll', toggleVisibility);
-    
-    // Nettoyer l'écouteur d'événement lors du démontage du composant
     return () => {
       window.removeEventListener('scroll', toggleVisibility);
     };

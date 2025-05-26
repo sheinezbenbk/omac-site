@@ -13,7 +13,6 @@ import ferme from '../assets/ferme.png';
 const Partners = () => {
   const sliderRef = useRef(null);
   
-  // Liste des logos avec des placeholders au lieu des images réelles
   const logos = [
     { id: 1, src:torcyLogo, alt: 'Torcy' },
     { id: 3, src:republic, alt: 'République Française' },
@@ -25,7 +24,6 @@ const Partners = () => {
     {id:8, src:ferme, alt:'ferme'}
   ];
   
-  // Effet pour l'animation
   useEffect(() => {
     if (!sliderRef.current) return;
     

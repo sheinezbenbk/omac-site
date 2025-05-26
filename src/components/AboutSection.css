@@ -1,4 +1,4 @@
-/* AboutSection.css */
+
 .about-section {
   padding: 80px 0;
   background-color: #f9f9f9;
@@ -44,15 +44,15 @@
   margin-top: 5px;
 }
 
-/* Mise en page en colonnes */
+
 .about-columns {
   display: flex;
   gap: 40px;
   position: relative;
-  margin-bottom: 80px; /* Espace entre la section À propos et les services */
+  margin-bottom: 80px; 
 }
 
-/* Colonne image */
+
 .image-column {
   flex: 1;
   position: relative;
@@ -76,7 +76,7 @@
   object-fit: cover;
 }
 
-/* Carré jaune décoratif */
+
 .yellow-square {
   position: absolute;
   width: 80px;
@@ -88,7 +88,7 @@
   z-index: 1;
 }
 
-/* Colonne texte */
+
 .text-column {
   flex: 1;
   position: relative;
@@ -103,7 +103,7 @@
   z-index: 2;
 }
 
-/* Carré bleu décoratif */
+
 .blue-square {
   position: absolute;
   width: 80px;
@@ -129,7 +129,7 @@
   margin-bottom: 15px;
 }
 
-/* Liste avec icônes */
+
 .feature-list {
   margin: 25px 0;
   padding: 0;
@@ -155,7 +155,7 @@
   color: #555;
 }
 
-/* Bouton */
+
 .btn-learn-more {
   background-color: #3498db;
   color: white;
@@ -182,7 +182,7 @@
   margin-top: 60px;
 }
 
-/* Style de la carte de service */
+
 .service-card {
   background-color: white;
   border-radius: 10px;
@@ -203,7 +203,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Icône du service */
+
 .service-icon {
   width: 60px;
   height: 60px;
@@ -221,7 +221,7 @@
   object-fit: contain;
 }
 
-/* Titre du service */
+
 .service-title {
   color: #1e6399;
   font-size: 22px;
@@ -229,7 +229,7 @@
   margin: 0 0 15px 0;
 }
 
-/* Description du service */
+
 .service-description {
   color: #666;
   font-size: 16px;
@@ -238,7 +238,7 @@
   margin-bottom: 20px;
 }
 
-/* Ligne de séparation */
+
 .card-divider {
   height: 1px;
   background-color: #eee;
@@ -246,7 +246,7 @@
   width: 100%;
 }
 
-/* Lien "En Savoir Plus" */
+
 .service-link {
   color: #8DC540;
   text-decoration: none;
@@ -261,32 +261,4 @@
   color: #7ab431;
 }
 
-/* Responsive */
-@media (max-width: 960px) {
-  .about-columns {
-    flex-direction: column;
-  }
-  
-  .image-column {
-    min-height: 300px;
-  }
-  
-  .text-content {
-    padding: 30px;
-  }
-  
-  .yellow-square, .blue-square {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .service-card {
-    width: calc(50% - 15px);
-  }
-}
-
-@media (max-width: 640px) {
-  .service-card {
-    width: 100%;
-  }
-}
+/* Responsive à venir */

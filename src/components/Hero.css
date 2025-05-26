@@ -1,4 +1,3 @@
-/* Hero.css */
 .hero {
   background-color: black;
   background-size: cover;
@@ -44,20 +43,4 @@
   gap: 20px;
   justify-content: center;
   
-}
-
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  
-  .hero-text {
-    font-size: 1rem;
-  }
-  
-  .hero-buttons {
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
-  }
 }

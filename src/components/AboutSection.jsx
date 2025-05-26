@@ -4,13 +4,13 @@ import icon1 from '../assets/check.png';
 import icon2 from '../assets/check.png';
 import icon3 from '../assets/check.png';
 
-// Importez vos icônes de services ici
+// importation des icônes
 import jeunesseIcon from '../assets/basket.png';
 import famillesIcon from '../assets/famille.png';
 import scolariteIcon from '../assets/ecole.png';
 
 const AboutSection = () => {
-  // Liste des éléments avec icônes
+  
   const items = [
     { id: 1, text: 'Lorem ipsum dolor sit amet', icon: icon1 },
     { id: 2, text: 'Lorem ipsum dolor sit amet', icon: icon2 },
@@ -24,28 +24,27 @@ const AboutSection = () => {
       icon: jeunesseIcon,
       title: "Jeunesse",
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum.",
-      link: "#"
+      link: "#" //renvoie à la page Jeunesse
     },
     {
       id: 2,
       icon: famillesIcon,
       title: "Familles et Adultes",
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum.",
-      link: "#"
+      link: "#" //renvoie à la page F&A
     },
     {
       id: 3,
       icon: scolariteIcon,
       title: "Aide à la scolarité",
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum.",
-      link: "#"
+      link: "#" //renvoie à la page Scolarité
     }
   ];
 
   return (
     <section className="about-section">
       <div className="container">
-        {/* Titre et sous-titre */}
         <div className="about-header">
           <h2 className="section-title">À Propos</h2>
           <div className="subtitle-container">
@@ -54,9 +53,7 @@ const AboutSection = () => {
           </div>
         </div>
         
-        {/* Contenu séparé en deux colonnes */}
         <div className="about-columns">
-          {/* Colonne image avec carré jaune décoratif */}
           <div className="image-column">
             <div className="yellow-square"></div>
             <div className="image-container">
@@ -64,7 +61,7 @@ const AboutSection = () => {
             </div>
           </div>
           
-          {/* Colonne texte avec carré bleu décoratif */}
+         
           <div className="text-column">
             <div className="text-content">
               <h3 className="card-title">Lorem ipsum dolor</h3>
@@ -88,7 +85,7 @@ const AboutSection = () => {
           </div>
         </div>
         
-        {/* Section des services */}
+        
         <div className="services-container">
           {services.map(service => (
             <div className="service-card" key={service.id}>

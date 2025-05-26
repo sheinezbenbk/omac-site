@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './MediaResources.css';
 
-// Données d'exemple pour les ressources multimédias
+// Exemple pour les ressources multimédias - BDD pour les vraies ressources 
 const sampleMedias = [
   {
     id: 1,

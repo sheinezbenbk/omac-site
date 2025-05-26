@@ -1,4 +1,3 @@
-/* ContactSection.css sans carte */
 .contact-section {
   padding: 80px 0;
   background-color: #fff;
@@ -10,7 +9,7 @@
   padding: 0 20px;
 }
 
-/* En-tête de la section */
+
 .contact-header {
   text-align: center;
   margin-bottom: 50px;
@@ -37,7 +36,7 @@
   border-radius: 5px;
 }
 
-/* Disposition en colonnes pour les coordonnées et les emplacements */
+
 .contact-content-no-map {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -48,7 +47,7 @@
 
 /* Carte de contact */
 .contact-card {
-  background-color: #e5f1f1; /* Couleur de fond bleu-vert très pâle */
+  background-color: #e5f1f1; 
   border-radius: 12px;
   padding: 30px;
   height: fit-content;
@@ -58,7 +57,7 @@
   gap: 25px;
 }
 
-/* Éléments de contact */
+
 .contact-item {
   display: flex;
   align-items: center;
@@ -144,56 +143,4 @@
   font-size: 14px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .contact-section {
-    padding: 60px 0;
-  }
-  
-  .section-title {
-    font-size: 28px;
-  }
-  
-  .contact-subtitle {
-    font-size: 16px;
-  }
-  
-  .contact-content-no-map {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  
-  .contact-card {
-    padding: 20px;
-  }
-
-  .contact-item {
-    gap: 12px;
-  }
-  
-  .contact-icon {
-    width: 45px;
-    height: 45px;
-  }
-  
-  .icon-image {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .contact-item-title {
-    font-size: 16px;
-  }
-  
-  .contact-item-detail {
-    font-size: 14px;
-  }
-  
-  .locations-info {
-    padding: 20px;
-  }
-  
-  .locations-title {
-    font-size: 20px;
-  }
-}
+/* Responsive à venir */

@@ -1,7 +1,6 @@
 import React from 'react';
 import './ContactSection.css';
 
-// Icônes importées pour chaque type d'information
 import LocationIcon from '../assets/location.png';
 import PhoneIcon from '../assets/phone.png';
 import MailIcon from '../assets/mail.png';

@@ -1,4 +1,3 @@
-/* MediaResources.css */
 .media-resources-section {
   padding: 80px 0;
   background-color: #f9f9f9;
@@ -10,7 +9,6 @@
   padding: 0 20px;
 }
 
-/* En-tête de la section */
 .media-header {
   text-align: center;
   margin-bottom: 50px;
@@ -112,7 +110,7 @@
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   height: 0;
-  padding-bottom: 56.25%; /* Ratio 16:9 */
+  padding-bottom: 56.25%; 
 }
 
 .media-thumbnail img {
@@ -323,35 +321,3 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .carousel-track {
-    grid-template-columns: repeat(auto-fill, 50%);
-  }
-}
-
-@media (max-width: 768px) {
-  .media-resources-section {
-    padding: 60px 0;
-  }
-  
-  .section-title {
-    font-size: 28px;
-  }
-  
-  .media-subtitle {
-    font-size: 16px;
-  }
-  
-  .carousel-track {
-    grid-template-columns: repeat(auto-fill, 100%);
-  }
-  
-  .media-player {
-    width: 95%;
-  }
-  
-  .carousel-control {
-    width: 36px;
-    height: 36px;
-  }
-}

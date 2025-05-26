@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './EventsCalendar.css';
 
-// Données d'exemple d'événements - dans un vrai projet, cela viendrait d'une API ou base de données
+// exemple d'événements - les vraies données seront utilisés avec la BDD
 const sampleEvents = [
   {
     id: 1,
@@ -37,7 +37,7 @@ const EventsCalendar = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
   
-  // Fonction pour obtenir le nombre de jours dans un mois
+
   const getDaysInMonth = (year, month) => {
     return new Date(year, month + 1, 0).getDate();
   };
