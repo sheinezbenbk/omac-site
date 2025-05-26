@@ -1,0 +1,364 @@
+/* EventsCalendar.css */
+.events-section {
+  padding: 80px 0;
+  background-color: #fff;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* En-tête de la section */
+.events-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-title {
+  color: #3498db;
+  font-size: 36px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.events-subtitle {
+  color: #777;
+  font-size: 26px;
+  margin: 0 0 10px 0;
+}
+
+.green-underline {
+  width: 75px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #8DC540;
+  margin: 5px auto 0;
+  border-radius: 3px;
+}
+
+/* Conteneur du calendrier */
+.calendar-container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Ombre plus prononcée */
+  overflow: hidden;
+  max-width: 1000px; /* Calendrier plus large */
+  margin: 0 auto;
+}
+
+/* En-tête du calendrier avec navigation */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px; /* Légèrement plus grand */
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #eee;
+}
+
+.calendar-title {
+  font-size: 20px; /* Plus grand */
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.calendar-nav-btn {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 36px; /* Plus grand */
+  height: 36px; /* Plus grand */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.calendar-nav-btn:hover {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+/* Grille du calendrier */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px; /* Légèrement plus d'espace entre les cellules */
+  padding: 15px;
+}
+
+/* Cellules du calendrier */
+.calendar-cell {
+  min-height: 100px; /* Hauteur minimale pour accueillir le titre */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+/* En-têtes des jours de la semaine */
+.calendar-cell.header {
+  min-height: auto;
+  font-weight: 600;
+  color: #777;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+/* Jours du mois */
+.calendar-cell.day {
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #f0f0f0;
+  background-color: #fafafa;
+}
+
+.calendar-cell.day:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Numéro du jour */
+.day-number {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+/* Jours avec des événements */
+.calendar-cell.has-event {
+  background-color: #e8f4fd;
+  border-color: #d1e8fa;
+}
+
+.calendar-cell.has-event .day-number {
+  font-weight: 600;
+  color: #3498db;
+}
+
+/* Preview de l'événement dans la cellule */
+.event-preview {
+  font-size: 0.8rem;
+  color: #333;
+  background-color: rgba(52, 152, 219, 0.1);
+  border-left: 3px solid #3498db;
+  padding: 3px 5px;
+  margin-top: 3px;
+  border-radius: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.event-count {
+  font-size: 0.7rem;
+  background-color: #3498db;
+  color: white;
+  border-radius: 10px;
+  padding: 0 5px;
+  margin-left: 5px;
+  display: inline-block;
+}
+
+/* Cellules vides avant le premier jour du mois */
+.calendar-cell.empty {
+  background-color: transparent;
+  cursor: default;
+  border: none;
+}
+
+/* Modal d'événement */
+.event-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Plus sombre pour meilleur contraste */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.event-modal {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); /* Ombre plus prononcée */
+  width: 90%;
+  max-width: 800px; /* Un peu plus large */
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.3s forwards;
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px; /* Plus grand */
+  color: #999;
+  cursor: pointer;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: #333;
+  background-color: #f0f0f0;
+}
+
+.event-modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .event-modal-content {
+    flex-direction: row;
+  }
+}
+
+.event-image {
+  flex: 0 0 40%;
+}
+
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+}
+
+@media (min-width: 768px) {
+  .event-image img {
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 0;
+  }
+}
+
+.event-details {
+  flex: 0 0 60%;
+  padding: 30px; /* Plus d'espace */
+}
+
+.event-title {
+  color: #3498db;
+  font-size: 24px; /* Plus grand */
+  margin: 0 0 20px 0;
+}
+
+.event-info {
+  margin-bottom: 20px;
+}
+
+.event-info-item {
+  margin-bottom: 12px; /* Plus d'espace */
+  display: flex;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #666;
+  min-width: 80px; /* Plus large */
+}
+
+.info-value {
+  color: #333;
+}
+
+.event-description {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 30px; /* Plus d'espace */
+}
+
+.event-register-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 14px 25px; /* Plus grand */
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.event-register-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .events-section {
+    padding: 60px 0;
+  }
+  
+  .section-title {
+    font-size: 28px;
+  }
+  
+  .events-subtitle {
+    font-size: 16px;
+  }
+  
+  .calendar-cell {
+    min-height: 80px;
+    padding: 5px;
+  }
+  
+  .event-modal {
+    width: 95%;
+  }
+  
+  .event-details {
+    padding: 20px;
+  }
+  
+  .event-preview {
+    font-size: 0.7rem;
+  }
+}

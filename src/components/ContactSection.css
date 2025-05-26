@@ -1,0 +1,199 @@
+/* ContactSection.css sans carte */
+.contact-section {
+  padding: 80px 0;
+  background-color: #fff;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* En-tête de la section */
+.contact-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-title {
+  color: #3498db;
+  font-size: 36px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.contact-subtitle {
+  color: #777;
+  font-size: 18px;
+  margin: 0 0 10px 0;
+}
+
+.teal-underline {
+  width: 75px;
+  height: 5px;
+  background-color: #8DC540;
+  margin: 5px auto 0;
+  border-radius: 5px;
+}
+
+/* Disposition en colonnes pour les coordonnées et les emplacements */
+.contact-content-no-map {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Carte de contact */
+.contact-card {
+  background-color: #e5f1f1; /* Couleur de fond bleu-vert très pâle */
+  border-radius: 12px;
+  padding: 30px;
+  height: fit-content;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+}
+
+/* Éléments de contact */
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.contact-icon {
+  width: 55px;
+  height: 55px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.contact-details {
+  flex-grow: 1;
+}
+
+.contact-item-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.contact-item-detail {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Section des emplacements */
+.locations-info {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.locations-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 25px 0;
+  text-align: center;
+}
+
+.locations-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.location-item {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #8DC540;
+}
+
+.location-item strong {
+  color: #3498db;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.location-item span {
+  color: #666;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 60px 0;
+  }
+  
+  .section-title {
+    font-size: 28px;
+  }
+  
+  .contact-subtitle {
+    font-size: 16px;
+  }
+  
+  .contact-content-no-map {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .contact-card {
+    padding: 20px;
+  }
+
+  .contact-item {
+    gap: 12px;
+  }
+  
+  .contact-icon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .icon-image {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .contact-item-title {
+    font-size: 16px;
+  }
+  
+  .contact-item-detail {
+    font-size: 14px;
+  }
+  
+  .locations-info {
+    padding: 20px;
+  }
+  
+  .locations-title {
+    font-size: 20px;
+  }
+}
