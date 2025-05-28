@@ -1,15 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import AppRouter from './AppRouter';
-import Admin from './components/Admin';
+import AppRouter from './AppRouter'; // ✅ On importe seulement le Router
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
-    <Admin/>
-    <AppRouter/>
+    <AppRouter />  {/* ✅ On render seulement le Router qui gère tout */}
   </React.StrictMode>
 );

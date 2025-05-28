@@ -1,7 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Hero.css';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  // Fonction pour scroller vers une section
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
     <section className="hero">
       <div className="hero-content">
@@ -12,8 +26,27 @@ const Hero = () => {
           Ensemble, animons la vie de quartier, soutenons les familles et accompagnons les jeunes dans un esprit d'éducation populaire et de laïcité.
         </p>
         <div className="hero-buttons">
-          <a href="#" className="btn btn-primary">Nos Actions →</a>
-          <a href="#" className="btn btn-secondary">Contactez-nous</a>
+          <a 
+            href="#" 
+            className="btn btn-primary"
+            onClick={(e) => {
+              e.preventDefault();
+              // ✅ Navigation vers la page Guide
+              navigate('/guide');
+            }}
+          >
+            Guide de l'OMAC →
+          </a>
+          <a 
+            href="#" 
+            className="btn btn-secondary"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('contact-section');
+            }}
+          >
+            Contactez-nous
+          </a>
         </div>
       </div>
     </section>

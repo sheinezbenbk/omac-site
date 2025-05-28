@@ -11,34 +11,35 @@ import scolariteIcon from '../assets/ecole.png';
 
 const AboutSection = () => {
   
+  // ✅ NOUVEAU CONTENU AUTHENTIQUE
   const items = [
-    { id: 1, text: 'Lorem ipsum dolor sit amet', icon: icon1 },
-    { id: 2, text: 'Lorem ipsum dolor sit amet', icon: icon2 },
-    { id: 3, text: 'Lorem ipsum dolor sit amet', icon: icon3 }
+    { id: 1, text: 'Accompagnement personnalisé des familles', icon: icon1 },
+    { id: 2, text: 'Activités éducatives et culturelles variées', icon: icon2 },
+    { id: 3, text: 'Engagement dans l\'éducation populaire et la laïcité', icon: icon3 }
   ];
 
-  // Données des services
+  // ✅ SERVICES AVEC CONTENU RÉEL
   const services = [
     {
       id: 1,
       icon: jeunesseIcon,
       title: "Jeunesse",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum.",
-      link: "#" //renvoie à la page Jeunesse
+      description: "Accompagnement éducatif, activités sportives et culturelles, sorties et projets collectifs pour les jeunes de Torcy. Développement de l'autonomie et de la citoyenneté.",
+      link: "#jeunesse"
     },
     {
       id: 2,
       icon: famillesIcon,
       title: "Familles et Adultes",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum.",
-      link: "#" //renvoie à la page F&A
+      description: "Soutien aux familles, ateliers parentalité, activités intergénérationnelles et accompagnement social. Un espace d'écoute et d'entraide pour tous.",
+      link: "#familles"
     },
     {
       id: 3,
       icon: scolariteIcon,
       title: "Aide à la scolarité",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum.",
-      link: "#" //renvoie à la page Scolarité
+      description: "Soutien scolaire, accompagnement aux devoirs, ateliers de méthodologie et orientation. Réussite éducative pour tous les enfants du quartier.",
+      link: "#scolarite"
     }
   ];
 
@@ -46,9 +47,9 @@ const AboutSection = () => {
     <section className="about-section">
       <div className="container">
         <div className="about-header">
-          <h2 className="section-title">À Propos</h2>
+          <h2 className="section-title">À Propos de l'OMAC</h2>
           <div className="subtitle-container">
-            <p className="about-subtitle">Découvrez notre Histoire et notre Missions</p>
+            <p className="about-subtitle">Découvrez notre Histoire et nos Missions</p>
             <div className="green-underline"></div>
           </div>
         </div>
@@ -57,16 +58,21 @@ const AboutSection = () => {
           <div className="image-column">
             <div className="yellow-square"></div>
             <div className="image-container">
-              <img src="/placeholder-image.jpg" alt="À propos de l'OMAC" />
+              {/* ✅ Tu peux remplacer par une vraie photo de l'OMAC */}
+              <img src="/placeholder-image.jpg" alt="L'équipe OMAC de Torcy" />
             </div>
           </div>
           
          
           <div className="text-column">
             <div className="text-content">
-              <h3 className="card-title">Lorem ipsum dolor</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing a sollicitudin est. Donec porta scelerisque interdum. Praesent vitae tellus elementum dolor viverra blandit. Vestibulum fermentum velit.</p>
-              <p>Vivamus in dolor ut sapien gravida mattis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mollis et massa.</p>
+              {/* ✅ NOUVEAU TITRE AUTHENTIQUE */}
+              <h3 className="card-title">Au service de la communauté depuis des années</h3>
+              
+              {/* ✅ NOUVEAU CONTENU AUTHENTIQUE */}
+              <p>L'OMAC de Torcy est une association d'éducation populaire qui œuvre quotidiennement pour l'animation de la vie de quartier et l'accompagnement des habitants. Nous développons des projets collectifs dans un esprit de solidarité et de laïcité.</p>
+              
+              <p>Implantés dans plusieurs quartiers de Torcy, nous proposons des activités diversifiées qui favorisent le lien social, l'épanouissement personnel et la participation citoyenne. Notre équipe professionnelle accompagne les projets des habitants dans une démarche participative.</p>
               
               <ul className="feature-list">
                 {items.map(item => (
@@ -79,7 +85,8 @@ const AboutSection = () => {
                 ))}
               </ul>
               
-              <button className="btn-learn-more">En Savoir Plus</button>
+              <button className="btn-learn-more">Guide de l'OMAC</button>
+              <button className="btn-learn-more">Projet Social</button>
             </div>
             <div className="blue-square"></div>
           </div>

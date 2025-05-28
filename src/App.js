@@ -8,19 +8,36 @@ import ScrollToTop from './components/ScrollToTop';
 import EventsCalendar from './components/EventsCalendar'; 
 import MediaRessources from './components/MediaResources'; 
 import ContactSection from './components/ContactSection'; 
-
+import Footer from './components/Footer';
 
 function App() {
   return (
     <div className="app">
       <Header />
-      <Hero />
+      
+      <div id="hero">
+        <Hero />
+      </div>
+      
       <Partners />
-      <AboutSection />
+
+      <div id="about-section">
+        <AboutSection />
+      </div>
+      
       <ScrollToTop />
-      <EventsCalendar />
+
+      <div id="events-section">
+        <EventsCalendar />
+      </div>
+      
       <MediaRessources/>
-      <ContactSection/>
+      
+      <div id="contact-section">
+        <ContactSection/>
+      </div>
+      
+      <Footer />
     </div>
   );
 }

@@ -1,7 +1,9 @@
 .hero {
-  background-color: black;
+  /* background-image: url('https://info-association.com/images/17517148829290096836.jpg'); */
+  background-color: #a8b55f;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -9,10 +11,26 @@
   align-items: center;
   text-align: center;
   padding: 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Overlay moins opaque pour laisser voir la photo */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(16, 27, 68, 0.25);
+  z-index: 1;
 }
 
 .hero-content {
   max-width: 1000px;
+  position: relative;
+  z-index: 10;
 }
 
 .hero-title {
@@ -20,14 +38,13 @@
   margin-bottom: 20px;
   font-weight: 700;
   line-height: 1.2;
-   color: white;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .hero-title .highlight {
   color: #FFD350; 
 }
-
-
 
 .hero-text {
   font-size: 20px;
@@ -36,11 +53,40 @@
   line-height: 1.6;
   font-weight: 300;
   color: #E2E2E2;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 .hero-buttons {
   display: flex;
   gap: 20px;
   justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 42px;
+  }
   
+  .hero-text {
+    font-size: 18px;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 36px;
+  }
+  
+  .hero-text {
+    font-size: 16px;
+  }
 }

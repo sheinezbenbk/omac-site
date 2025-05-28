@@ -15,6 +15,7 @@
 .header.scrolled {
   background-color: rgba(187, 224, 182, 0.8);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .header-bottom-line {
@@ -66,15 +67,18 @@
 .nav {
   display: flex;
   gap: 30px;
+  align-items: center;
 }
 
 .nav-link {
   color: #ffffff;
   font-weight: 400;
   font-size: 20px;
-  transition: color 0.3s;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
 }
-
 
 .header.scrolled .nav-link {
   color: #3498db;
@@ -82,9 +86,171 @@
 
 .nav-link:hover {
   color: #f7be00;
+  transform: translateY(-2px);
 }
-
 
 .header.scrolled .nav-link:hover {
   color: #f7be00;
+}
+
+/* Conteneur du dropdown Nos Actions */
+.nav-actions-container {
+  position: relative;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-actions.active {
+  color: #f7be00 !important;
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  margin-left: 5px;
+}
+
+.dropdown-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu */
+.actions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 15px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 220px;
+  overflow: hidden;
+  animation: dropdownSlide 0.3s ease-out;
+  z-index: 1001;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Flèche du dropdown */
+.actions-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+  color: #3498db;
+  transform: translateX(5px);
+}
+
+.dropdown-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .header {
+    padding: 15px 30px;
+  }
+  
+  .nav {
+    gap: 20px;
+  }
+  
+  .nav-link {
+    font-size: 18px;
+  }
+  
+  .actions-dropdown {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+    height: 70px;
+  }
+  
+  .logo img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .nav {
+    display: none; /* Tu pourras créer un menu burger plus tard */
+  }
+  
+  .admin-icon {
+    width: 40px;
+    height: 35px;
+  }
+}
+
+/* Style pour les sections ciblées */
+section {
+  scroll-margin-top: 80px; /* Compense la hauteur du header fixe */
+}
+
+/* Animation hover sur les liens */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #f7be00;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
 }
