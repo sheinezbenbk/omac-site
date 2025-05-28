@@ -1,0 +1,409 @@
+/* GuideOMAC.css - Page du Guide OMAC */
+
+.guide-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Header de la page guide */
+.guide-header {
+  background: linear-gradient(135deg, #3498db 0%, #63a0c9 100%);
+  color: white;
+  padding: 100px 0 60px 0; /* Plus de padding-top pour compenser le header fixe */
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.guide-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+  animation: float 20s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes float {
+  0% { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(-50px) translateY(-50px); }
+}
+
+.guide-header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.guide-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.guide-subtitle {
+  font-size: 20px;
+  font-weight: 100;
+  margin: 0 0 30px 0;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.guide-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  color: white;
+  text-decoration: none;
+}
+
+.nav-btn.primary {
+  background: #f7be00;
+  border-color: #f7be00;
+  color: #333;
+}
+
+.nav-btn.primary:hover {
+  background: #e6ab00;
+  border-color: #e6ab00;
+  color: #333;
+}
+
+/* Section principale avec le flipbook */
+.guide-content {
+  padding: 60px 0;
+}
+
+.guide-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.flipbook-section {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 50px;
+}
+
+.flipbook-header {
+  background-color: #BADA8D;
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+.flipbook-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.flipbook-description {
+  font-size: 16px;
+  opacity: 0.9;
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.flipbook-container {
+  position: relative;
+  padding: 30px;
+  background: #f8f9fa;
+}
+
+.flipbook-wrapper {
+  position: relative;
+  padding-top: max(60%, 324px);
+  width: 100%;
+  height: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.flipbook-iframe {
+  position: absolute;
+  border: none;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  border-radius: 12px;
+}
+
+/* Section d'informations supplémentaires */
+.guide-info-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.info-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.info-card-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.info-card-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 15px 0;
+}
+
+.info-card-description {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Section d'actions */
+.guide-actions {
+  text-align: center;
+  margin-top: 60px;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.05) 0%, rgba(141, 197, 64, 0.05) 100%);
+  border-radius: 20px;
+  border: 1px solid rgba(52, 152, 219, 0.1);
+}
+
+.actions-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 15px 0;
+}
+
+.actions-description {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 30px 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.actions-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.action-btn:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+.action-btn.secondary {
+  background: #8DC540;
+}
+
+.action-btn.secondary:hover {
+  background: #76b52d;
+  box-shadow: 0 5px 15px rgba(141, 197, 64, 0.4);
+}
+
+/* Loading state pour le flipbook */
+.flipbook-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #666;
+  z-index: 1;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f0f0f0;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .guide-title {
+    font-size: 42px;
+  }
+  
+  .guide-container {
+    max-width: 100%;
+  }
+  
+  .flipbook-container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .guide-header {
+    padding: 120px 0 40px 0;
+  }
+  
+  .guide-title {
+    font-size: 36px;
+  }
+  
+  .guide-subtitle {
+    font-size: 18px;
+  }
+  
+  .guide-navigation {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .nav-btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+  
+  .flipbook-container {
+    padding: 15px;
+  }
+  
+  .flipbook-wrapper {
+    padding-top: max(70%, 300px);
+  }
+  
+  .info-card {
+    padding: 25px;
+  }
+  
+  .guide-actions {
+    padding: 30px 20px;
+  }
+  
+  .actions-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .guide-header {
+    padding: 100px 0 30px 0;
+  }
+  
+  .guide-title {
+    font-size: 28px;
+  }
+  
+  .guide-subtitle {
+    font-size: 16px;
+  }
+  
+  .flipbook-header {
+    padding: 20px;
+  }
+  
+  .flipbook-title {
+    font-size: 24px;
+  }
+  
+  .flipbook-description {
+    font-size: 14px;
+  }
+  
+  .flipbook-wrapper {
+    padding-top: max(75%, 280px);
+  }
+}

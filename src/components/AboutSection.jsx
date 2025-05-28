@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ Import du hook de navigation
 import './AboutSection.css';
 import icon1 from '../assets/check.png';
 import icon2 from '../assets/check.png';
@@ -10,6 +11,7 @@ import famillesIcon from '../assets/famille.png';
 import scolariteIcon from '../assets/ecole.png';
 
 const AboutSection = () => {
+  const navigate = useNavigate(); // ✅ Hook pour la navigation
   
   // ✅ NOUVEAU CONTENU AUTHENTIQUE
   const items = [
@@ -42,6 +44,24 @@ const AboutSection = () => {
       link: "#scolarite"
     }
   ];
+
+  // ✅ Fonction pour naviguer vers la page Guide
+  const handleGuideClick = () => {
+    navigate('/guide');
+    // ✅ Forcer le scroll en haut de la page
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  };
+
+  // ✅ Fonction pour naviguer vers la page Projet Social
+  const handleProjetSocialClick = () => {
+    navigate('/projet-social');
+    // ✅ Forcer le scroll en haut de la page
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  };
 
   return (
     <section className="about-section">
@@ -85,8 +105,14 @@ const AboutSection = () => {
                 ))}
               </ul>
               
-              <button className="btn-learn-more">Guide de l'OMAC</button>
-              <button className="btn-learn-more">Projet Social</button>
+              {/* ✅ BOUTON MODIFIÉ POUR NAVIGUER VERS /guide */}
+              <button className="btn-learn-more" onClick={handleGuideClick}>
+                Guide de l'OMAC
+              </button>
+              {/* ✅ BOUTON MODIFIÉ POUR NAVIGUER VERS /projet-social */}
+              <button className="btn-learn-more" onClick={handleProjetSocialClick}>
+                Projet Social
+              </button>
             </div>
             <div className="blue-square"></div>
           </div>

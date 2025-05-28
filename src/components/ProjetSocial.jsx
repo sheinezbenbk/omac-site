@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './GuideOMAC.css';
+import './ProjetSocial.css';
 
 // Import des composants communs
 import Header from './Header';
 import Footer from './Footer';
 
-const GuideOMAC = () => {
+const ProjetSocial = () => {
   const navigate = useNavigate();
   const [isFlipbookLoaded, setIsFlipbookLoaded] = useState(false);
+
+  // Forcer le scroll en haut à chaque chargement de la page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Gestion du chargement du flipbook
   const handleFlipbookLoad = () => {
@@ -39,68 +44,47 @@ const GuideOMAC = () => {
     }, 100);
   };
 
-  // Informations supplémentaires sur le guide
-  const guideInfo = [
+  // Informations supplémentaires sur le projet social
+  const projetSocialInfo = [
     {
       id: 1,
-      icon: '📖',
-      title: 'Guide Complet',
-      description: 'Découvrez l\'histoire, les missions et les valeurs de l\'OMAC de Torcy à travers ce guide interactif détaillé.'
+      icon: 'P',
+      title: 'Projet Associatif',
+      description: 'Découvrez les orientations stratégiques et les valeurs qui guident l\'action de l\'OMAC dans le développement local.'
     },
     {
       id: 2,
-      icon: '🏢',
-      title: 'Nos Structures',
-      description: 'Explorez nos différents centres et découvrez les activités proposées dans chaque lieu d\'accueil.'
+      icon: 'C',
+      title: 'Cohésion Sociale',
+      description: 'Nos actions visent à renforcer le lien social et la solidarité entre les habitants des différents quartiers de Torcy.'
     },
     {
       id: 3,
-      icon: '👥',
-      title: 'Notre Équipe',
-      description: 'Rencontrez les professionnels qui s\'engagent quotidiennement pour l\'animation de la vie de quartier.'
+      icon: 'E',
+      title: 'Éducation Populaire',
+      description: 'L\'éducation populaire est au cœur de notre démarche pour favoriser l\'émancipation et la citoyenneté active.'
     },
     {
       id: 4,
-      icon: '🎯',
-      title: 'Nos Actions',
-      description: 'Comprenez notre approche de l\'éducation populaire et découvrez nos projets communautaires.'
+      icon: 'D',
+      title: 'Développement Local',
+      description: 'Nous contribuons au développement du territoire en favorisant la participation des habitants aux projets locaux.'
     }
   ];
 
   return (
-    <div className="guide-page">
+    <div className="projet-social-page">
       {/* Header commun */}
       <Header />
 
-      {/* En-tête de la page guide */}
-      <section className="guide-header">
-        <div className="guide-header-container">
-          <h1 className="guide-title">Guide de l'OMAC</h1>
-          <p className="guide-subtitle">
-            Découvrez l'Office Municipal d'Animation de la Cité de Torcy, 
-            son histoire, ses missions et ses actions au service de la communauté.
-          </p>
-          <div className="guide-navigation">
-            <button className="nav-btn" onClick={goToHome}>
-               Retour à l'accueil
-            </button>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Contenu principal */}
-      <section className="guide-content">
-        <div className="guide-container">
+      <section className="projet-social-content">
+        <div className="projet-social-container">
           
           {/* Section du flipbook */}
           <div id="flipbook-section" className="flipbook-section">
-            <div className="flipbook-header">
-              <h2 className="flipbook-title">Guide Interactif OMAC Torcy</h2>
-              <p className="flipbook-description">
-                Parcourez notre guide interactif pour découvrir en détail 
-                l'organisation, les services et les activités de l'OMAC.
-              </p>
-            </div>
             
             <div className="flipbook-container">
               <div className="flipbook-wrapper">
@@ -108,29 +92,39 @@ const GuideOMAC = () => {
                 {!isFlipbookLoaded && (
                   <div className="flipbook-loading">
                     <div className="loading-spinner"></div>
-                    <p>Chargement du guide en cours...</p>
+                    <p>Chargement du projet social en cours...</p>
                   </div>
                 )}
                 
                 {/* Flipbook intégré */}
                 <iframe 
                   className="flipbook-iframe"
-                  src="https://online.fliphtml5.com/pilvj/xhez/" 
+                  src="https://online.fliphtml5.com/pilvj/fxcr/" 
                   seamless="seamless" 
                   scrolling="no" 
                   frameBorder="0" 
                   allowTransparency="true" 
                   allowFullScreen="true"
                   onLoad={handleFlipbookLoad}
-                  title="Guide OMAC Torcy"
+                  title="Projet Social OMAC Torcy"
                 />
+              </div>
+              
+              {/* Instructions d'utilisation */}
+              <div style={{ 
+                textAlign: 'center', 
+                marginTop: '15px', 
+                color: '#666', 
+                fontSize: '13px' 
+              }}>
+
               </div>
             </div>
           </div>
 
           {/* Section d'informations supplémentaires */}
-          <div className="guide-info-section">
-            {guideInfo.map(info => (
+          <div className="projet-social-info-section">
+            {projetSocialInfo.map(info => (
               <div key={info.id} className="info-card">
                 <div className="info-card-icon">
                   {info.icon}
@@ -142,21 +136,21 @@ const GuideOMAC = () => {
           </div>
 
           {/* Section d'actions */}
-          <div className="guide-actions">
-            <h3 className="actions-title">Besoin de plus d'informations ?</h3>
+          <div className="projet-social-actions">
+            <h3 className="actions-title">Envie de participer à nos projets ?</h3>
             <p className="actions-description">
-              Notre équipe est à votre disposition pour répondre à toutes vos questions 
-              et vous accompagner dans vos démarches.
+              L'OMAC de Torcy est ouverte à tous ceux qui souhaitent s'investir 
+              dans la vie de quartier et contribuer au développement local.
             </p>
             <div className="actions-buttons">
               <button className="action-btn" onClick={goToContact}>
-                 Nous Contacter
+                Nous Rejoindre
               </button>
               <button className="action-btn secondary" onClick={() => scrollToSection('flipbook-section')}>
-                 Relire le Guide
+                Relire le Projet
               </button>
-              <button className="action-btn" onClick={goToHome}>
-                 Retour à l'Accueil
+              <button className="action-btn secondary" onClick={goToHome}>
+                Retour à l'Accueil
               </button>
             </div>
           </div>
@@ -169,4 +163,4 @@ const GuideOMAC = () => {
   );
 };
 
-export default GuideOMAC;
+export default ProjetSocial;
