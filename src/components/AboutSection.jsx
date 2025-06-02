@@ -13,38 +13,6 @@ import scolariteIcon from '../assets/ecole.png';
 const AboutSection = () => {
   const navigate = useNavigate(); // ✅ Hook pour la navigation
   
-  // ✅ NOUVEAU CONTENU AUTHENTIQUE
-  const items = [
-    { id: 1, text: 'Accompagnement personnalisé des familles', icon: icon1 },
-    { id: 2, text: 'Activités éducatives et culturelles variées', icon: icon2 },
-    { id: 3, text: 'Engagement dans l\'éducation populaire et la laïcité', icon: icon3 }
-  ];
-
-  // ✅ SERVICES AVEC CONTENU RÉEL
-  const services = [
-    {
-      id: 1,
-      icon: jeunesseIcon,
-      title: "Jeunesse",
-      description: "Accompagnement éducatif, activités sportives et culturelles, sorties et projets collectifs pour les jeunes de Torcy. Développement de l'autonomie et de la citoyenneté.",
-      link: "#jeunesse"
-    },
-    {
-      id: 2,
-      icon: famillesIcon,
-      title: "Familles et Adultes",
-      description: "Soutien aux familles, ateliers parentalité, activités intergénérationnelles et accompagnement social. Un espace d'écoute et d'entraide pour tous.",
-      link: "#familles"
-    },
-    {
-      id: 3,
-      icon: scolariteIcon,
-      title: "Aide à la scolarité",
-      description: "Soutien scolaire, accompagnement aux devoirs, ateliers de méthodologie et orientation. Réussite éducative pour tous les enfants du quartier.",
-      link: "#scolarite"
-    }
-  ];
-
   // ✅ Fonction pour naviguer vers la page Guide
   const handleGuideClick = () => {
     navigate('/guide');
@@ -62,6 +30,60 @@ const AboutSection = () => {
       window.scrollTo(0, 0);
     }, 100);
   };
+
+  // ✅ Fonctions pour naviguer vers les secteurs
+  const handleJeunesseClick = () => {
+    navigate('/jeunesse');
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  };
+
+  const handleFamilleClick = () => {
+    navigate('/famille');
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  };
+
+  const handleScolariteClick = () => {
+    navigate('/scolarite');
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  };
+  
+  // ✅ NOUVEAU CONTENU AUTHENTIQUE
+  const items = [
+    { id: 1, text: 'Accompagnement personnalisé des familles', icon: icon1 },
+    { id: 2, text: 'Activités éducatives et culturelles variées', icon: icon2 },
+    { id: 3, text: 'Engagement dans l\'éducation populaire et la laïcité', icon: icon3 }
+  ];
+
+  // ✅ SERVICES AVEC CONTENU RÉEL ET NAVIGATION
+  const services = [
+    {
+      id: 1,
+      icon: jeunesseIcon,
+      title: "Jeunesse",
+      description: "Accompagnement éducatif, activités sportives et culturelles, sorties et projets collectifs pour les jeunes de Torcy. Développement de l'autonomie et de la citoyenneté.",
+      onClick: handleJeunesseClick
+    },
+    {
+      id: 2,
+      icon: famillesIcon,
+      title: "Familles et Adultes",
+      description: "Soutien aux familles, ateliers parentalité, activités intergénérationnelles et accompagnement social. Un espace d'écoute et d'entraide pour tous.",
+      onClick: handleFamilleClick
+    },
+    {
+      id: 3,
+      icon: scolariteIcon,
+      title: "Aide à la scolarité",
+      description: "Soutien scolaire, accompagnement aux devoirs, ateliers de méthodologie et orientation. Réussite éducative pour tous les enfants du quartier.",
+      onClick: handleScolariteClick
+    }
+  ];
 
   return (
     <section className="about-section">

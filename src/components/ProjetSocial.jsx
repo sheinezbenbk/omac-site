@@ -48,25 +48,25 @@ const ProjetSocial = () => {
   const projetSocialInfo = [
     {
       id: 1,
-      icon: 'P',
+      icon: '📋',
       title: 'Projet Associatif',
       description: 'Découvrez les orientations stratégiques et les valeurs qui guident l\'action de l\'OMAC dans le développement local.'
     },
     {
       id: 2,
-      icon: 'C',
+      icon: '🏘️',
       title: 'Cohésion Sociale',
       description: 'Nos actions visent à renforcer le lien social et la solidarité entre les habitants des différents quartiers de Torcy.'
     },
     {
       id: 3,
-      icon: 'E',
+      icon: '👥',
       title: 'Éducation Populaire',
       description: 'L\'éducation populaire est au cœur de notre démarche pour favoriser l\'émancipation et la citoyenneté active.'
     },
     {
       id: 4,
-      icon: 'D',
+      icon: '🎯',
       title: 'Développement Local',
       description: 'Nous contribuons au développement du territoire en favorisant la participation des habitants aux projets locaux.'
     }
@@ -77,7 +77,21 @@ const ProjetSocial = () => {
       {/* Header commun */}
       <Header />
 
-      
+      {/* En-tête de la page projet social */}
+      <section className="projet-social-header">
+        <div className="projet-social-header-container">
+          <h1 className="projet-social-title">Projet Social de l'OMAC</h1>
+          <p className="projet-social-subtitle">
+            Découvrez le projet social de l'Office Municipal d'Animation de la Cité de Torcy, 
+            nos orientations et nos engagements pour le développement local et la cohésion sociale.
+          </p>
+          <div className="projet-social-navigation">
+            <button className="nav-btn" onClick={goToHome}>
+              Retour à l'accueil
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* Contenu principal */}
       <section className="projet-social-content">
@@ -85,6 +99,13 @@ const ProjetSocial = () => {
           
           {/* Section du flipbook */}
           <div id="flipbook-section" className="flipbook-section">
+            <div className="flipbook-header">
+              <h2 className="flipbook-title">Projet Social Interactif OMAC Torcy</h2>
+              <p className="flipbook-description">
+                Parcourez notre projet social interactif pour découvrir en détail 
+                nos orientations, nos valeurs et nos engagements pour la communauté.
+              </p>
+            </div>
             
             <div className="flipbook-container">
               <div className="flipbook-wrapper">
@@ -108,16 +129,6 @@ const ProjetSocial = () => {
                   onLoad={handleFlipbookLoad}
                   title="Projet Social OMAC Torcy"
                 />
-              </div>
-              
-              {/* Instructions d'utilisation */}
-              <div style={{ 
-                textAlign: 'center', 
-                marginTop: '15px', 
-                color: '#666', 
-                fontSize: '13px' 
-              }}>
-
               </div>
             </div>
           </div>

@@ -98,13 +98,18 @@
   position: relative;
 }
 
-.nav-actions {
+/* ✅ Conteneur du dropdown L'OMAC */
+.nav-omac-container {
+  position: relative;
+}
+
+.nav-actions, .nav-omac {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.nav-actions.active {
+.nav-actions.active, .nav-omac.active {
   color: #f7be00 !important;
 }
 
@@ -118,8 +123,8 @@
   transform: rotate(180deg);
 }
 
-/* Dropdown menu */
-.actions-dropdown {
+/* Dropdown menu - Styles communs */
+.actions-dropdown, .omac-dropdown {
   position: absolute;
   top: 100%;
   left: 50%;
@@ -147,7 +152,7 @@
 }
 
 /* Flèche du dropdown */
-.actions-dropdown::before {
+.actions-dropdown::before, .omac-dropdown::before {
   content: '';
   position: absolute;
   top: -8px;
@@ -208,7 +213,7 @@ html {
     font-size: 18px;
   }
   
-  .actions-dropdown {
+  .actions-dropdown, .omac-dropdown {
     min-width: 200px;
   }
 }

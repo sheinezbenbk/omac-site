@@ -7,6 +7,7 @@ import admin from '../assets/admin.png';
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showActionsDropdown, setShowActionsDropdown] = useState(false);
+  const [showOmacDropdown, setShowOmacDropdown] = useState(false); // ✅ Nouveau état pour dropdown OMAC
   const navigate = useNavigate();
   const location = useLocation();
      
@@ -60,13 +61,52 @@ const Header = () => {
   const handleActionsClick = (e) => {
     e.preventDefault();
     setShowActionsDropdown(!showActionsDropdown);
+    setShowOmacDropdown(false); // Fermer l'autre dropdown
   };
 
-  // Fermer le dropdown quand on clique ailleurs
+  // ✅ Gestion du dropdown "L'OMAC"
+  const handleOmacClick = (e) => {
+    e.preventDefault();
+    setShowOmacDropdown(!showOmacDropdown);
+    setShowActionsDropdown(false); // Fermer l'autre dropdown
+  };
+
+  // ✅ Navigation vers Guide OMAC
+  const handleGuideClick = () => {
+    navigate('/guide');
+    setShowOmacDropdown(false);
+  };
+
+  // ✅ Navigation vers Projet Social
+  const handleProjetSocialClick = () => {
+    navigate('/projet-social');
+    setShowOmacDropdown(false);
+  };
+
+  // ✅ Navigation vers Jeunesse
+  const handleJeunesseClick = () => {
+    navigate('/jeunesse');
+    setShowActionsDropdown(false);
+  };
+
+  // ✅ Navigation vers Scolarité
+  const handleScolariteClick = () => {
+    navigate('/scolarite');
+    setShowActionsDropdown(false);
+  };
+
+  // ✅ Navigation vers Famille
+  const handleFamilleClick = () => {
+    navigate('/famille');
+    setShowActionsDropdown(false);
+  };
+
+  // Fermer les dropdowns quand on clique ailleurs
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.nav-actions-container')) {
+      if (!event.target.closest('.nav-actions-container') && !event.target.closest('.nav-omac-container')) {
         setShowActionsDropdown(false);
+        setShowOmacDropdown(false);
       }
     };
 
@@ -103,16 +143,58 @@ const Header = () => {
           Accueil
         </a>
         
-        <a 
-          href="#" 
-          className="nav-link"
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToSection('about-section');
-          }}
-        >
-          L'OMAC
-        </a>
+        {/* ✅ Dropdown L'OMAC */}
+        <div className="nav-omac-container">
+          <a 
+            href="#" 
+            className={`nav-link nav-omac ${showOmacDropdown ? 'active' : ''}`}
+            onClick={handleOmacClick}
+          >
+            L'OMAC
+            <span className={`dropdown-arrow ${showOmacDropdown ? 'rotated' : ''}`}>▼</span>
+          </a>
+          
+          {showOmacDropdown && (
+            <div className="omac-dropdown">
+              <a 
+                href="#" 
+                className="dropdown-item"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleGuideClick();
+                }}
+              >
+                <span className="dropdown-icon">📖</span>
+                Guide OMAC
+              </a>
+              
+              <a 
+                href="#" 
+                className="dropdown-item"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleProjetSocialClick();
+                }}
+              >
+                <span className="dropdown-icon">📋</span>
+                Projet Social
+              </a>
+              
+              <a 
+                href="#" 
+                className="dropdown-item"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowOmacDropdown(false);
+                  scrollToSection('about-section');
+                }}
+              >
+                <span className="dropdown-icon">🏢</span>
+                À Propos
+              </a>
+            </div>
+          )}
+        </div>
         
         {/* Dropdown Nos Actions */}
         <div className="nav-actions-container">
@@ -132,9 +214,7 @@ const Header = () => {
                 className="dropdown-item"
                 onClick={(e) => {
                   e.preventDefault();
-                  setShowActionsDropdown(false);
-                  // Ici tu pourras ajouter la navigation vers la page Jeunesse
-                  console.log('Navigation vers Jeunesse');
+                  handleJeunesseClick();
                 }}
               >
                 <span className="dropdown-icon">🏀</span>
@@ -146,9 +226,7 @@ const Header = () => {
                 className="dropdown-item"
                 onClick={(e) => {
                   e.preventDefault();
-                  setShowActionsDropdown(false);
-                  // Ici tu pourras ajouter la navigation vers la page Familles
-                  console.log('Navigation vers Familles et Adultes');
+                  handleFamilleClick();
                 }}
               >
                 <span className="dropdown-icon">👨‍👩‍👧‍👦</span>
@@ -160,9 +238,7 @@ const Header = () => {
                 className="dropdown-item"
                 onClick={(e) => {
                   e.preventDefault();
-                  setShowActionsDropdown(false);
-                  // Ici tu pourras ajouter la navigation vers la page Scolarité
-                  console.log('Navigation vers Aide à la scolarité');
+                  handleScolariteClick();
                 }}
               >
                 <span className="dropdown-icon">📚</span>
