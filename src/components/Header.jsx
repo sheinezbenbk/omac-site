@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import ApiService from '../services/api'; // ✅ Import du service API
 import './Header.css';
 import logoOmac from '../assets/omac-logo.png';
 import admin from '../assets/admin.png';
@@ -7,9 +8,25 @@ import admin from '../assets/admin.png';
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showActionsDropdown, setShowActionsDropdown] = useState(false);
-  const [showOmacDropdown, setShowOmacDropdown] = useState(false); // ✅ Nouveau état pour dropdown OMAC
+  const [showOmacDropdown, setShowOmacDropdown] = useState(false);
+  const [isAdminConnected, setIsAdminConnected] = useState(false); // ✅ État pour afficher le statut
   const navigate = useNavigate();
   const location = useLocation();
+
+  // ✅ Vérifier le statut admin au chargement et quand on change de page
+  useEffect(() => {
+    checkAdminStatus();
+  }, [location.pathname]);
+
+  const checkAdminStatus = () => {
+    const connected = ApiService.isAuthenticated();
+    setIsAdminConnected(connected);
+    
+    if (connected) {
+      const adminData = ApiService.getAdmin();
+      console.log('👤 Admin connecté dans Header:', adminData?.username);
+    }
+  };
      
   // Détecte le défilement
   const handleScroll = () => {
@@ -20,9 +37,17 @@ const Header = () => {
     }
   };
      
-  // Clic sur l'icône admin
+  // ✅ Clic sur l'icône admin avec redirection intelligente
   const handleAdminClick = () => {
-    navigate('/admin');
+    if (isAdminConnected) {
+      // Déjà connecté → aller au dashboard
+      console.log('🎯 Admin connecté, redirection vers dashboard');
+      navigate('/admin/dashboard');
+    } else {
+      // Pas connecté → aller à la page de login
+      console.log('🔓 Admin non connecté, redirection vers login');
+      navigate('/admin');
+    }
   };
 
   // Clic sur le logo pour retourner à l'accueil
@@ -64,38 +89,38 @@ const Header = () => {
     setShowOmacDropdown(false); // Fermer l'autre dropdown
   };
 
-  // ✅ Gestion du dropdown "L'OMAC"
+  // Gestion du dropdown "L'OMAC"
   const handleOmacClick = (e) => {
     e.preventDefault();
     setShowOmacDropdown(!showOmacDropdown);
     setShowActionsDropdown(false); // Fermer l'autre dropdown
   };
 
-  // ✅ Navigation vers Guide OMAC
+  // Navigation vers Guide OMAC
   const handleGuideClick = () => {
     navigate('/guide');
     setShowOmacDropdown(false);
   };
 
-  // ✅ Navigation vers Projet Social
+  // Navigation vers Projet Social
   const handleProjetSocialClick = () => {
     navigate('/projet-social');
     setShowOmacDropdown(false);
   };
 
-  // ✅ Navigation vers Jeunesse
+  // Navigation vers Jeunesse
   const handleJeunesseClick = () => {
     navigate('/jeunesse');
     setShowActionsDropdown(false);
   };
 
-  // ✅ Navigation vers Scolarité
+  // Navigation vers Scolarité
   const handleScolariteClick = () => {
     navigate('/scolarite');
     setShowActionsDropdown(false);
   };
 
-  // ✅ Navigation vers Famille
+  // Navigation vers Famille
   const handleFamilleClick = () => {
     navigate('/famille');
     setShowActionsDropdown(false);
@@ -143,7 +168,7 @@ const Header = () => {
           Accueil
         </a>
         
-        {/* ✅ Dropdown L'OMAC */}
+        {/* Dropdown L'OMAC */}
         <div className="nav-omac-container">
           <a 
             href="#" 
@@ -271,14 +296,86 @@ const Header = () => {
         </a>
       </nav>
       
+      {/* ✅ Admin avec indicateur de statut et redirection intelligente */}
       <div className="admin">
-        <img 
-          src={admin} 
-          alt="Administration" 
-          className="admin-icon"
+        <div 
+          className={`admin-container ${isAdminConnected ? 'connected' : ''}`}
           onClick={handleAdminClick}
-        />
+          title={isAdminConnected ? 'Aller au dashboard admin' : 'Se connecter en tant qu\'admin'}
+        >
+          <img 
+            src={admin} 
+            alt="Administration" 
+            className="admin-icon"
+          />
+          {/* ✅ Indicateur de connexion */}
+          {isAdminConnected && (
+            <div className="admin-status-indicator">●</div>
+          )}
+        </div>
+        
+        {/* ✅ Tooltip informatif */}
+        {isAdminConnected && (
+          <div className="admin-tooltip">
+            {ApiService.getAdmin()?.username} connecté
+          </div>
+        )}
       </div>
+
+      {/* ✅ CSS pour les nouveaux éléments */}
+      <style jsx>{`
+        .admin-container {
+          position: relative;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        
+        .admin-container:hover {
+          transform: scale(1.1);
+        }
+        
+        .admin-status-indicator {
+          position: absolute;
+          top: -2px;
+          right: -2px;
+          width: 12px;
+          height: 12px;
+          background: #8DC540;
+          border-radius: 50%;
+          border: 2px solid white;
+          font-size: 8px;
+          color: #8DC540;
+          animation: pulse 2s infinite;
+        }
+        
+        .admin-tooltip {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 5px 8px;
+          font-size: 12px;
+          border-radius: 4px;
+          white-space: nowrap;
+          opacity: 0;
+          transform: translateY(-10px);
+          transition: all 0.2s ease;
+          pointer-events: none;
+          z-index: 1000;
+        }
+        
+        .admin-container:hover .admin-tooltip {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        @keyframes pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+        }
+      `}</style>
     </header>
   );
 };

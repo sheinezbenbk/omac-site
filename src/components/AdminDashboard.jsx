@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ApiService from '../services/api'; // ✅ Import du service API
 import './AdminDashboard.css';
 import logoOmac from '../assets/omac-logo.png';
 
@@ -15,47 +16,12 @@ const AdminDashboard = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [collapsedMonths, setCollapsedMonths] = useState(new Set());
   
-  // États pour les événements
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Atelier de peinture",
-      date: "2025-05-15",
-      time: "14:00 - 16:00",
-      location: "Salle 2, OMAC Torcy",
-      description: "Atelier de peinture pour les enfants de 6 à 12 ans. Matériel fourni.",
-      image: "/api/placeholder/400/300"
-    },
-    {
-      id: 2,
-      title: "Sortie culturelle - Musée",
-      date: "2025-05-20",
-      time: "10:00 - 16:00",
-      location: "Départ de l'OMAC Torcy",
-      description: "Visite guidée du musée d'art moderne. Transport en bus inclus. Prévoir un pique-nique.",
-      image: "/api/placeholder/400/300"
-    },
-    {
-      id: 3,
-      title: "Spectacle de fin d'année",
-      date: "2025-06-10",
-      time: "19:00 - 21:00",
-      location: "Salle des fêtes, Torcy",
-      description: "Spectacle présenté par les enfants des ateliers théâtre et danse.",
-      image: "/api/placeholder/400/300"
-    },
-    {
-      id: 4,
-      title: "Pique-nique de l'été",
-      date: "2025-07-05",
-      time: "12:00 - 16:00",
-      location: "Parc municipal, Torcy",
-      description: "Grand pique-nique familial avec jeux et animations pour tous.",
-      image: "/api/placeholder/400/300"
-    }
-  ]);
+  // ✅ NOUVEAU : États pour les événements de la BDD
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // États pour les médias
+  // États pour les médias (inchangés pour l'instant)
   const [medias, setMedias] = useState([
     {
       id: 1,
@@ -75,14 +41,14 @@ const AdminDashboard = () => {
     }
   ]);
 
-  // Formulaire d'événement
+  // ✅ NOUVEAU : Formulaire d'événement pour la BDD
   const [eventForm, setEventForm] = useState({
-    title: '',
-    date: '',
-    time: '',
-    location: '',
+    titre: '',
     description: '',
-    image: ''
+    date_debut: '',
+    date_fin: '',
+    couleur: '#3498db',
+    toute_la_journee: false
   });
 
   // Formulaire de média
@@ -93,6 +59,75 @@ const AdminDashboard = () => {
     thumbnail: '',
     url: ''
   });
+
+  // ✅ NOUVEAU : Charger les événements depuis la BDD
+  useEffect(() => {
+    checkAuthAndLoadData();
+  }, [navigate]);
+
+  const checkAuthAndLoadData = async () => {
+    // Vérifier l'authentification plus rigoureusement
+    if (!ApiService.isAuthenticated()) {
+      console.log('❌ Pas d\'authentification valide, redirection vers login');
+      navigate('/admin');
+      return;
+    }
+
+    // Vérifier que l'admin existe toujours
+    const adminData = ApiService.getAdmin();
+    if (!adminData) {
+      console.log('❌ Données admin manquantes, redirection vers login');
+      navigate('/admin');
+      return;
+    }
+
+    console.log('✅ Admin connecté:', adminData.username);
+    
+    // Charger les événements
+    await loadEvents();
+  };
+
+  const loadEvents = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      console.log('🔄 Chargement des événements...');
+      const eventsData = await ApiService.getEvents();
+      
+      // Transformer les données pour votre interface existante
+      const formattedEvents = eventsData.map(event => {
+        const startDate = new Date(event.date_debut);
+        const endDate = new Date(event.date_fin);
+        
+        return {
+          id: event.id,
+          title: event.titre,
+          date: startDate.toISOString().split('T')[0], // Format YYYY-MM-DD
+          time: event.toute_la_journee 
+            ? 'Toute la journée' 
+            : `${startDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${endDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
+          location: "OMAC Torcy",
+          description: event.description || 'Événement OMAC',
+          image: "/api/placeholder/400/300",
+          couleur: event.couleur,
+          // Données originales pour l'édition
+          date_debut: event.date_debut,
+          date_fin: event.date_fin,
+          toute_la_journee: event.toute_la_journee
+        };
+      });
+      
+      setEvents(formattedEvents);
+      console.log('✅ Événements chargés:', formattedEvents);
+      
+    } catch (err) {
+      console.error('❌ Erreur chargement événements:', err);
+      setError('Impossible de charger les événements');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // FONCTIONS POUR LA GESTION DES MOIS
   const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
@@ -159,64 +194,81 @@ const AdminDashboard = () => {
     };
   };
 
-  // Vérifier l'authentification au chargement
-  useEffect(() => {
-    const isLoggedIn = sessionStorage.getItem('omac_admin_logged');
-    if (!isLoggedIn) {
-      navigate('/admin');
+  // ✅ NOUVEAU : Gestion de la déconnexion avec API
+  const handleLogout = async () => {
+    try {
+      await ApiService.logout();
+    } catch (error) {
+      console.error('Erreur déconnexion:', error);
     }
-  }, [navigate]);
-
-  // Gestion de la déconnexion
-  const handleLogout = () => {
-    sessionStorage.removeItem('omac_admin_logged');
     navigate('/admin');
   };
 
-  // Gestion des événements
+  // ✅ NOUVEAU : Gestion des événements avec API
   const handleAddEvent = () => {
     setEditingEvent(null);
     setEventForm({
-      title: '',
-      date: '',
-      time: '',
-      location: '',
+      titre: '',
       description: '',
-      image: ''
+      date_debut: '',
+      date_fin: '',
+      couleur: '#3498db',
+      toute_la_journee: false
     });
     setShowEventForm(true);
   };
 
   const handleEditEvent = (event) => {
     setEditingEvent(event);
-    setEventForm(event);
+    setEventForm({
+      titre: event.title,
+      description: event.description,
+      date_debut: event.date_debut,
+      date_fin: event.date_fin,
+      couleur: event.couleur || '#3498db',
+      toute_la_journee: event.toute_la_journee || false
+    });
     setShowEventForm(true);
   };
 
-  const handleDeleteEvent = (eventId) => {
+  const handleDeleteEvent = async (eventId) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
-      setEvents(events.filter(event => event.id !== eventId));
+      try {
+        const token = ApiService.getToken();
+        await ApiService.deleteEvent(eventId, token);
+        await loadEvents(); // Recharger la liste
+        console.log('✅ Événement supprimé');
+      } catch (error) {
+        console.error('❌ Erreur suppression:', error);
+        alert('Erreur lors de la suppression de l\'événement');
+      }
     }
   };
 
-  const handleSaveEvent = () => {
-    if (editingEvent) {
-      // Modification
-      setEvents(events.map(event => 
-        event.id === editingEvent.id ? { ...eventForm, id: editingEvent.id } : event
-      ));
-    } else {
-      // Ajout
-      const newEvent = {
-        ...eventForm,
-        id: Date.now() // Simple ID generation
-      };
-      setEvents([...events, newEvent]);
+  const handleSaveEvent = async () => {
+    try {
+      const token = ApiService.getToken();
+      
+      if (editingEvent) {
+        // Modification
+        await ApiService.updateEvent(editingEvent.id, eventForm, token);
+        console.log('✅ Événement modifié');
+      } else {
+        // Ajout
+        await ApiService.createEvent(eventForm, token);
+        console.log('✅ Événement ajouté');
+      }
+      
+      setShowEventForm(false);
+      await loadEvents(); // Recharger la liste
+      
+    } catch (error) {
+      console.error('❌ Erreur sauvegarde:', error);
+      alert('Erreur lors de la sauvegarde de l\'événement');
     }
-    setShowEventForm(false);
   };
 
-  // Gestion des médias
+  // Gestion des médias (inchangée pour l'instant)
   const handleAddMedia = () => {
     setEditingMedia(null);
     setMediaForm({
@@ -257,6 +309,32 @@ const AdminDashboard = () => {
     }
     setShowMediaForm(false);
   };
+
+  // ✅ NOUVEAU : Affichage de loading
+  if (loading) {
+    return (
+      <div className="admin-dashboard">
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh',
+          flexDirection: 'column'
+        }}>
+          <div style={{ 
+            border: '4px solid #f3f3f3',
+            borderTop: '4px solid #3498db',
+            borderRadius: '50%',
+            width: '50px',
+            height: '50px',
+            animation: 'spin 1s linear infinite',
+            marginBottom: '20px'
+          }}></div>
+          <p>Chargement du dashboard OMAC...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-dashboard">
@@ -300,6 +378,32 @@ const AdminDashboard = () => {
             Ressources Multimédias ({medias.length})
           </button>
         </div>
+
+        {/* ✅ NOUVEAU : Affichage d'erreur */}
+        {error && (
+          <div style={{ 
+            background: '#fff3cd', 
+            border: '1px solid #ffeeba',
+            borderRadius: '5px',
+            padding: '15px',
+            margin: '20px 0',
+            color: '#856404'
+          }}>
+            <strong>⚠️ {error}</strong>
+            <button 
+              onClick={loadEvents}
+              style={{ 
+                marginLeft: '15px', 
+                background: '#ffc107', 
+                border: 'none', 
+                padding: '5px 10px', 
+                borderRadius: '3px' 
+              }}
+            >
+              Réessayer
+            </button>
+          </div>
+        )}
 
         {/* Contenu des onglets */}
         <div className="tab-content">
@@ -486,7 +590,7 @@ const AdminDashboard = () => {
         </div>
       </main>
 
-      {/* Formulaire d'événement */}
+      {/* ✅ NOUVEAU : Formulaire d'événement pour la BDD */}
       {showEventForm && (
         <div className="form-overlay">
           <div className="form-modal">
@@ -504,38 +608,46 @@ const AdminDashboard = () => {
                 <input
                   type="text"
                   className="form-input"
-                  value={eventForm.title}
-                  onChange={(e) => setEventForm({...eventForm, title: e.target.value})}
+                  value={eventForm.titre}
+                  onChange={(e) => setEventForm({...eventForm, titre: e.target.value})}
                   placeholder="Ex: Atelier de peinture"
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Date</label>
+                <label className="form-label">Date et heure de début</label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="form-input"
-                  value={eventForm.date}
-                  onChange={(e) => setEventForm({...eventForm, date: e.target.value})}
+                  value={eventForm.date_debut}
+                  onChange={(e) => setEventForm({...eventForm, date_debut: e.target.value})}
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Horaire</label>
+                <label className="form-label">Date et heure de fin</label>
                 <input
-                  type="text"
+                  type="datetime-local"
                   className="form-input"
-                  value={eventForm.time}
-                  onChange={(e) => setEventForm({...eventForm, time: e.target.value})}
-                  placeholder="Ex: 14:00 - 16:00"
+                  value={eventForm.date_fin}
+                  onChange={(e) => setEventForm({...eventForm, date_fin: e.target.value})}
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Lieu</label>
+                <label className="form-label">
+                  <input
+                    type="checkbox"
+                    checked={eventForm.toute_la_journee}
+                    onChange={(e) => setEventForm({...eventForm, toute_la_journee: e.target.checked})}
+                  />
+                  Événement toute la journée
+                </label>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Couleur</label>
                 <input
-                  type="text"
+                  type="color"
                   className="form-input"
-                  value={eventForm.location}
-                  onChange={(e) => setEventForm({...eventForm, location: e.target.value})}
-                  placeholder="Ex: Salle 2, OMAC Torcy"
+                  value={eventForm.couleur}
+                  onChange={(e) => setEventForm({...eventForm, couleur: e.target.value})}
                 />
               </div>
               <div className="form-group">
@@ -545,16 +657,6 @@ const AdminDashboard = () => {
                   value={eventForm.description}
                   onChange={(e) => setEventForm({...eventForm, description: e.target.value})}
                   placeholder="Décrivez l'événement..."
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">URL de l'image</label>
-                <input
-                  type="url"
-                  className="form-input"
-                  value={eventForm.image}
-                  onChange={(e) => setEventForm({...eventForm, image: e.target.value})}
-                  placeholder="https://exemple.com/image.jpg"
                 />
               </div>
             </div>
@@ -570,7 +672,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Formulaire de média */}
+      {/* Formulaire de média (inchangé) */}
       {showMediaForm && (
         <div className="form-overlay">
           <div className="form-modal">
@@ -645,6 +747,14 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* CSS pour l'animation */}
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };

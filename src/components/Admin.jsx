@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ApiService from '../services/api'; // ✅ Import du service API
 import './Admin.css';
 import logoOmac from '../assets/omac-logo.png';
 
@@ -7,12 +8,27 @@ const Admin = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
-        password: '',
+        mot_de_passe: '', // ✅ Changé pour correspondre à votre BDD
         rememberMe: false
     });
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [loginError, setLoginError] = useState('');
+
+    // ✅ Vérification d'authentification au chargement
+    useEffect(() => {
+        console.log('🔍 État de la connexion au chargement:', {
+            hasToken: !!localStorage.getItem('omac_token'),
+            isAuthenticated: ApiService ? ApiService.isAuthenticated() : 'ApiService non disponible',
+            currentPath: window.location.pathname
+        });
+
+        // Si déjà connecté, rediriger directement vers le dashboard
+        if (ApiService && ApiService.isAuthenticated()) {
+            console.log('👤 Utilisateur déjà connecté, redirection automatique vers dashboard...');
+            navigate('/admin/dashboard', { replace: true });
+        }
+    }, [navigate]);
 
     // Gestion du retour à l'accueil
     const handleBackToHome = () => {
@@ -49,58 +65,78 @@ const Admin = () => {
             newErrors.username = 'Le nom d\'utilisateur est requis';
         }
 
-        if (!formData.password) {
-            newErrors.password = 'Le mot de passe est requis';
-        } else if (formData.password.length < 6) {
-            newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+        if (!formData.mot_de_passe) {
+            newErrors.mot_de_passe = 'Le mot de passe est requis';
+        } else if (formData.mot_de_passe.length < 6) {
+            newErrors.mot_de_passe = 'Le mot de passe doit contenir au moins 6 caractères';
         }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    // Gestion de la soumission du formulaire
+    // ✅ NOUVEAU : Gestion de la soumission avec l'API réelle + DEBUG
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoginError('');
 
+        console.log('🟡 Début handleSubmit');
+
         if (!validateForm()) {
+            console.log('❌ Validation échouée');
             return;
         }
 
         setIsLoading(true);
 
         try {
-            // Simulation d'une requête d'authentification
-            // Dans un vrai projet, tu ferais un appel API ici
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Simulation de vérification des identifiants
-            // Remplace par ta logique d'authentification réelle
-            if (formData.username === 'admin' && formData.password === 'omac2025') {
-                // Connexion réussie
-                console.log('Connexion réussie !');
-                
-                // Sauvegarder la session si "Se souvenir de moi" est coché
-                if (formData.rememberMe) {
-                    localStorage.setItem('omac_remember_user', formData.username);
-                }
-                
-                // Sauvegarder l'état de connexion
-                sessionStorage.setItem('omac_admin_logged', 'true');
-                
-                // ✅ Rediriger vers le dashboard admin
-                navigate('/admin/dashboard');
-                
-            } else {
-                // Identifiants incorrects
-                setLoginError('Nom d\'utilisateur ou mot de passe incorrect');
+            console.log('🔄 Tentative de connexion...', { 
+                username: formData.username, 
+                password: '***' 
+            });
+            
+            // Vérifier que ApiService existe
+            if (!ApiService || !ApiService.login) {
+                throw new Error('ApiService non disponible');
             }
+            
+            // ✅ Appel à l'API réelle SiteGround
+            const response = await ApiService.login({
+                username: formData.username,
+                mot_de_passe: formData.mot_de_passe
+            });
+
+            console.log('✅ Connexion réussie:', response);
+
+            // Sauvegarder la session si "Se souvenir de moi" est coché
+            if (formData.rememberMe) {
+                localStorage.setItem('omac_remember_user', formData.username);
+            }
+
+            // ✅ Le token et les infos admin sont automatiquement sauvegardés par ApiService.login()
+            
+            // Rediriger vers le dashboard admin
+            console.log('🔄 Redirection vers dashboard...');
+            navigate('/admin/dashboard');
+            
         } catch (error) {
-            setLoginError('Une erreur est survenue. Veuillez réessayer.');
-            console.error('Erreur de connexion:', error);
+            console.error('❌ Erreur complète de connexion:', error);
+            console.error('❌ Message d\'erreur:', error.message);
+            console.error('❌ Stack trace:', error.stack);
+            
+            // Gestion des différents types d'erreurs
+            if (error.message && error.message.includes('Identifiants invalides')) {
+                setLoginError('Nom d\'utilisateur ou mot de passe incorrect');
+            } else if (error.message && error.message.includes('Erreur de connexion')) {
+                setLoginError('Problème de connexion au serveur. Vérifiez votre connexion internet.');
+            } else if (error.message && error.message.includes('ApiService non disponible')) {
+                setLoginError('Erreur technique : Service API non disponible');
+            } else {
+                setLoginError(`Erreur technique : ${error.message || 'Erreur inconnue'}`);
+            }
         } finally {
             setIsLoading(false);
+            console.log('🟡 Fin handleSubmit');
         }
     };
 
@@ -118,7 +154,21 @@ const Admin = () => {
 
     // Gestion du "Mot de passe oublié"
     const handleForgotPassword = () => {
-        alert('Fonctionnalité "Mot de passe oublié" à implémenter.\nContactez l\'administrateur système pour réinitialiser votre mot de passe.');
+        alert('Pour réinitialiser votre mot de passe, contactez l\'administrateur système de l\'OMAC.\n\nEmail: omac.torcy77@gmail.com\nTéléphone: 01 60 31 31 01');
+    };
+
+    // ✅ NOUVEAU : Test de connexion API
+    const testApiConnection = async () => {
+        try {
+            const result = await ApiService.testConnection();
+            if (result) {
+                alert('✅ Connexion API réussie ! Le serveur répond correctement.');
+            } else {
+                alert('❌ Pas de réponse du serveur. Vérifiez que le backend Node.js est démarré.');
+            }
+        } catch (error) {
+            alert('❌ Erreur de connexion API: ' + error.message);
+        }
     };
 
     return (
@@ -137,6 +187,24 @@ const Admin = () => {
                     </div>
                     <h1 className="login-title">Administration OMAC</h1>
                     <p className="login-subtitle">Connectez-vous pour gérer le site</p>
+                </div>
+
+                {/* ✅ NOUVEAU : Informations de connexion par défaut */}
+                <div className="default-credentials" style={{
+                    background: '#e8f4fd',
+                    padding: '15px',
+                    borderRadius: '8px',
+                    marginBottom: '20px',
+                    border: '1px solid #bee5eb'
+                }}>
+                    <h4 style={{ margin: '0 0 10px 0', color: '#0c5460' }}>Identifiants par défaut :</h4>
+                    <p style={{ margin: '5px 0', fontSize: '14px' }}>
+                        <strong>Username:</strong> admin<br/>
+                        <strong>Password:</strong> omac77200
+                    </p>
+                    <small style={{ color: '#6c757d' }}>
+                        Ces identifiants correspondent à ceux de votre base SiteGround
+                    </small>
                 </div>
 
                 {/* Message d'erreur général */}
@@ -160,7 +228,8 @@ const Admin = () => {
                             value={formData.username}
                             onChange={handleInputChange}
                             className={`form-input ${errors.username ? 'error' : ''}`}
-                            placeholder="Saisissez votre nom d'utilisateur"
+                            placeholder="admin"
+                            autoComplete="username"
                             disabled={isLoading}
                         />
                         {errors.username && (
@@ -170,21 +239,22 @@ const Admin = () => {
 
                     {/* Mot de passe */}
                     <div className="form-group">
-                        <label htmlFor="password" className="form-label">
+                        <label htmlFor="mot_de_passe" className="form-label">
                             Mot de passe
                         </label>
                         <input
                             type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
+                            id="mot_de_passe"
+                            name="mot_de_passe"
+                            value={formData.mot_de_passe}
                             onChange={handleInputChange}
-                            className={`form-input ${errors.password ? 'error' : ''}`}
-                            placeholder="Saisissez votre mot de passe"
+                            className={`form-input ${errors.mot_de_passe ? 'error' : ''}`}
+                            placeholder="omac77200"
+                            autoComplete="current-password"
                             disabled={isLoading}
                         />
-                        {errors.password && (
-                            <span className="error-message">{errors.password}</span>
+                        {errors.mot_de_passe && (
+                            <span className="error-message">{errors.mot_de_passe}</span>
                         )}
                     </div>
 
@@ -219,10 +289,30 @@ const Admin = () => {
                         disabled={isLoading}
                     >
                         {isLoading && <span className="loading"></span>}
-                        {isLoading ? 'Connexion...' : 'Se connecter'}
+                        {isLoading ? 'Connexion en cours...' : 'Se connecter'}
                     </button>
                 </form>
 
+                {/* ✅ NOUVEAU : Bouton de test API (en développement seulement) */}
+                {process.env.NODE_ENV === 'development' && (
+                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                        <button 
+                            onClick={testApiConnection}
+                            style={{
+                                background: '#6c757d',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 15px',
+                                borderRadius: '4px',
+                                fontSize: '12px',
+                                cursor: 'pointer'
+                            }}
+                            disabled={isLoading}
+                        >
+                            Tester la connexion API
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

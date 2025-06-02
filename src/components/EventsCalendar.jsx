@@ -1,42 +1,85 @@
 import React, { useState, useEffect } from 'react';
+import ApiService from '../services/api'; // ✅ Import du service API
 import './EventsCalendar.css';
-
-// exemple d'événements - les vraies données seront utilisés avec la BDD
-const sampleEvents = [
-  {
-    id: 1,
-    title: "Atelier de peinture",
-    date: "2025-05-15",
-    time: "14:00 - 16:00",
-    location: "Salle 2, OMAC Torcy",
-    description: "Atelier de peinture pour les enfants de 6 à 12 ans. Matériel fourni.",
-    image: "/api/placeholder/400/300"
-  },
-  {
-    id: 2,
-    title: "Sortie culturelle - Musée",
-    date: "2025-05-20",
-    time: "10:00 - 16:00",
-    location: "Départ de l'OMAC Torcy",
-    description: "Visite guidée du musée d'art moderne. Transport en bus inclus. Prévoir un pique-nique.",
-    image: "/api/placeholder/400/300"
-  },
-  {
-    id: 3,
-    title: "Réunion des familles",
-    date: "2025-05-28",
-    time: "18:30 - 20:00",
-    location: "Salle principale, OMAC Torcy",
-    description: "Réunion d'information sur les activités d'été et discussion ouverte.",
-    image: "/api/placeholder/400/300"
-  }
-];
 
 const EventsCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
   
+  // ✅ NOUVEAU : États pour les données de la BDD
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // ✅ NOUVEAU : Charger les événements depuis la BDD au montage du composant
+  useEffect(() => {
+    loadEventsFromDB();
+  }, []);
+
+  const loadEventsFromDB = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      console.log('🔄 Chargement des événements depuis SiteGround...');
+      
+      // Appel à votre API
+      const eventsData = await ApiService.getEvents();
+      
+      console.log('✅ Événements reçus:', eventsData);
+      
+      // Transformer les données de la BDD au format de votre interface existante
+      const formattedEvents = eventsData.map(event => {
+        const startDate = new Date(event.date_debut);
+        const endDate = new Date(event.date_fin);
+        
+        // Formater l'heure
+        const timeStart = startDate.toLocaleTimeString('fr-FR', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+        const timeEnd = endDate.toLocaleTimeString('fr-FR', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+        
+        return {
+          id: event.id,
+          title: event.titre,
+          date: startDate.toISOString().split('T')[0], // Format YYYY-MM-DD pour votre logique existante
+          time: event.toute_la_journee ? 'Toute la journée' : `${timeStart} - ${timeEnd}`,
+          location: "OMAC Torcy", // Vous pouvez ajouter un champ location dans votre BDD plus tard
+          description: event.description || 'Événement organisé par l\'OMAC Torcy',
+          image: "/api/placeholder/400/300", // Image par défaut, vous pouvez ajouter des vraies images plus tard
+          color: event.couleur || '#3498db',
+          allDay: event.toute_la_journee === 1
+        };
+      });
+      
+      setEvents(formattedEvents);
+      console.log('✅ Événements formatés:', formattedEvents);
+      
+    } catch (err) {
+      console.error('❌ Erreur lors du chargement des événements:', err);
+      setError('Impossible de charger les événements');
+      
+      // En cas d'erreur, utiliser des événements de fallback
+      setEvents([
+        {
+          id: 'fallback-1',
+          title: "Événements en cours de chargement...",
+          date: new Date().toISOString().split('T')[0],
+          time: "Bientôt disponible",
+          location: "OMAC Torcy",
+          description: "Les événements seront bientôt disponibles.",
+          image: "/api/placeholder/400/300"
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getDaysInMonth = (year, month) => {
     return new Date(year, month + 1, 0).getDate();
@@ -52,23 +95,23 @@ const EventsCalendar = () => {
     return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   };
   
-  // Vérifier si une date a des événements
+  // Vérifier si une date a des événements (utilise maintenant les vraies données)
   const hasEvents = (year, month, day) => {
     const formattedDate = formatDate(year, month, day);
-    return sampleEvents.some(event => event.date === formattedDate);
+    return events.some(event => event.date === formattedDate);
   };
   
-  // Obtenir les événements pour une date spécifique
+  // Obtenir les événements pour une date spécifique (utilise maintenant les vraies données)
   const getEventsForDate = (year, month, day) => {
     const formattedDate = formatDate(year, month, day);
-    return sampleEvents.filter(event => event.date === formattedDate);
+    return events.filter(event => event.date === formattedDate);
   };
   
   // Gérer le clic sur une date
   const handleDateClick = (year, month, day) => {
-    const events = getEventsForDate(year, month, day);
-    if (events.length > 0) {
-      setSelectedEvent(events[0]); // Prendre le premier événement par défaut
+    const eventsForDate = getEventsForDate(year, month, day);
+    if (eventsForDate.length > 0) {
+      setSelectedEvent(eventsForDate[0]); // Prendre le premier événement par défaut
       setShowModal(true);
     }
   };
@@ -148,15 +191,74 @@ const EventsCalendar = () => {
     
     return days;
   };
+
+  // ✅ NOUVEAU : Affichage de loading
+  if (loading) {
+    return (
+      <section className="events-section">
+        <div className="container">
+          <div className="events-header">
+            <h2 className="section-title">Nos Activités</h2>
+            <p className="events-subtitle">Chargement des événements OMAC...</p>
+            <div className="green-underline"></div>
+          </div>
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <div style={{ 
+              border: '4px solid #f3f3f3',
+              borderTop: '4px solid #3498db',
+              borderRadius: '50%',
+              width: '50px',
+              height: '50px',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 20px'
+            }}></div>
+            <p>Connexion à la base de données SiteGround...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
   
   return (
     <section className="events-section">
       <div className="container">
         <div className="events-header">
           <h2 className="section-title">Nos Activités</h2>
-          <p className="events-subtitle">Découvrez nos prochains événements et formations</p>
+          <p className="events-subtitle">
+            {error 
+              ? 'Événements en cours de chargement...' 
+              : `Découvrez tous les évènements et activités de l'OMAC Torcy`
+            }
+          </p>
           <div className="green-underline"></div>
         </div>
+        
+        {/* ✅ NOUVEAU : Affichage d'erreur si besoin */}
+        {error && (
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '20px', 
+            backgroundColor: '#fff3cd', 
+            borderLeft: '4px solid #ffc107',
+            margin: '20px 0',
+            borderRadius: '5px'
+          }}>
+            <p>⚠️ {error}</p>
+            <button 
+              onClick={loadEventsFromDB}
+              style={{
+                background: '#3498db',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Réessayer
+            </button>
+          </div>
+        )}
         
         <div className="calendar-container">
           <div className="calendar-header">
@@ -176,7 +278,26 @@ const EventsCalendar = () => {
           </div>
         </div>
         
-        {/* Modal pour afficher les détails de l'événement */}
+        {/* ✅ NOUVEAU : Informations de debug en développement */}
+        {process.env.NODE_ENV === 'development' && (
+          <div style={{ 
+            marginTop: '20px', 
+            padding: '15px', 
+            backgroundColor: '#f8f9fa', 
+            borderRadius: '5px',
+            fontSize: '14px'
+          }}>
+            <strong>Debug Info:</strong> {events.length} événements chargés depuis SiteGround
+            <button 
+              onClick={loadEventsFromDB}
+              style={{ marginLeft: '10px', padding: '5px 10px' }}
+            >
+              Recharger
+            </button>
+          </div>
+        )}
+        
+        {/* Modal pour afficher les détails de l'événement (votre code original conservé) */}
         {showModal && selectedEvent && (
           <div className="event-modal-overlay" onClick={closeModal}>
             <div className="event-modal" onClick={(e) => e.stopPropagation()}>
@@ -207,14 +328,20 @@ const EventsCalendar = () => {
                   </div>
                   
                   <p className="event-description">{selectedEvent.description}</p>
-                  
-                 
                 </div>
               </div>
             </div>
           </div>
         )}
       </div>
+      
+      {/* ✅ NOUVEAU : CSS pour l'animation de loading */}
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </section>
   );
 };
