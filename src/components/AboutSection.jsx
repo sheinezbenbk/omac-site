@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ Import du hook de navigation
+import { useNavigate } from 'react-router-dom';
 import './AboutSection.css';
 import icon1 from '../assets/check.png';
 import icon2 from '../assets/check.png';
@@ -11,27 +11,25 @@ import famillesIcon from '../assets/famille.png';
 import scolariteIcon from '../assets/ecole.png';
 
 const AboutSection = () => {
-  const navigate = useNavigate(); // ✅ Hook pour la navigation
+  const navigate = useNavigate();
   
-  // ✅ Fonction pour naviguer vers la page Guide
+  // Fonction pour naviguer vers la page Guide
   const handleGuideClick = () => {
     navigate('/guide');
-    // ✅ Forcer le scroll en haut de la page
     setTimeout(() => {
       window.scrollTo(0, 0);
     }, 100);
   };
 
-  // ✅ Fonction pour naviguer vers la page Projet Social
+  // Fonction pour naviguer vers la page Projet Social
   const handleProjetSocialClick = () => {
     navigate('/projet-social');
-    // ✅ Forcer le scroll en haut de la page
     setTimeout(() => {
       window.scrollTo(0, 0);
     }, 100);
   };
 
-  // ✅ Fonctions pour naviguer vers les secteurs
+  // Fonctions pour naviguer vers les secteurs
   const handleJeunesseClick = () => {
     navigate('/jeunesse');
     setTimeout(() => {
@@ -53,14 +51,13 @@ const AboutSection = () => {
     }, 100);
   };
   
-  // ✅ NOUVEAU CONTENU AUTHENTIQUE
   const items = [
     { id: 1, text: 'Accompagnement personnalisé des familles', icon: icon1 },
     { id: 2, text: 'Activités éducatives et culturelles variées', icon: icon2 },
     { id: 3, text: 'Engagement dans l\'éducation populaire et la laïcité', icon: icon3 }
   ];
 
-  // ✅ SERVICES AVEC CONTENU RÉEL ET NAVIGATION
+  // SERVICES AVEC NAVIGATION CORRIGÉE
   const services = [
     {
       id: 1,
@@ -100,18 +97,14 @@ const AboutSection = () => {
           <div className="image-column">
             <div className="yellow-square"></div>
             <div className="image-container">
-              {/* ✅ Tu peux remplacer par une vraie photo de l'OMAC */}
               <img src="/placeholder-image.jpg" alt="L'équipe OMAC de Torcy" />
             </div>
           </div>
           
-         
           <div className="text-column">
             <div className="text-content">
-              {/* ✅ NOUVEAU TITRE AUTHENTIQUE */}
               <h3 className="card-title">Au service de la communauté depuis des années</h3>
               
-              {/* ✅ NOUVEAU CONTENU AUTHENTIQUE */}
               <p>L'OMAC de Torcy est une association d'éducation populaire qui œuvre quotidiennement pour l'animation de la vie de quartier et l'accompagnement des habitants. Nous développons des projets collectifs dans un esprit de solidarité et de laïcité.</p>
               
               <p>Implantés dans plusieurs quartiers de Torcy, nous proposons des activités diversifiées qui favorisent le lien social, l'épanouissement personnel et la participation citoyenne. Notre équipe professionnelle accompagne les projets des habitants dans une démarche participative.</p>
@@ -127,11 +120,9 @@ const AboutSection = () => {
                 ))}
               </ul>
               
-              {/* ✅ BOUTON MODIFIÉ POUR NAVIGUER VERS /guide */}
               <button className="btn-learn-more" onClick={handleGuideClick}>
                 Guide de l'OMAC
               </button>
-              {/* ✅ BOUTON MODIFIÉ POUR NAVIGUER VERS /projet-social */}
               <button className="btn-learn-more" onClick={handleProjetSocialClick}>
                 Projet Social
               </button>
@@ -140,7 +131,7 @@ const AboutSection = () => {
           </div>
         </div>
         
-        
+        {/* SECTION SERVICES CORRIGÉE */}
         <div className="services-container">
           {services.map(service => (
             <div className="service-card" key={service.id}>
@@ -150,7 +141,11 @@ const AboutSection = () => {
               <h3 className="service-title">{service.title}</h3>
               <p className="service-description">{service.description}</p>
               <div className="card-divider"></div>
-              <a href={service.link} className="service-link">
+              {/* ✅ CORRECTION : Garder le design du lien avec onClick */}
+              <a href="#" className="service-link" onClick={(e) => {
+                e.preventDefault();
+                service.onClick();
+              }}>
                 En Savoir Plus →
               </a>
             </div>

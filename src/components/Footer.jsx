@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Footer.css';
 
 // Import des logos et icônes
@@ -13,20 +14,49 @@ import caf from '../assets/caf.png';
 import republic from '../assets/republic-logo.png';
 
 const Footer = () => {
-  // Liens de navigation
+  const navigate = useNavigate();
+
+  // Fonction utilitaire pour la navigation avec scroll
+  const navigateTo = (path) => {
+    navigate(path);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  };
+
+  // Fonction pour naviguer vers les sections de la page principale
+  const scrollToSection = (sectionId) => {
+    // Si on n'est pas sur la page principale, y aller d'abord
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 300);
+    } else {
+      // Si on est déjà sur la page principale, juste scroller
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  // Liens de navigation avec navigation fonctionnelle
   const navigationLinks = [
-    { name: 'Accueil', href: '#' },
-    { name: 'À Propos', href: '#' },
-    { name: 'Nos Actions', href: '#' },
-    { name: 'Activités', href: '#' },
-    { name: 'Contact', href: '#' }
+    { name: 'Accueil', onClick: () => navigateTo('/') },
+    { name: 'À Propos', onClick: () => scrollToSection('about-section') },
+    { name: 'Activités', onClick: () => scrollToSection('events-section') },
+    { name: 'Contact', onClick: () => scrollToSection('contact-section') }
   ];
 
-  // Services proposés
+  // Services proposés avec navigation vers les secteurs
   const services = [
-    { name: 'Jeunesse', href: '#' },
-    { name: 'Familles et Adultes', href: '#' },
-    { name: 'Aide à la scolarité', href: '#' },
+    { name: 'Jeunesse', onClick: () => navigateTo('/jeunesse') },
+    { name: 'Familles et Adultes', onClick: () => navigateTo('/famille') },
+    { name: 'Aide à la scolarité', onClick: () => navigateTo('/scolarite') },
   ];
 
   // Horaires d'ouverture
@@ -70,13 +100,31 @@ const Footer = () => {
             
             {/* Réseaux sociaux */}
             <div className="social-links">
-              <a href="#" className="social-link facebook" aria-label="Facebook">
+              <a 
+                href="https://facebook.com/omactorcy" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="social-link facebook" 
+                aria-label="Facebook"
+              >
                 <img src={fb} alt="Facebook" style={{width: '24px', height: '24px'}} />
               </a>
-              <a href="#" className="social-link instagram" aria-label="Instagram">
+              <a 
+                href="https://instagram.com/omactorcy" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="social-link instagram" 
+                aria-label="Instagram"
+              >
                 <img src={insta} alt="Instagram" style={{width: '24px', height: '24px'}} />
               </a>
-              <a href="#" className="social-link snapchat" aria-label="Snapchat">
+              <a 
+                href="https://snapchat.com/add/omactorcy" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="social-link snapchat" 
+                aria-label="Snapchat"
+              >
                 <img src={snap} alt="Snapchat" style={{width: '24px', height: '24px'}} />
               </a>
             </div>
@@ -88,7 +136,16 @@ const Footer = () => {
             <ul className="footer-links">
               {navigationLinks.map((link, index) => (
                 <li key={index}>
-                  <a href={link.href} className="footer-link">{link.name}</a>
+                  <a 
+                    href="#" 
+                    className="footer-link" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      link.onClick();
+                    }}
+                  >
+                    {link.name}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -100,13 +157,22 @@ const Footer = () => {
             <ul className="footer-links">
               {services.map((service, index) => (
                 <li key={index}>
-                  <a href={service.href} className="footer-link">{service.name}</a>
+                  <a 
+                    href="#" 
+                    className="footer-link" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      service.onClick();
+                    }}
+                  >
+                    {service.name}
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact - SANS les horaires maintenant */}
+          {/* Contact */}
           <div className="footer-section">
             <h4 className="footer-title">Contact</h4>
             
@@ -123,21 +189,25 @@ const Footer = () => {
               <div className="contact-item">
                 <div className="contact-text">
                   <strong>Téléphone</strong>
-                  01 60 31 31 01
+                  <a href="tel:0160313101" style={{color: '#3498db', textDecoration: 'none'}}>
+                    01 60 31 31 01
+                  </a>
                 </div>
               </div>
               
               <div className="contact-item">
                 <div className="contact-text">
                   <strong>Email</strong>
-                  omac.torcy77@gmail.com
+                  <a href="mailto:omac.torcy77@gmail.com" style={{color: '#3498db', textDecoration: 'none'}}>
+                    omac.torcy77@gmail.com
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ✅ NOUVELLE SECTION HORAIRES - Plus large et séparée */}
+        {/* Section horaires */}
         <div className="footer-schedule-section">
           <h4 className="footer-schedule-title">Nos Horaires d'Ouverture</h4>
           <ul className="hours-list">

@@ -109,7 +109,7 @@ const Famille = () => {
           
           <div className="about-columns">
             <div className="image-column">
-              <div className="yellow-square"></div>
+           
               <div className="image-container">
                 <img src="/placeholder-image.jpg" alt="Familles en activité à l'OMAC" />
               </div>
@@ -141,7 +141,7 @@ const Famille = () => {
                   Retour Accueil
                 </button>
               </div>
-              <div className="blue-square"></div>
+             
             </div>
           </div>
           
