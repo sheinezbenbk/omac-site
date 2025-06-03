@@ -1,54 +1,74 @@
 import React, { useState, useRef } from 'react';
 import './MediaResources.css';
 
-// Exemple pour les ressources multimédias - BDD pour les vraies ressources 
-const sampleMedias = [
+// 🎯 DONNÉES PAR DÉFAUT (fallback si localStorage vide)
+const defaultMedias = [
   {
     id: 1,
     type: 'video',
     title: 'Atelier de danse pour enfants',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum. Praesent vitae tortor elementum.',
-    thumbnail: '/api/placeholder/400/250',
-    url: 'https://www.example.com/video1.mp4'
+    description: 'Découvrez nos ateliers de danse créative pour les plus jeunes. Une approche ludique et éducative.',
+    youtubeId: 'dQw4w9WgXcQ',
   },
   {
     id: 2,
-    type: 'audio',
+    type: 'video',
     title: 'Podcast - Rencontre avec les artistes',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum. Praesent vitae tortor elementum.',
-    thumbnail: '/api/placeholder/400/250',
-    url: 'https://www.example.com/audio1.mp3'
-  },
-  {
-    id: 3,
-    type: 'video',
-    title: 'Reportage - Journée portes ouvertes',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum. Praesent vitae tortor elementum.',
-    thumbnail: '/api/placeholder/400/250',
-    url: 'https://www.example.com/video2.mp4'
-  },
-  {
-    id: 4,
-    type: 'audio',
-    title: 'Entretien - Éducation populaire et culture',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum. Praesent vitae tortor elementum.',
-    thumbnail: '/api/placeholder/400/250',
-    url: 'https://www.example.com/audio2.mp3'
-  },
-  {
-    id: 5,
-    type: 'video',
-    title: 'Spectacle de fin d année',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta scelerisque interdum. Praesent vitae tortor elementum.',
-    thumbnail: '/api/placeholder/400/250',
-    url: 'https://www.example.com/video3.mp4'
+    description: 'Échanges privilégiés avec nos artistes résidents sur leur processus créatif.',
+    youtubeId: 'jNQXAC9IVRw',
   }
 ];
 
 const MediaResources = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const [sampleMedias, setSampleMedias] = useState(defaultMedias);
   const carouselRef = useRef(null);
+  
+  // 🎯 CHARGER LES VIDÉOS DEPUIS LE LOCALSTORAGE
+  React.useEffect(() => {
+    const loadVideosFromStorage = () => {
+      try {
+        const saved = localStorage.getItem('omac_youtube_videos');
+        if (saved) {
+          const videos = JSON.parse(saved);
+          // Convertir au format attendu par MediaResources
+          const formattedVideos = videos.map(video => ({
+            id: video.id,
+            type: 'video',
+            title: video.titre,
+            description: video.description,
+            youtubeId: video.youtubeId
+          }));
+          setSampleMedias(formattedVideos);
+          console.log('✅ Vidéos chargées depuis le dashboard:', formattedVideos);
+        } else {
+          // Utiliser les données par défaut
+          setSampleMedias(defaultMedias);
+        }
+      } catch (error) {
+        console.error('❌ Erreur chargement vidéos:', error);
+        setSampleMedias(defaultMedias);
+      }
+    };
+
+    // Charger au montage
+    loadVideosFromStorage();
+
+    // Écouter les changements dans le localStorage (si l'admin modifie les vidéos)
+    const handleStorageChange = (e) => {
+      if (e.key === 'omac_youtube_videos') {
+        console.log('🔄 Vidéos mises à jour dans le dashboard, rechargement...');
+        loadVideosFromStorage();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
   
   // Calculer le nombre de slides visibles en fonction de la taille de l'écran
   const getVisibleCount = () => {
@@ -100,8 +120,8 @@ const MediaResources = () => {
         <div className="media-header">
           <h2 className="section-title">Ressources Multimédias</h2>
           <p className="media-subtitle">
-            Accédez à nos contenus audio et vidéo pour découvrir<br />
-            avis et retours sur l'OMAC de Torcy.
+            Accédez à nos contenus vidéo pour découvrir<br />
+            les activités et la vie de l'OMAC de Torcy.
           </p>
           <div className="green-underline"></div>
         </div>
@@ -140,19 +160,16 @@ const MediaResources = () => {
                   onClick={() => openMediaPlayer(media)}
                 >
                   <div className="media-thumbnail">
-                    <img src={media.thumbnail} alt={media.title} />
+                    {/* 🎯 MINIATURE YOUTUBE AUTOMATIQUE */}
+                    <img 
+                      src={`https://img.youtube.com/vi/${media.youtubeId}/maxresdefault.jpg`} 
+                      alt={media.title} 
+                    />
                     <div className="media-play-button">
-                      <div className={`play-icon ${media.type === 'audio' ? 'audio-icon' : ''}`}>
-                        {media.type === 'video' ? (
-                          <svg viewBox="0 0 24 24" fill="#fff">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        ) : (
-                          <svg viewBox="0 0 24 24" fill="#fff">
-                            <path d="M8 5.14v14l11-7-11-7zm6.93 7L9.4 8.27v7.46L14.93 12z" />
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                          </svg>
-                        )}
+                      <div className="play-icon">
+                        <svg viewBox="0 0 24 24" fill="#fff">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
                       </div>
                     </div>
                   </div>
@@ -166,41 +183,25 @@ const MediaResources = () => {
           </div>
         </div>
         
-        {/* Lecteur multimédia */}
+        {/* 🎯 LECTEUR YOUTUBE */}
         {selectedMedia && (
           <div className="media-player-overlay" onClick={closeMediaPlayer}>
             <div className="media-player" onClick={e => e.stopPropagation()}>
               <button className="player-close-btn" onClick={closeMediaPlayer}>×</button>
               
               <div className="player-content">
-                {selectedMedia.type === 'video' ? (
-                  <div className="video-container">
-                    <video 
-                      controls 
-                      autoPlay
-                      className="video-player"
-                    >
-                      <source src={selectedMedia.url} type="video/mp4" />
-                      Votre navigateur ne supporte pas la lecture de vidéos.
-                    </video>
-                  </div>
-                ) : (
-                  <div className="audio-container">
-                    <img 
-                      src={selectedMedia.thumbnail} 
-                      alt={selectedMedia.title} 
-                      className="audio-thumbnail" 
-                    />
-                    <audio 
-                      controls 
-                      autoPlay
-                      className="audio-player"
-                    >
-                      <source src={selectedMedia.url} type="audio/mpeg" />
-                      Votre navigateur ne supporte pas la lecture audio.
-                    </audio>
-                  </div>
-                )}
+                <div className="video-container">
+                  <iframe
+                    width="100%"
+                    height="400"
+                    src={`https://www.youtube.com/embed/${selectedMedia.youtubeId}?autoplay=1`}
+                    title={selectedMedia.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="video-player"
+                  ></iframe>
+                </div>
                 
                 <div className="player-info">
                   <h3 className="player-title">{selectedMedia.title}</h3>

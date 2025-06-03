@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ApiService from '../services/api'; // ✅ Import du service API
+import ApiService from '../services/api';
 import './AdminDashboard.css';
 import logoOmac from '../assets/omac-logo.png';
 
@@ -12,36 +12,20 @@ const AdminDashboard = () => {
   const [editingEvent, setEditingEvent] = useState(null);
   const [editingMedia, setEditingMedia] = useState(null);
   
-  // NOUVEAUX ÉTATS POUR LA NAVIGATION PAR MOIS
+  // États pour la navigation par mois
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [collapsedMonths, setCollapsedMonths] = useState(new Set());
   
-  // ✅ NOUVEAU : États pour les événements de la BDD
+  // États pour les événements de la BDD
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // États pour les médias (inchangés pour l'instant)
-  const [medias, setMedias] = useState([
-    {
-      id: 1,
-      type: 'video',
-      title: 'Atelier de danse pour enfants',
-      description: 'Découvrez nos ateliers de danse où les enfants apprennent tout en s\'amusant.',
-      thumbnail: '/api/placeholder/400/250',
-      url: 'https://www.example.com/video1.mp4'
-    },
-    {
-      id: 2,
-      type: 'audio',
-      title: 'Podcast - Rencontre avec les artistes',
-      description: 'Écoutez les témoignages des artistes qui interviennent dans nos ateliers.',
-      thumbnail: '/api/placeholder/400/250',
-      url: 'https://www.example.com/audio1.mp3'
-    }
-  ]);
+  // ✅ MODIFIÉ : États pour les médias YouTube (localStorage)
+  const [medias, setMedias] = useState([]);
+  const [loadingMedias, setLoadingMedias] = useState(false);
 
-  // ✅ NOUVEAU : Formulaire d'événement pour la BDD
+  // Formulaire d'événement pour la BDD
   const [eventForm, setEventForm] = useState({
     titre: '',
     description: '',
@@ -51,22 +35,20 @@ const AdminDashboard = () => {
     toute_la_journee: false
   });
 
-  // Formulaire de média
+  // ✅ MODIFIÉ : Formulaire de média pour YouTube
   const [mediaForm, setMediaForm] = useState({
-    type: 'video',
-    title: '',
+    titre: '',
     description: '',
-    thumbnail: '',
-    url: ''
+    youtubeId: ''
   });
 
-  // ✅ NOUVEAU : Charger les événements depuis la BDD
+  // Charger les données au montage
   useEffect(() => {
     checkAuthAndLoadData();
   }, [navigate]);
 
   const checkAuthAndLoadData = async () => {
-    // Vérifier l'authentification plus rigoureusement
+    // Vérifier l'authentification
     if (!ApiService.isAuthenticated()) {
       console.log('❌ Pas d\'authentification valide, redirection vers login');
       navigate('/admin');
@@ -83,8 +65,9 @@ const AdminDashboard = () => {
 
     console.log('✅ Admin connecté:', adminData.username);
     
-    // Charger les événements
+    // Charger les événements ET les médias
     await loadEvents();
+    loadMedias(); // ✅ MODIFIÉ : Plus async car localStorage
   };
 
   const loadEvents = async () => {
@@ -103,7 +86,7 @@ const AdminDashboard = () => {
         return {
           id: event.id,
           title: event.titre,
-          date: startDate.toISOString().split('T')[0], // Format YYYY-MM-DD
+          date: startDate.toISOString().split('T')[0],
           time: event.toute_la_journee 
             ? 'Toute la journée' 
             : `${startDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - ${endDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
@@ -129,11 +112,79 @@ const AdminDashboard = () => {
     }
   };
 
-  // FONCTIONS POUR LA GESTION DES MOIS
+  // ✅ MODIFIÉ : Fonction loadMedias pour localStorage
+  const loadMedias = () => {
+    try {
+      setLoadingMedias(true);
+      
+      console.log('🔄 Chargement des médias depuis localStorage...');
+      const saved = localStorage.getItem('omac_youtube_videos');
+      
+      let mediasData = [];
+      if (saved) {
+        mediasData = JSON.parse(saved);
+      } else {
+        // Données par défaut
+        mediasData = [
+          {
+            id: 1,
+            titre: 'Atelier de danse pour enfants',
+            description: 'Découvrez nos ateliers de danse créative pour les plus jeunes.',
+            youtubeId: 'dQw4w9WgXcQ'
+          }
+        ];
+        localStorage.setItem('omac_youtube_videos', JSON.stringify(mediasData));
+      }
+      
+      // Transformer les données pour votre interface existante
+      const formattedMedias = mediasData.map(media => ({
+        id: media.id,
+        type: 'video',
+        title: media.titre,
+        description: media.description,
+        thumbnail: `https://img.youtube.com/vi/${media.youtubeId}/maxresdefault.jpg`,
+        url: `https://www.youtube.com/watch?v=${media.youtubeId}`,
+        youtubeId: media.youtubeId
+      }));
+      
+      setMedias(formattedMedias);
+      console.log('✅ Médias chargés:', formattedMedias);
+      
+    } catch (err) {
+      console.error('❌ Erreur chargement médias:', err);
+      setError('Impossible de charger les médias');
+    } finally {
+      setLoadingMedias(false);
+    }
+  };
+
+  // ✅ MODIFIÉ : Fonction pour sauvegarder dans localStorage
+  const saveMediasToStorage = (newMedias) => {
+    try {
+      const dataToSave = newMedias.map(media => ({
+        id: media.id,
+        titre: media.title,
+        description: media.description,
+        youtubeId: media.youtubeId
+      }));
+      localStorage.setItem('omac_youtube_videos', JSON.stringify(dataToSave));
+      loadMedias(); // Recharger les données
+    } catch (error) {
+      console.error('❌ Erreur sauvegarde médias:', error);
+    }
+  };
+
+  // ✅ MODIFIÉ : Fonction pour extraire l'ID YouTube
+  const extractYouTubeId = (url) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : url;
+  };
+
+  // FONCTIONS POUR LA GESTION DES MOIS (inchangées)
   const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", 
                      "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 
-  // Grouper les événements par mois
   const groupEventsByMonth = () => {
     const grouped = {};
     
@@ -152,7 +203,6 @@ const AdminDashboard = () => {
       grouped[monthKey].events.push(event);
     });
 
-    // Trier les événements dans chaque mois par date
     Object.keys(grouped).forEach(monthKey => {
       grouped[monthKey].events.sort((a, b) => new Date(a.date) - new Date(b.date));
     });
@@ -160,21 +210,18 @@ const AdminDashboard = () => {
     return grouped;
   };
 
-  // Naviguer vers le mois précédent/suivant
   const navigateMonth = (direction) => {
     const newDate = new Date(currentMonth);
     newDate.setMonth(newDate.getMonth() + direction);
     setCurrentMonth(newDate);
   };
 
-  // Obtenir les événements du mois sélectionné
   const getCurrentMonthEvents = () => {
     const monthKey = `${currentMonth.getFullYear()}-${currentMonth.getMonth()}`;
     const grouped = groupEventsByMonth();
     return grouped[monthKey]?.events || [];
   };
 
-  // Toggle collapse d'un mois
   const toggleMonthCollapse = (monthKey) => {
     const newCollapsed = new Set(collapsedMonths);
     if (newCollapsed.has(monthKey)) {
@@ -185,7 +232,6 @@ const AdminDashboard = () => {
     setCollapsedMonths(newCollapsed);
   };
 
-  // Obtenir le nombre total d'événements et ceux du mois actuel
   const getTotalStats = () => {
     const currentMonthEvents = getCurrentMonthEvents();
     return {
@@ -194,7 +240,7 @@ const AdminDashboard = () => {
     };
   };
 
-  // ✅ NOUVEAU : Gestion de la déconnexion avec API
+  // Gestion de la déconnexion
   const handleLogout = async () => {
     try {
       await ApiService.logout();
@@ -204,7 +250,7 @@ const AdminDashboard = () => {
     navigate('/admin');
   };
 
-  // ✅ NOUVEAU : Gestion des événements avec API
+  // Gestion des événements (inchangées)
   const handleAddEvent = () => {
     setEditingEvent(null);
     setEventForm({
@@ -236,7 +282,7 @@ const AdminDashboard = () => {
       try {
         const token = ApiService.getToken();
         await ApiService.deleteEvent(eventId, token);
-        await loadEvents(); // Recharger la liste
+        await loadEvents();
         console.log('✅ Événement supprimé');
       } catch (error) {
         console.error('❌ Erreur suppression:', error);
@@ -250,17 +296,15 @@ const AdminDashboard = () => {
       const token = ApiService.getToken();
       
       if (editingEvent) {
-        // Modification
         await ApiService.updateEvent(editingEvent.id, eventForm, token);
         console.log('✅ Événement modifié');
       } else {
-        // Ajout
         await ApiService.createEvent(eventForm, token);
         console.log('✅ Événement ajouté');
       }
       
       setShowEventForm(false);
-      await loadEvents(); // Recharger la liste
+      await loadEvents();
       
     } catch (error) {
       console.error('❌ Erreur sauvegarde:', error);
@@ -268,49 +312,95 @@ const AdminDashboard = () => {
     }
   };
 
-  // Gestion des médias (inchangée pour l'instant)
+  // ✅ MODIFIÉ : Gestion des médias pour localStorage
   const handleAddMedia = () => {
     setEditingMedia(null);
     setMediaForm({
-      type: 'video',
-      title: '',
+      titre: '',
       description: '',
-      thumbnail: '',
-      url: ''
+      youtubeId: ''
     });
     setShowMediaForm(true);
   };
 
   const handleEditMedia = (media) => {
     setEditingMedia(media);
-    setMediaForm(media);
+    setMediaForm({
+      titre: media.title,
+      description: media.description,
+      youtubeId: media.youtubeId
+    });
     setShowMediaForm(true);
   };
 
   const handleDeleteMedia = (mediaId) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')) {
-      setMedias(medias.filter(media => media.id !== mediaId));
+      try {
+        const newMedias = medias.filter(media => media.id !== mediaId);
+        saveMediasToStorage(newMedias);
+        console.log('✅ Média supprimé');
+      } catch (error) {
+        console.error('❌ Erreur suppression:', error);
+        alert('Erreur lors de la suppression du média');
+      }
     }
   };
 
   const handleSaveMedia = () => {
-    if (editingMedia) {
-      // Modification
-      setMedias(medias.map(media => 
-        media.id === editingMedia.id ? { ...mediaForm, id: editingMedia.id } : media
-      ));
-    } else {
-      // Ajout
-      const newMedia = {
-        ...mediaForm,
-        id: Date.now()
-      };
-      setMedias([...medias, newMedia]);
+    try {
+      if (!mediaForm.titre || !mediaForm.youtubeId) {
+        alert('Veuillez remplir tous les champs obligatoires');
+        return;
+      }
+
+      const youtubeId = extractYouTubeId(mediaForm.youtubeId);
+      
+      if (youtubeId.length !== 11) {
+        alert('ID YouTube invalide');
+        return;
+      }
+      
+      let newMedias;
+      if (editingMedia) {
+        // Modifier
+        newMedias = medias.map(media => 
+          media.id === editingMedia.id 
+            ? { 
+                ...media, 
+                title: mediaForm.titre,
+                description: mediaForm.description,
+                youtubeId: youtubeId,
+                thumbnail: `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`,
+                url: `https://www.youtube.com/watch?v=${youtubeId}`
+              }
+            : media
+        );
+        console.log('✅ Média modifié');
+      } else {
+        // Ajouter
+        const newMedia = {
+          id: Math.max(...medias.map(v => v.id), 0) + 1,
+          type: 'video',
+          title: mediaForm.titre,
+          description: mediaForm.description,
+          youtubeId: youtubeId,
+          thumbnail: `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`,
+          url: `https://www.youtube.com/watch?v=${youtubeId}`
+        };
+        newMedias = [...medias, newMedia];
+        console.log('✅ Média ajouté');
+      }
+      
+      saveMediasToStorage(newMedias);
+      setShowMediaForm(false);
+      
+    } catch (error) {
+      console.error('❌ Erreur sauvegarde média:', error);
+      alert('Erreur lors de la sauvegarde du média');
     }
-    setShowMediaForm(false);
   };
 
-  // ✅ NOUVEAU : Affichage de loading
+  // Affichage de loading
   if (loading) {
     return (
       <div className="admin-dashboard">
@@ -379,7 +469,7 @@ const AdminDashboard = () => {
           </button>
         </div>
 
-        {/* ✅ NOUVEAU : Affichage d'erreur */}
+        {/* Affichage d'erreur */}
         {error && (
           <div style={{ 
             background: '#fff3cd', 
@@ -391,7 +481,10 @@ const AdminDashboard = () => {
           }}>
             <strong>⚠️ {error}</strong>
             <button 
-              onClick={loadEvents}
+              onClick={() => {
+                loadEvents();
+                loadMedias();
+              }}
               style={{ 
                 marginLeft: '15px', 
                 background: '#ffc107', 
@@ -416,7 +509,7 @@ const AdminDashboard = () => {
                 </button>
               </div>
 
-              {/* NAVIGATION PAR MOIS */}
+              {/* Navigation par mois */}
               <div className="month-navigation">
                 <div className="month-selector">
                   <button 
@@ -448,7 +541,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* AFFICHAGE GROUPÉ PAR MOIS */}
+              {/* Affichage groupé par mois */}
               <div className="items-list">
                 {events.length === 0 ? (
                   <div className="empty-state">
@@ -463,18 +556,6 @@ const AdminDashboard = () => {
                     const groupedEvents = groupEventsByMonth();
                     const sortedMonthKeys = Object.keys(groupedEvents).sort().reverse();
                     
-                    if (sortedMonthKeys.length === 0) {
-                      return (
-                        <div className="empty-state">
-                          <h3>Aucun événement</h3>
-                          <p>Commencez par ajouter votre premier événement</p>
-                          <button className="btn-add" onClick={handleAddEvent}>
-                            + Ajouter un événement
-                          </button>
-                        </div>
-                      );
-                    }
-
                     return sortedMonthKeys.map(monthKey => {
                       const monthData = groupedEvents[monthKey];
                       const isCollapsed = collapsedMonths.has(monthKey);
@@ -557,9 +638,7 @@ const AdminDashboard = () => {
                       <div className="item-header">
                         <div>
                           <h3 className="item-title">{media.title}</h3>
-                          <p className="item-meta">
-                            {media.type === 'video' ? 'Vidéo' : 'Audio'}
-                          </p>
+                          <p className="item-meta">Vidéo YouTube</p>
                         </div>
                         <div className="item-actions">
                           <button className="btn-edit" onClick={() => handleEditMedia(media)}>
@@ -571,16 +650,6 @@ const AdminDashboard = () => {
                         </div>
                       </div>
                       <p className="item-description">{media.description}</p>
-                      <div className="item-details">
-                        <div className="detail-item">
-                          <span className="detail-label">Type</span>
-                          <span className="detail-value">{media.type}</span>
-                        </div>
-                        <div className="detail-item">
-                          <span className="detail-label">URL</span>
-                          <span className="detail-value">{media.url}</span>
-                        </div>
-                      </div>
                     </div>
                   ))
                 )}
@@ -590,7 +659,7 @@ const AdminDashboard = () => {
         </div>
       </main>
 
-      {/* ✅ NOUVEAU : Formulaire d'événement pour la BDD */}
+      {/* Formulaire d'événement (inchangé) */}
       {showEventForm && (
         <div className="form-overlay">
           <div className="form-modal">
@@ -672,7 +741,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Formulaire de média (inchangé) */}
+      {/* ✅ MODIFIÉ : Formulaire de média pour YouTube */}
       {showMediaForm && (
         <div className="form-overlay">
           <div className="form-modal">
@@ -686,23 +755,12 @@ const AdminDashboard = () => {
             </div>
             <div className="form-body">
               <div className="form-group">
-                <label className="form-label">Type de média</label>
-                <select
-                  className="form-select"
-                  value={mediaForm.type}
-                  onChange={(e) => setMediaForm({...mediaForm, type: e.target.value})}
-                >
-                  <option value="video">Vidéo</option>
-                  <option value="audio">Audio</option>
-                </select>
-              </div>
-              <div className="form-group">
                 <label className="form-label">Titre</label>
                 <input
                   type="text"
                   className="form-input"
-                  value={mediaForm.title}
-                  onChange={(e) => setMediaForm({...mediaForm, title: e.target.value})}
+                  value={mediaForm.titre}
+                  onChange={(e) => setMediaForm({...mediaForm, titre: e.target.value})}
                   placeholder="Ex: Atelier de danse pour enfants"
                 />
               </div>
@@ -716,25 +774,19 @@ const AdminDashboard = () => {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">URL de la miniature</label>
+                <label className="form-label">URL ou ID YouTube</label>
                 <input
-                  type="url"
+                  type="text"
                   className="form-input"
-                  value={mediaForm.thumbnail}
-                  onChange={(e) => setMediaForm({...mediaForm, thumbnail: e.target.value})}
-                  placeholder="https://exemple.com/miniature.jpg"
+                  value={mediaForm.youtubeId}
+                  onChange={(e) => setMediaForm({...mediaForm, youtubeId: e.target.value})}
+                  placeholder="https://www.youtube.com/watch?v=... ou ID direct"
                 />
+                <p style={{ fontSize: '0.875rem', color: '#666', margin: '0.5rem 0 0 0' }}>
+                  Vous pouvez coller l'URL complète ou juste l'ID de la vidéo
+                </p>
               </div>
-              <div className="form-group">
-                <label className="form-label">URL du fichier {mediaForm.type === 'video' ? 'vidéo' : 'audio'}</label>
-                <input
-                  type="url"
-                  className="form-input"
-                  value={mediaForm.url}
-                  onChange={(e) => setMediaForm({...mediaForm, url: e.target.value})}
-                  placeholder={`https://exemple.com/fichier.${mediaForm.type === 'video' ? 'mp4' : 'mp3'}`}
-                />
-              </div>
+              
             </div>
             <div className="form-actions">
               <button className="btn-cancel" onClick={() => setShowMediaForm(false)}>
