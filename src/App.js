@@ -11,6 +11,7 @@ import ContactSection from './components/ContactSection';
 import Fammille from './components/Famille'; 
 import Jeunesse from './components/Jeunesse'; 
 import Scolarite from './components/Scolarite'; 
+import './styles/responsive.css';
 import Footer from './components/Footer';
 
 function App() {

@@ -1,16 +1,36 @@
+/* Hero.css - ÉTAPE 2 : Responsive Parfait pour TOUS les écrans */
+
+/* ========================
+   HERO SECTION RESPONSIVE
+   ====================== */
+
 .hero {
-  /* background-image: url('https://info-association.com/images/17517148829290096836.jpg'); */
+  /* Background adaptatif selon l'appareil */
   background-color: #a8b55f;
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
+  
+  /* Height adaptatif mobile */
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height pour mobiles modernes */
+  min-height: 500px; /* Hauteur minimum sécurisée */
+  max-height: 900px; /* Éviter les très grands écrans */
+  
+  /* Background optimisé mobile */
+  background-attachment: scroll; /* Meilleur performance sur mobile */
+  
+  /* Layout centré */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 0 20px;
+  
+  /* Padding adaptatif avec clamp() */
+  padding: clamp(80px, 15vh, 120px) clamp(16px, 4vw, 40px) clamp(40px, 8vh, 60px);
+  
+  /* Position et overlay */
   position: relative;
   overflow: hidden;
 }
@@ -28,28 +48,52 @@
 }
 
 .hero-content {
-  max-width: 1000px;
+  /* Largeur adaptive */
+  width: 100%;
+  max-width: min(90%, 900px); /* Maximum 90% de la largeur ou 900px */
+  
+  /* Position et espacement */
   position: relative;
   z-index: 10;
+  
+  /* Éviter le débordement */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero-title {
-  font-size: 60px;
-  margin-bottom: 20px;
+  /* Taille fluide parfaite avec clamp() */
+  font-size: clamp(2rem, 6vw, 3.75rem);
+  
+  /* Espacement adaptatif */
+  margin-bottom: clamp(16px, 4vw, 32px);
+  
+  /* Poids et hauteur de ligne */
   font-weight: 700;
   line-height: 1.2;
+  
+  /* Couleur et ombre */
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  
+  /* Gestion du texte long */
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .hero-title .highlight {
-  color: #FFD350; 
+  color: #FFD350; /* Votre couleur jaune conservée */
 }
 
 .hero-text {
-  font-size: 20px;
-  max-width: 800px;
-  margin: 0 auto 40px;
+  /* Taille fluide */
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  
+  /* Largeur optimisée */
+  max-width: min(85%, 700px);
+  margin: 0 auto clamp(24px, 6vw, 40px);
+  
+  /* Style de texte */
   line-height: 1.6;
   font-weight: 300;
   color: #E2E2E2;
@@ -57,36 +101,447 @@
 }
 
 .hero-buttons {
+  /* Layout adaptatif */
   display: flex;
-  gap: 20px;
+  gap: clamp(12px, 3vw, 20px);
   justify-content: center;
+  align-items: center;
+  
+  /* Responsive layout */
+  flex-wrap: wrap;
+  
+  /* Position */
   position: relative;
   z-index: 10;
+  
+  /* Largeur */
+  width: 100%;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* ========================
+   BOUTONS RESPONSIVE (couleurs conservées)
+   ====================== */
+
+.btn {
+  /* Taille tactile optimale */
+  min-height: 48px;
+  min-width: 140px;
+  
+  /* Padding adaptatif */
+  padding: clamp(12px, 3vw, 16px) clamp(20px, 5vw, 32px);
+  
+  /* Taille de texte fluide */
+  font-size: clamp(14px, 3.5vw, 18px);
+  font-weight: 600;
+  
+  /* Apparence */
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  
+  /* Transitions optimisées */
+  transition: all 0.3s ease;
+  
+  /* Optimisation tactile */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  
+  /* Espacement */
+  white-space: nowrap;
+}
+
+/* Bouton primaire - VOS couleurs conservées */
+.btn-primary {
+  background-color: #3498db; /* Votre bleu conservé */
+  color: white;
+  border-color: #3498db;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9; /* Votre hover bleu conservé */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+/* Bouton secondaire - VOS couleurs conservées */
+.btn-secondary {
+  background-color: transparent;
+  color: white;
+  border-color: white;
+}
+
+.btn-secondary:hover {
+  background-color: white;
+  color: #3498db; /* Votre bleu conservé */
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+/* ========================
+   RESPONSIVE BREAKPOINTS
+   ====================== */
+
+/* Très petits mobiles (320px-375px) */
+@media (max-width: 375px) {
+  .hero {
+    min-height: 450px;
+    padding: 70px 12px 20px;
+  }
+  
   .hero-title {
-    font-size: 42px;
+    font-size: 1.8rem; /* Fallback pour très petits écrans */
+    margin-bottom: 16px;
   }
   
   .hero-text {
-    font-size: 18px;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
   }
   
   .hero-buttons {
     flex-direction: column;
-    align-items: center;
-    gap: 15px;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .btn {
+    width: 100%;
+    max-width: 280px;
+    font-size: 14px;
+    padding: 12px 16px;
   }
 }
 
-@media (max-width: 480px) {
+/* Mobiles standards (376px-480px) */
+@media (min-width: 376px) and (max-width: 480px) {
+  .hero {
+    min-height: 500px;
+    padding: 80px 16px 30px;
+  }
+  
   .hero-title {
-    font-size: 36px;
+    font-size: 2.2rem;
   }
   
   .hero-text {
+    font-size: 1rem;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .btn {
+    width: 100%;
+    max-width: 300px;
+    font-size: 15px;
+  }
+}
+
+/* Mobiles larges et petites tablettes (481px-767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+  .hero {
+    min-height: 550px;
+    padding: 90px 20px 40px;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-text {
+    font-size: 1.1rem;
+  }
+  
+  .hero-buttons {
+    flex-direction: row;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .btn {
+    min-width: 160px;
     font-size: 16px;
+  }
+}
+
+/* Tablettes portrait (768px-834px) */
+@media (min-width: 768px) and (max-width: 834px) {
+  .hero {
+    min-height: 600px;
+    padding: 100px 30px 50px;
+    background-attachment: scroll; /* Gardé en scroll pour tablettes */
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  .hero-text {
+    font-size: 1.15rem;
+  }
+  
+  .hero-buttons {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .btn {
+    min-width: 180px;
+    font-size: 17px;
+    padding: 14px 28px;
+  }
+}
+
+/* Tablettes paysage et petits desktops (835px-1023px) */
+@media (min-width: 835px) and (max-width: 1023px) {
+  .hero {
+    min-height: 650px;
+    padding: 110px 40px 60px;
+    background-attachment: fixed; /* Fixed OK sur desktop */
+  }
+  
+  .hero-title {
+    font-size: 3.2rem;
+  }
+  
+  .hero-text {
+    font-size: 1.2rem;
+  }
+}
+
+/* Desktop standard (1024px-1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .hero {
+    min-height: 700px;
+    max-height: 800px;
+    padding: 120px 50px 70px;
+    background-attachment: fixed;
+  }
+  
+  .hero-title {
+    font-size: 3.5rem;
+  }
+  
+  .hero-text {
+    font-size: 1.25rem;
+  }
+  
+  .btn {
+    min-width: 200px;
+    font-size: 18px;
+    padding: 16px 32px;
+  }
+}
+
+/* Grands écrans (1200px+) */
+@media (min-width: 1200px) {
+  .hero {
+    min-height: 750px;
+    max-height: 900px;
+    padding: 130px 60px 80px;
+    background-attachment: fixed;
+  }
+  
+  .hero-title {
+    font-size: 3.75rem; /* Taille maximale */
+  }
+  
+  .hero-text {
+    font-size: 1.25rem;
+    max-width: 800px;
+  }
+  
+  .hero-buttons {
+    gap: 25px;
+  }
+  
+  .btn {
+    min-width: 220px;
+    font-size: 18px;
+    padding: 16px 35px;
+  }
+}
+
+/* ========================
+   MODE PAYSAGE MOBILE
+   ====================== */
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .hero {
+    height: 100vh;
+    min-height: 400px;
+    max-height: none;
+    padding: 60px 20px 20px;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+  
+  .hero-text {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+  
+  .hero-buttons {
+    flex-direction: row;
+    gap: 12px;
+  }
+  
+  .btn {
+    min-width: 120px;
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}
+
+/* ========================
+   OPTIMISATIONS MOBILES
+   ====================== */
+
+/* Fix pour Safari iOS */
+@supports (-webkit-touch-callout: none) {
+  .hero {
+    /* Fix height viewport sur iOS */
+    height: -webkit-fill-available;
+  }
+}
+
+/* Fix pour iPhone X et plus récents (encoche) */
+@supports (padding: max(0px)) {
+  .hero {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
+
+/* Optimisation tactile pour boutons */
+@media (max-width: 768px) {
+  .btn:active {
+    transform: scale(0.98);
+  }
+  
+  .btn:hover {
+    /* Simplifier le hover sur mobile */
+    transform: translateY(-1px);
+  }
+}
+
+/* Support pour les utilisateurs qui préfèrent moins d'animations */
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition-duration: 0.1s;
+  }
+  
+  .btn:hover {
+    transform: none;
+  }
+}
+
+/* Améliorer les contrastes si demandé */
+@media (prefers-contrast: high) {
+  .hero-text {
+    color: #f0f0f0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .btn {
+    border-width: 3px;
+  }
+}
+
+/* Focus visible pour la navigation au clavier */
+.btn:focus-visible {
+  outline: 3px solid #f7be00;
+  outline-offset: 2px;
+}
+
+/* ========================
+   PRINT STYLES
+   ====================== */
+
+@media print {
+  .hero {
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    background: white;
+    color: black;
+    padding: 40px 20px;
+    page-break-inside: avoid;
+  }
+  
+  .hero::before {
+    display: none;
+  }
+  
+  .hero-title,
+  .hero-text {
+    color: black;
+    text-shadow: none;
+  }
+  
+  .btn {
+    border: 2px solid #333;
+    color: #333;
+    background: white;
+  }
+}
+
+/* ========================
+   FALLBACKS NAVIGATEURS
+   ====================== */
+
+/* Support pour navigateurs sans clamp() */
+@supports not (font-size: clamp(1rem, 2vw, 1.5rem)) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-text {
+    font-size: 1.1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    
+    .hero-text {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 1.8rem;
+    }
+    
+    .hero-text {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/* Support pour navigateurs sans dvh */
+@supports not (height: 100dvh) {
+  .hero {
+    height: 100vh;
   }
 }

@@ -1,6 +1,7 @@
+// Header.jsx - Menu Burger PLAT (Option A)
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ApiService from '../services/api'; // ✅ Import du service API
+import ApiService from '../services/api';
 import './Header.css';
 import logoOmac from '../assets/omac-logo.png';
 import admin from '../assets/admin.png';
@@ -9,11 +10,15 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showActionsDropdown, setShowActionsDropdown] = useState(false);
   const [showOmacDropdown, setShowOmacDropdown] = useState(false);
-  const [isAdminConnected, setIsAdminConnected] = useState(false); // ✅ État pour afficher le statut
+  const [isAdminConnected, setIsAdminConnected] = useState(false);
+  
+  // État pour le menu burger
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ Vérifier le statut admin au chargement et quand on change de page
+  // Vérifier le statut admin au chargement
   useEffect(() => {
     checkAdminStatus();
   }, [location.pathname]);
@@ -36,31 +41,67 @@ const Header = () => {
       setScrolled(false);
     }
   };
+
+  // Fermer le menu mobile au scroll
+  useEffect(() => {
+    const handleScrollClose = () => {
+      if (isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScrollClose);
+    return () => window.removeEventListener('scroll', handleScrollClose);
+  }, [isMobileMenuOpen]);
+
+  // Fermer le menu mobile au redimensionnement
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMobileMenuOpen]);
      
-  // ✅ Clic sur l'icône admin avec redirection intelligente
+  // Clic sur l'icône admin
   const handleAdminClick = () => {
+    setIsMobileMenuOpen(false);
+    
     if (isAdminConnected) {
-      // Déjà connecté → aller au dashboard
       console.log('🎯 Admin connecté, redirection vers dashboard');
       navigate('/admin/dashboard');
     } else {
-      // Pas connecté → aller à la page de login
       console.log('🔓 Admin non connecté, redirection vers login');
       navigate('/admin');
     }
   };
 
-  // Clic sur le logo pour retourner à l'accueil
+  // Clic sur le logo
   const handleLogoClick = () => {
+    setIsMobileMenuOpen(false);
     navigate('/');
+  };
+
+  // Toggle menu burger
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    // Fermer les dropdowns desktop
+    setShowActionsDropdown(false);
+    setShowOmacDropdown(false);
   };
 
   // Fonction pour scroller vers une section
   const scrollToSection = (sectionId) => {
-    // Si on n'est pas sur la page d'accueil, naviguer d'abord
+    // Fermer le menu mobile
+    setIsMobileMenuOpen(false);
+    setShowActionsDropdown(false);
+    setShowOmacDropdown(false);
+    
     if (location.pathname !== '/') {
       navigate('/', { replace: true });
-      // Attendre que la navigation soit terminée puis scroller
       setTimeout(() => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -71,7 +112,6 @@ const Header = () => {
         }
       }, 100);
     } else {
-      // Si on est déjà sur la page d'accueil, scroller directement
       const element = document.getElementById(sectionId);
       if (element) {
         element.scrollIntoView({ 
@@ -82,51 +122,56 @@ const Header = () => {
     }
   };
 
-  // Gestion du dropdown "Nos Actions"
+  // Gestion du dropdown "Nos Actions" (DESKTOP SEULEMENT)
   const handleActionsClick = (e) => {
     e.preventDefault();
     setShowActionsDropdown(!showActionsDropdown);
-    setShowOmacDropdown(false); // Fermer l'autre dropdown
+    setShowOmacDropdown(false);
   };
 
-  // Gestion du dropdown "L'OMAC"
+  // Gestion du dropdown "L'OMAC" (DESKTOP SEULEMENT)
   const handleOmacClick = (e) => {
     e.preventDefault();
     setShowOmacDropdown(!showOmacDropdown);
-    setShowActionsDropdown(false); // Fermer l'autre dropdown
+    setShowActionsDropdown(false);
   };
 
   // Navigation vers Guide OMAC
   const handleGuideClick = () => {
     navigate('/guide');
     setShowOmacDropdown(false);
+    setIsMobileMenuOpen(false);
   };
 
   // Navigation vers Projet Social
   const handleProjetSocialClick = () => {
     navigate('/projet-social');
     setShowOmacDropdown(false);
+    setIsMobileMenuOpen(false);
   };
 
   // Navigation vers Jeunesse
   const handleJeunesseClick = () => {
     navigate('/jeunesse');
     setShowActionsDropdown(false);
+    setIsMobileMenuOpen(false);
   };
 
   // Navigation vers Scolarité
   const handleScolariteClick = () => {
     navigate('/scolarite');
     setShowActionsDropdown(false);
+    setIsMobileMenuOpen(false);
   };
 
   // Navigation vers Famille
   const handleFamilleClick = () => {
     navigate('/famille');
     setShowActionsDropdown(false);
+    setIsMobileMenuOpen(false);
   };
 
-  // Fermer les dropdowns quand on clique ailleurs
+  // Fermer les dropdowns quand on clique ailleurs (DESKTOP SEULEMENT)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest('.nav-actions-container') && !event.target.closest('.nav-omac-container')) {
@@ -152,11 +197,24 @@ const Header = () => {
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="header-bottom-line"></div>
              
+      {/* Logo */}
       <div className="logo" onClick={handleLogoClick} style={{cursor: 'pointer'}}>
         <img src={logoOmac} alt="Logo OMAC" />
       </div>
       
-      <nav className="nav">
+      {/* Menu Burger */}
+      <button 
+        className={`mobile-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
+        onClick={toggleMobileMenu}
+        aria-label="Menu de navigation"
+      >
+        <span className={`burger-line ${isMobileMenuOpen ? 'rotate1' : ''}`}></span>
+        <span className={`burger-line ${isMobileMenuOpen ? 'hide' : ''}`}></span>
+        <span className={`burger-line ${isMobileMenuOpen ? 'rotate2' : ''}`}></span>
+      </button>
+      
+      {/* Navigation Desktop (cachée sur mobile) */}
+      <nav className="nav desktop-nav">
         <a 
           href="#" 
           className="nav-link"
@@ -295,9 +353,145 @@ const Header = () => {
           Contact
         </a>
       </nav>
+
+      {/* 🆕 NOUVEAU : Menu Mobile PLAT (tous les liens visibles) */}
+      <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'active' : ''}`}>
+        <nav className="mobile-nav">
+          
+          {/* 🏠 Accueil */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('hero');
+            }}
+          >
+            🏠 Accueil
+          </a>
+          
+          {/* 📖 Guide OMAC */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              handleGuideClick();
+            }}
+          >
+            📖 Guide OMAC
+          </a>
+          
+          {/* 📋 Projet Social */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              handleProjetSocialClick();
+            }}
+          >
+            📋 Projet Social
+          </a>
+          
+          {/* 🏢 À Propos */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('about-section');
+            }}
+          >
+            🏢 À Propos
+          </a>
+          
+          {/* 🏀 Jeunesse */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              handleJeunesseClick();
+            }}
+          >
+            🏀 Jeunesse
+          </a>
+          
+          {/* 👨‍👩‍👧‍👦 Familles et Adultes */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              handleFamilleClick();
+            }}
+          >
+            👨‍👩‍👧‍👦 Familles et Adultes
+          </a>
+          
+          {/* 📚 Aide à la scolarité */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              handleScolariteClick();
+            }}
+          >
+            📚 Aide à la scolarité
+          </a>
+          
+          {/* 📅 Actualités */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('events-section');
+            }}
+          >
+            📅 Actualités
+          </a>
+          
+          {/* 📧 Contact */}
+          <a 
+            href="#" 
+            className="mobile-nav-link"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('contact-section');
+            }}
+          >
+            📧 Contact
+          </a>
+
+          {/* 🔐 Administration */}
+          <div className="mobile-admin-section">
+            <button 
+              className="mobile-admin-btn"
+              onClick={handleAdminClick}
+            >
+              <img 
+                src={admin} 
+                alt="Administration" 
+                className="mobile-admin-icon"
+              />
+              <span>🔐 Administration</span>
+              {isAdminConnected && <span className="admin-connected-badge">●</span>}
+            </button>
+            
+            {isAdminConnected && (
+              <p className="mobile-admin-status">
+                👤 {ApiService.getAdmin()?.username} connecté
+              </p>
+            )}
+          </div>
+        </nav>
+      </div>
       
-      {/* ✅ Admin avec indicateur de statut et redirection intelligente */}
-      <div className="admin">
+      {/* Admin Desktop (caché sur mobile) */}
+      <div className="admin desktop-only">
         <div 
           className={`admin-container ${isAdminConnected ? 'connected' : ''}`}
           onClick={handleAdminClick}
@@ -308,21 +502,18 @@ const Header = () => {
             alt="Administration" 
             className="admin-icon"
           />
-          {/* ✅ Indicateur de connexion */}
           {isAdminConnected && (
             <div className="admin-status-indicator">●</div>
           )}
         </div>
         
-        {/* ✅ Tooltip informatif */}
         {isAdminConnected && (
           <div className="admin-tooltip">
             {ApiService.getAdmin()?.username} connecté
           </div>
         )}
       </div>
-
-      {/* ✅ CSS pour les nouveaux éléments */}
+      
       <style jsx>{`
         .admin-container {
           position: relative;
@@ -343,8 +534,6 @@ const Header = () => {
           background: #8DC540;
           border-radius: 50%;
           border: 2px solid white;
-          font-size: 8px;
-          color: #8DC540;
           animation: pulse 2s infinite;
         }
         
@@ -352,7 +541,7 @@ const Header = () => {
           position: absolute;
           top: 100%;
           right: 0;
-          background: rgba(0, 0, 0, 0.8);
+          background: rgba(134, 165, 90, 0.8);
           color: white;
           padding: 5px 8px;
           font-size: 12px;
