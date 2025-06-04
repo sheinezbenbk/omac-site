@@ -1,321 +1,483 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ApiService from '../services/api'; // ✅ Import du service API
-import './Admin.css';
-import logoOmac from '../assets/omac-logo.png';
+"use client"
+
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import ApiService from "../services/api"
+import logoOmac from "../assets/omac-logo.png"
 
 const Admin = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        username: '',
-        mot_de_passe: '', // ✅ Changé pour correspondre à votre BDD
-        rememberMe: false
-    });
-    const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    username: "",
+    mot_de_passe: "",
+    rememberMe: false,
+  })
+  const [errors, setErrors] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [loginError, setLoginError] = useState("")
 
-    // ✅ Vérification d'authentification au chargement
-    useEffect(() => {
-        console.log('🔍 État de la connexion au chargement:', {
-            hasToken: !!localStorage.getItem('omac_token'),
-            isAuthenticated: ApiService ? ApiService.isAuthenticated() : 'ApiService non disponible',
-            currentPath: window.location.pathname
-        });
+  // Styles intégrés
+  const styles = {
+    adminPage: {
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #3498db 0%, #8DC540 50%, #f7be00 100%)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "20px",
+      fontFamily: "'Poppins', sans-serif",
+      position: "relative",
+      overflow: "hidden",
+    },
+    loginContainer: {
+      background: "rgba(255, 255, 255, 0.95)",
+      backdropFilter: "blur(20px)",
+      borderRadius: "20px",
+      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
+      border: "1px solid rgba(255, 255, 255, 0.3)",
+      width: "100%",
+      maxWidth: "600px",
+      padding: "50px",
+      position: "relative",
+      overflow: "hidden",
+    },
+    loginHeader: {
+      textAlign: "center",
+      marginBottom: "40px",
+    },
+    adminLogo: {
+      width: "90px",
+      height: "90px",
+      borderRadius: "50%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      margin: "0 auto 20px",
+      overflow: "hidden",
+      boxShadow: "0 8px 25px rgba(52, 152, 219, 0.3)",
+      background: "white",
+      border: "3px solid #f0f0f0",
+    },
+    logoImg: {
+      width: "70px",
+      height: "70px",
+      objectFit: "contain",
+    },
+    loginTitle: {
+      color: "#333",
+      fontSize: "28px",
+      fontWeight: "600",
+      margin: "0 0 8px 0",
+    },
+    loginSubtitle: {
+      color: "#666",
+      fontSize: "16px",
+      margin: "0",
+      fontWeight: "400",
+    },
+    defaultCredentials: {
+      background: "#e8f4fd",
+      padding: "15px",
+      borderRadius: "8px",
+      marginBottom: "20px",
+      border: "1px solid #bee5eb",
+    },
+    credentialsTitle: {
+      margin: "0 0 10px 0",
+      color: "#0c5460",
+      fontSize: "16px",
+    },
+    credentialsText: {
+      margin: "5px 0",
+      fontSize: "14px",
+    },
+    credentialsSmall: {
+      color: "#6c757d",
+      fontSize: "12px",
+    },
+    errorMessage: {
+      background: "#ffe6e6",
+      color: "#e74c3c",
+      padding: "12px 16px",
+      borderRadius: "8px",
+      fontSize: "14px",
+      borderLeft: "4px solid #e74c3c",
+      marginBottom: "20px",
+    },
+    loginForm: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "25px",
+    },
+    formGroup: {
+      position: "relative",
+    },
+    formLabel: {
+      display: "block",
+      color: "#555",
+      fontSize: "14px",
+      fontWeight: "500",
+      marginBottom: "8px",
+    },
+    formInput: {
+      width: "100%",
+      padding: "15px 20px",
+      border: "2px solid #e1e8ed",
+      borderRadius: "12px",
+      fontSize: "16px",
+      background: "#f8f9fa",
+      transition: "all 0.3s ease",
+      fontFamily: "'Poppins', sans-serif",
+      boxSizing: "border-box",
+    },
+    formInputError: {
+      borderColor: "#e74c3c",
+      backgroundColor: "#ffe6e6",
+    },
+    loginOptions: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      margin: "10px 0",
+      flexWrap: "wrap",
+      gap: "10px",
+    },
+    rememberMe: {
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      color: "#666",
+      fontSize: "14px",
+    },
+    rememberCheckbox: {
+      width: "18px",
+      height: "18px",
+      cursor: "pointer",
+    },
+    forgotPassword: {
+      color: "#3498db",
+      background: "none",
+      border: "none",
+      fontSize: "14px",
+      fontWeight: "500",
+      cursor: "pointer",
+      textDecoration: "underline",
+    },
+    loginButton: {
+      background: "linear-gradient(135deg, #3498db 0%, #2980b9 100%)",
+      color: "white",
+      border: "none",
+      borderRadius: "12px",
+      padding: "16px 30px",
+      fontSize: "16px",
+      fontWeight: "600",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      marginTop: "10px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "8px",
+    },
+    loginButtonDisabled: {
+      background: "#bdc3c7",
+      cursor: "not-allowed",
+    },
+    loading: {
+      display: "inline-block",
+      width: "20px",
+      height: "20px",
+      border: "2px solid rgba(255,255,255,0.3)",
+      borderRadius: "50%",
+      borderTopColor: "white",
+      animation: "spin 1s linear infinite",
+    },
+    // Nouveau style pour le bouton retour à l'accueil
+    backToHomeButton: {
+      background: "linear-gradient(135deg, #8DC540 0%, #6ab04c 100%)",
+      color: "white",
+      border: "none",
+      borderRadius: "12px",
+      padding: "14px 30px",
+      fontSize: "16px",
+      fontWeight: "500",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      marginTop: "20px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "8px",
+      width: "100%",
+    },
+    backToHomeButtonHover: {
+      transform: "translateY(-2px)",
+      boxShadow: "0 8px 25px rgba(141, 197, 64, 0.4)",
+    },
+    buttonsContainer: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "15px",
+      marginTop: "20px",
+    },
+  }
 
-        // Si déjà connecté, rediriger directement vers le dashboard
-        if (ApiService && ApiService.isAuthenticated()) {
-            console.log('👤 Utilisateur déjà connecté, redirection automatique vers dashboard...');
-            navigate('/admin/dashboard', { replace: true });
-        }
-    }, [navigate]);
+  // États pour les effets hover
+  const [isBackButtonHovered, setIsBackButtonHovered] = useState(false)
 
-    // Gestion du retour à l'accueil
-    const handleBackToHome = () => {
-        navigate('/');
-    };
+  // Vérification d'authentification au chargement
+  useEffect(() => {
+    console.log("🔍 État de la connexion au chargement:", {
+      hasToken: !!localStorage.getItem("omac_token"),
+      isAuthenticated: ApiService ? ApiService.isAuthenticated() : "ApiService non disponible",
+      currentPath: window.location.pathname,
+    })
 
-    // Gestion des changements dans le formulaire
-    const handleInputChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+    if (ApiService && ApiService.isAuthenticated()) {
+      console.log("👤 Utilisateur déjà connecté, redirection automatique vers dashboard...")
+      navigate("/admin/dashboard", { replace: true })
+    }
+  }, [navigate])
+
+  // Gestion du retour à l'accueil
+  const handleBackToHome = () => {
+    console.log("🏠 Retour à l'accueil")
+    navigate("/")
+  }
+
+  // Gestion des changements dans le formulaire
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }))
+
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }))
+    }
+
+    if (loginError) {
+      setLoginError("")
+    }
+  }
+
+  // Validation du formulaire
+  const validateForm = () => {
+    const newErrors = {}
+
+    if (!formData.username.trim()) {
+      newErrors.username = "Le nom d'utilisateur est requis"
+    }
+
+    if (!formData.mot_de_passe) {
+      newErrors.mot_de_passe = "Le mot de passe est requis"
+    } else if (formData.mot_de_passe.length < 6) {
+      newErrors.mot_de_passe = "Le mot de passe doit contenir au moins 6 caractères"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  // Gestion de la soumission
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoginError("")
+
+    console.log("🟡 Début handleSubmit")
+
+    if (!validateForm()) {
+      console.log("❌ Validation échouée")
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      console.log("🔄 Tentative de connexion...", {
+        username: formData.username,
+        password: "***",
+      })
+
+      if (!ApiService || !ApiService.login) {
+        throw new Error("ApiService non disponible")
+      }
+
+      const response = await ApiService.login({
+        username: formData.username,
+        mot_de_passe: formData.mot_de_passe,
+      })
+
+      console.log("✅ Connexion réussie:", response)
+
+      if (formData.rememberMe) {
+        localStorage.setItem("omac_remember_user", formData.username)
+      }
+
+      console.log("🔄 Redirection vers dashboard...")
+      navigate("/admin/dashboard")
+    } catch (error) {
+      console.error("❌ Erreur complète de connexion:", error)
+
+      if (error.message && error.message.includes("Identifiants invalides")) {
+        setLoginError("Nom d'utilisateur ou mot de passe incorrect")
+      } else if (error.message && error.message.includes("Erreur de connexion")) {
+        setLoginError("Problème de connexion au serveur. Vérifiez votre connexion internet.")
+      } else if (error.message && error.message.includes("ApiService non disponible")) {
+        setLoginError("Erreur technique : Service API non disponible")
+      } else {
+        setLoginError(`Erreur technique : ${error.message || "Erreur inconnue"}`)
+      }
+    } finally {
+      setIsLoading(false)
+      console.log("🟡 Fin handleSubmit")
+    }
+  }
+
+  // Charger les données sauvegardées au chargement
+  useEffect(() => {
+    const rememberedUser = localStorage.getItem("omac_remember_user")
+    if (rememberedUser) {
+      setFormData((prev) => ({
+        ...prev,
+        username: rememberedUser,
+        rememberMe: true,
+      }))
+    }
+  }, [])
+
+  // Gestion du "Mot de passe oublié"
+  const handleForgotPassword = () => {
+    alert(
+      "Pour réinitialiser votre mot de passe, contactez l'administrateur système de l'OMAC.\n\nEmail: omac.torcy77@gmail.com\nTéléphone: 01 60 31 31 01",
+    )
+  }
+
+  return (
+    <div style={styles.adminPage}>
+      {/* Conteneur de connexion */}
+      <div style={styles.loginContainer}>
+        {/* Header */}
+        <div style={styles.loginHeader}>
+          <div style={styles.adminLogo}>
+            <img src={logoOmac || "/placeholder.svg"} alt="Logo OMAC" style={styles.logoImg} />
+          </div>
+          <h1 style={styles.loginTitle}>Administration OMAC</h1>
+          <p style={styles.loginSubtitle}>Connectez-vous pour gérer le site</p>
+        </div>
+
         
-        // Effacer l'erreur du champ modifié
-        if (errors[name]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
-        }
-        
-        // Effacer le message d'erreur général
-        if (loginError) {
-            setLoginError('');
-        }
-    };
+        {/* Message d'erreur général */}
+        {loginError && <div style={styles.errorMessage}>{loginError}</div>}
 
-    // Validation du formulaire
-    const validateForm = () => {
-        const newErrors = {};
+        {/* Formulaire de connexion */}
+        <form style={styles.loginForm} onSubmit={handleSubmit}>
+          {/* Nom d'utilisateur */}
+          <div style={styles.formGroup}>
+            <label htmlFor="username" style={styles.formLabel}>
+              Nom d'utilisateur
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+              style={{
+                ...styles.formInput,
+                ...(errors.username ? styles.formInputError : {}),
+              }}
+              placeholder="admin"
+              autoComplete="username"
+              disabled={isLoading}
+            />
+            {errors.username && <span style={styles.errorMessage}>{errors.username}</span>}
+          </div>
 
-        if (!formData.username.trim()) {
-            newErrors.username = 'Le nom d\'utilisateur est requis';
-        }
+          {/* Mot de passe */}
+          <div style={styles.formGroup}>
+            <label htmlFor="mot_de_passe" style={styles.formLabel}>
+              Mot de passe
+            </label>
+            <input
+              type="password"
+              id="mot_de_passe"
+              name="mot_de_passe"
+              value={formData.mot_de_passe}
+              onChange={handleInputChange}
+              style={{
+                ...styles.formInput,
+                ...(errors.mot_de_passe ? styles.formInputError : {}),
+              }}
+              placeholder="omac77200"
+              autoComplete="current-password"
+              disabled={isLoading}
+            />
+            {errors.mot_de_passe && <span style={styles.errorMessage}>{errors.mot_de_passe}</span>}
+          </div>
 
-        if (!formData.mot_de_passe) {
-            newErrors.mot_de_passe = 'Le mot de passe est requis';
-        } else if (formData.mot_de_passe.length < 6) {
-            newErrors.mot_de_passe = 'Le mot de passe doit contenir au moins 6 caractères';
-        }
+          {/* Options de connexion */}
+          <div style={styles.loginOptions}>
+            <label style={styles.rememberMe}>
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={formData.rememberMe}
+                onChange={handleInputChange}
+                style={styles.rememberCheckbox}
+                disabled={isLoading}
+              />
+              Se souvenir de moi
+            </label>
 
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    // ✅ NOUVEAU : Gestion de la soumission avec l'API réelle + DEBUG
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoginError('');
-
-        console.log('🟡 Début handleSubmit');
-
-        if (!validateForm()) {
-            console.log('❌ Validation échouée');
-            return;
-        }
-
-        setIsLoading(true);
-
-        try {
-            console.log('🔄 Tentative de connexion...', { 
-                username: formData.username, 
-                password: '***' 
-            });
             
-            // Vérifier que ApiService existe
-            if (!ApiService || !ApiService.login) {
-                throw new Error('ApiService non disponible');
-            }
-            
-            // ✅ Appel à l'API réelle SiteGround
-            const response = await ApiService.login({
-                username: formData.username,
-                mot_de_passe: formData.mot_de_passe
-            });
+          </div>
 
-            console.log('✅ Connexion réussie:', response);
-
-            // Sauvegarder la session si "Se souvenir de moi" est coché
-            if (formData.rememberMe) {
-                localStorage.setItem('omac_remember_user', formData.username);
-            }
-
-            // ✅ Le token et les infos admin sont automatiquement sauvegardés par ApiService.login()
-            
-            // Rediriger vers le dashboard admin
-            console.log('🔄 Redirection vers dashboard...');
-            navigate('/admin/dashboard');
-            
-        } catch (error) {
-            console.error('❌ Erreur complète de connexion:', error);
-            console.error('❌ Message d\'erreur:', error.message);
-            console.error('❌ Stack trace:', error.stack);
-            
-            // Gestion des différents types d'erreurs
-            if (error.message && error.message.includes('Identifiants invalides')) {
-                setLoginError('Nom d\'utilisateur ou mot de passe incorrect');
-            } else if (error.message && error.message.includes('Erreur de connexion')) {
-                setLoginError('Problème de connexion au serveur. Vérifiez votre connexion internet.');
-            } else if (error.message && error.message.includes('ApiService non disponible')) {
-                setLoginError('Erreur technique : Service API non disponible');
-            } else {
-                setLoginError(`Erreur technique : ${error.message || 'Erreur inconnue'}`);
-            }
-        } finally {
-            setIsLoading(false);
-            console.log('🟡 Fin handleSubmit');
-        }
-    };
-
-    // Charger les données sauvegardées au chargement
-    useEffect(() => {
-        const rememberedUser = localStorage.getItem('omac_remember_user');
-        if (rememberedUser) {
-            setFormData(prev => ({
-                ...prev,
-                username: rememberedUser,
-                rememberMe: true
-            }));
-        }
-    }, []);
-
-    // Gestion du "Mot de passe oublié"
-    const handleForgotPassword = () => {
-        alert('Pour réinitialiser votre mot de passe, contactez l\'administrateur système de l\'OMAC.\n\nEmail: omac.torcy77@gmail.com\nTéléphone: 01 60 31 31 01');
-    };
-
-    // ✅ NOUVEAU : Test de connexion API
-    const testApiConnection = async () => {
-        try {
-            const result = await ApiService.testConnection();
-            if (result) {
-                alert('✅ Connexion API réussie ! Le serveur répond correctement.');
-            } else {
-                alert('❌ Pas de réponse du serveur. Vérifiez que le backend Node.js est démarré.');
-            }
-        } catch (error) {
-            alert('❌ Erreur de connexion API: ' + error.message);
-        }
-    };
-
-    return (
-        <div className="admin-page">
-            {/* Bouton retour */}
-            <button className="back-button" onClick={handleBackToHome}>
-                ← Retour à l'accueil
+          {/* Conteneur des boutons */}
+          <div style={styles.buttonsContainer}>
+            {/* Bouton de connexion */}
+            <button
+              type="submit"
+              style={{
+                ...styles.loginButton,
+                ...(isLoading ? styles.loginButtonDisabled : {}),
+              }}
+              disabled={isLoading}
+            >
+              {isLoading && <div style={styles.loading}></div>}
+              {isLoading ? "Connexion en cours..." : "Se connecter"}
             </button>
 
-            {/* Conteneur de connexion */}
-            <div className="login-container">
-                {/* Header */}
-                <div className="login-header">
-                    <div className="admin-logo">
-                        <img src={logoOmac} alt="Logo OMAC" />
-                    </div>
-                    <h1 className="login-title">Administration OMAC</h1>
-                    <p className="login-subtitle">Connectez-vous pour gérer le site</p>
-                </div>
+            {/* Bouton retour à l'accueil */}
+            <button
+              type="button"
+              onClick={handleBackToHome}
+              style={{
+                ...styles.backToHomeButton,
+                ...(isBackButtonHovered ? styles.backToHomeButtonHover : {}),
+              }}
+              onMouseEnter={() => setIsBackButtonHovered(true)}
+              onMouseLeave={() => setIsBackButtonHovered(false)}
+              disabled={isLoading}
+            >
+              Retour à l'accueil
+            </button>
+          </div>
+        </form>
+      </div>
 
-                {/* ✅ NOUVEAU : Informations de connexion par défaut */}
-                <div className="default-credentials" style={{
-                    background: '#e8f4fd',
-                    padding: '15px',
-                    borderRadius: '8px',
-                    marginBottom: '20px',
-                    border: '1px solid #bee5eb'
-                }}>
-                    <h4 style={{ margin: '0 0 10px 0', color: '#0c5460' }}>Identifiants par défaut :</h4>
-                    <p style={{ margin: '5px 0', fontSize: '14px' }}>
-                        <strong>Username:</strong> admin<br/>
-                        <strong>Password:</strong> omac77200
-                    </p>
-                    <small style={{ color: '#6c757d' }}>
-                        Ces identifiants correspondent à ceux de votre base SiteGround
-                    </small>
-                </div>
+      {/* CSS pour l'animation de rotation */}
+      <style jsx>{`
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            `}</style>
+    </div>
+  )
+}
 
-                {/* Message d'erreur général */}
-                {loginError && (
-                    <div className="error-message">
-                        {loginError}
-                    </div>
-                )}
-
-                {/* Formulaire de connexion */}
-                <form className="login-form" onSubmit={handleSubmit}>
-                    {/* Nom d'utilisateur */}
-                    <div className="form-group">
-                        <label htmlFor="username" className="form-label">
-                            Nom d'utilisateur
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleInputChange}
-                            className={`form-input ${errors.username ? 'error' : ''}`}
-                            placeholder="admin"
-                            autoComplete="username"
-                            disabled={isLoading}
-                        />
-                        {errors.username && (
-                            <span className="error-message">{errors.username}</span>
-                        )}
-                    </div>
-
-                    {/* Mot de passe */}
-                    <div className="form-group">
-                        <label htmlFor="mot_de_passe" className="form-label">
-                            Mot de passe
-                        </label>
-                        <input
-                            type="password"
-                            id="mot_de_passe"
-                            name="mot_de_passe"
-                            value={formData.mot_de_passe}
-                            onChange={handleInputChange}
-                            className={`form-input ${errors.mot_de_passe ? 'error' : ''}`}
-                            placeholder="omac77200"
-                            autoComplete="current-password"
-                            disabled={isLoading}
-                        />
-                        {errors.mot_de_passe && (
-                            <span className="error-message">{errors.mot_de_passe}</span>
-                        )}
-                    </div>
-
-                    {/* Options de connexion */}
-                    <div className="login-options">
-                        <label className="remember-me">
-                            <input
-                                type="checkbox"
-                                name="rememberMe"
-                                checked={formData.rememberMe}
-                                onChange={handleInputChange}
-                                className="remember-checkbox"
-                                disabled={isLoading}
-                            />
-                            Se souvenir de moi
-                        </label>
-                        
-                        <button
-                            type="button"
-                            className="forgot-password"
-                            onClick={handleForgotPassword}
-                            disabled={isLoading}
-                        >
-                            Mot de passe oublié ?
-                        </button>
-                    </div>
-
-                    {/* Bouton de connexion */}
-                    <button
-                        type="submit"
-                        className="login-button"
-                        disabled={isLoading}
-                    >
-                        {isLoading && <span className="loading"></span>}
-                        {isLoading ? 'Connexion en cours...' : 'Se connecter'}
-                    </button>
-                </form>
-
-                {/* ✅ NOUVEAU : Bouton de test API (en développement seulement) */}
-                {process.env.NODE_ENV === 'development' && (
-                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                        <button 
-                            onClick={testApiConnection}
-                            style={{
-                                background: '#6c757d',
-                                color: 'white',
-                                border: 'none',
-                                padding: '8px 15px',
-                                borderRadius: '4px',
-                                fontSize: '12px',
-                                cursor: 'pointer'
-                            }}
-                            disabled={isLoading}
-                        >
-                            Tester la connexion API
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
-
-export default Admin;
+export default Admin

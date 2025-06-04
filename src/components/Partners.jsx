@@ -70,41 +70,7 @@ const Partners = () => {
           />
         ))}
 
-        {logos.map(logo => (
-          <img 
-            key={`duplicate-${logo.id}`} 
-            src={logo.src} 
-            alt={logo.alt} 
-            className="partner-logo" 
-          />
-        ))}
-
-        {logos.map(logo => (
-          <img 
-            key={`duplicate-${logo.id}`} 
-            src={logo.src} 
-            alt={logo.alt} 
-            className="partner-logo" 
-          />
-        ))}
-
-        {logos.map(logo => (
-          <img 
-            key={`duplicate-${logo.id}`} 
-            src={logo.src} 
-            alt={logo.alt} 
-            className="partner-logo" 
-          />
-        ))}
-
-        {logos.map(logo => (
-          <img 
-            key={`duplicate-${logo.id}`} 
-            src={logo.src} 
-            alt={logo.alt} 
-            className="partner-logo" 
-          />
-        ))}
+        
       </div>
     </section>
   );

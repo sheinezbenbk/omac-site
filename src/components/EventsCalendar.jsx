@@ -278,25 +278,7 @@ const EventsCalendar = () => {
           </div>
         </div>
         
-        {/* ✅ NOUVEAU : Informations de debug en développement */}
-        {process.env.NODE_ENV === 'development' && (
-          <div style={{ 
-            marginTop: '20px', 
-            padding: '15px', 
-            backgroundColor: '#f8f9fa', 
-            borderRadius: '5px',
-            fontSize: '14px'
-          }}>
-            <strong>Debug Info:</strong> {events.length} événements chargés depuis SiteGround
-            <button 
-              onClick={loadEventsFromDB}
-              style={{ marginLeft: '10px', padding: '5px 10px' }}
-            >
-              Recharger
-            </button>
-          </div>
-        )}
-        
+       
         {/* Modal pour afficher les détails de l'événement (votre code original conservé) */}
         {showModal && selectedEvent && (
           <div className="event-modal-overlay" onClick={closeModal}>

@@ -161,15 +161,15 @@
 
 /* Bouton primaire - VOS couleurs conservées */
 .btn-primary {
-  background-color: #3498db; /* Votre bleu conservé */
+  background-color: #dbbc34; 
   color: white;
-  border-color: #3498db;
+  border-color: #dbbc34;
 }
 
 .btn-primary:hover {
-  background-color: #2980b9; /* Votre hover bleu conservé */
+  background-color: #dbbc34; /* Votre hover bleu conservé */
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+  box-shadow: 0 5px 15px;
   color: white;
   text-decoration: none;
 }
