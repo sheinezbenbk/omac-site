@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { createPortal } from "react-dom"
 import { useNavigate, useLocation } from "react-router-dom"
 import logoOmac from "../assets/omac-logo.png"
 import admin from "../assets/admin.png"
@@ -33,6 +34,89 @@ const ChevronUpIcon = () => (
   </svg>
 )
 
+// Composant Dropdown avec portail pour desktop
+const DropdownPortal = ({ isOpen, children, triggerRef }) => {
+  const [position, setPosition] = useState({ top: 0, left: 0 })
+  const dropdownRef = useRef(null)
+
+  useEffect(() => {
+    if (isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect()
+      const scrollY = window.scrollY
+
+      // Calcul initial de la position
+      let left = rect.left + rect.width / 2 - 110 // Centré (110 = moitié de la largeur du dropdown)
+
+      // Ajustement pour éviter le dépassement à droite
+      const windowWidth = window.innerWidth
+      if (left + 220 > windowWidth) {
+        left = windowWidth - 230 // 10px de marge
+      }
+
+      // Ajustement pour éviter le dépassement à gauche
+      if (left < 10) {
+        left = 10
+      }
+
+      setPosition({
+        top: rect.bottom + scrollY + 10, // 10px de marge
+        left: left,
+      })
+    }
+  }, [isOpen, triggerRef])
+
+  if (!isOpen) return null
+
+  return createPortal(
+    <div
+      ref={dropdownRef}
+      style={{
+        position: "absolute",
+        top: `${position.top}px`,
+        left: `${position.left}px`,
+        background: "white",
+        borderRadius: "10px",
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.15)",
+        border: "1px solid rgba(255, 255, 255, 0.2)",
+        width: "220px",
+        maxWidth: "calc(100vw - 20px)",
+        overflow: "hidden",
+        zIndex: 999999,
+        animation: "dropdownSlide 0.3s ease-out",
+      }}
+    >
+      {/* Flèche du dropdown */}
+      <div
+        style={{
+          position: "absolute",
+          top: "-8px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 0,
+          height: 0,
+          borderLeft: "8px solid transparent",
+          borderRight: "8px solid transparent",
+          borderBottom: "8px solid white",
+        }}
+      />
+      {children}
+      <style jsx>{`
+        @keyframes dropdownSlide {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </div>,
+    document.body,
+  )
+}
+
 const Header = () => {
   const [scrolled, setScrolled] = useState(false)
   const [showActionsDropdown, setShowActionsDropdown] = useState(false)
@@ -40,6 +124,10 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileDrop1Open, setMobileDrop1Open] = useState(false)
   const [mobileDrop2Open, setMobileDrop2Open] = useState(false)
+
+  // Refs pour les éléments de navigation desktop
+  const omacRef = useRef(null)
+  const actionsRef = useRef(null)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -226,6 +314,18 @@ const Header = () => {
       cursor: "pointer",
       transition: "all 0.3s ease",
     },
+    dropdownItem: {
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      padding: "15px 20px",
+      color: "#333",
+      textDecoration: "none",
+      fontSize: "16px",
+      fontWeight: 500,
+      transition: "all 0.3s ease",
+      borderBottom: "1px solid #f0f0f0",
+    },
   }
 
   // Media queries avec JavaScript pour desktop
@@ -338,6 +438,21 @@ const Header = () => {
     setShowOmacDropdown(false)
   }
 
+  // Fermer les dropdowns quand on clique ailleurs
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!omacRef.current?.contains(event.target) && !actionsRef.current?.contains(event.target)) {
+        setShowActionsDropdown(false)
+        setShowOmacDropdown(false)
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside)
+    return () => {
+      document.removeEventListener("click", handleClickOutside)
+    }
+  }, [])
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll)
     return () => {
@@ -397,29 +512,67 @@ const Header = () => {
             Accueil
           </a>
 
-          <a
-            href="#"
-            style={styles.navLink}
-            onClick={(e) => {
-              e.preventDefault()
-              setShowOmacDropdown(!showOmacDropdown)
-              setShowActionsDropdown(false)
-            }}
-          >
-            L'OMAC ▼
-          </a>
+          {/* Dropdown L'OMAC Desktop */}
+          <div ref={omacRef} style={{ position: "relative" }}>
+            <a
+              href="#"
+              style={{
+                ...styles.navLink,
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                color: showOmacDropdown ? "#f7be00" : scrolled ? "#3498db" : "#ffffff",
+              }}
+              onClick={(e) => {
+                e.preventDefault()
+                setShowOmacDropdown(!showOmacDropdown)
+                setShowActionsDropdown(false)
+              }}
+            >
+              L'OMAC
+              <span
+                style={{
+                  fontSize: "12px",
+                  transition: "transform 0.3s ease",
+                  marginLeft: "5px",
+                  transform: showOmacDropdown ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+              >
+                ▼
+              </span>
+            </a>
+          </div>
 
-          <a
-            href="#"
-            style={styles.navLink}
-            onClick={(e) => {
-              e.preventDefault()
-              setShowActionsDropdown(!showActionsDropdown)
-              setShowOmacDropdown(false)
-            }}
-          >
-            Nos Actions ▼
-          </a>
+          {/* Dropdown Nos Actions Desktop */}
+          <div ref={actionsRef} style={{ position: "relative" }}>
+            <a
+              href="#"
+              style={{
+                ...styles.navLink,
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                color: showActionsDropdown ? "#f7be00" : scrolled ? "#3498db" : "#ffffff",
+              }}
+              onClick={(e) => {
+                e.preventDefault()
+                setShowActionsDropdown(!showActionsDropdown)
+                setShowOmacDropdown(false)
+              }}
+            >
+              Nos Actions
+              <span
+                style={{
+                  fontSize: "12px",
+                  transition: "transform 0.3s ease",
+                  marginLeft: "5px",
+                  transform: showActionsDropdown ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+              >
+                ▼
+              </span>
+            </a>
+          </div>
 
           <a
             href="#"
@@ -608,6 +761,141 @@ const Header = () => {
         </div>
       </nav>
 
+      {/* Dropdowns Desktop avec portail */}
+      <DropdownPortal isOpen={showOmacDropdown} triggerRef={omacRef}>
+        <a
+          href="#"
+          style={styles.dropdownItem}
+          onClick={(e) => {
+            e.preventDefault()
+            handleGuideClick()
+          }}
+        >
+          <span style={{ fontSize: "18px", width: "24px", textAlign: "center" }}>📖</span>
+          Guide OMAC
+        </a>
+
+        <a
+          href="#"
+          style={styles.dropdownItem}
+          onClick={(e) => {
+            e.preventDefault()
+            handleProjetSocialClick()
+          }}
+        >
+          <span style={{ fontSize: "18px", width: "24px", textAlign: "center" }}>📋</span>
+          Projet Social
+        </a>
+
+        <a
+          href="#"
+          style={{
+            ...styles.dropdownItem,
+            borderBottom: "none",
+          }}
+          onClick={(e) => {
+            e.preventDefault()
+            setShowOmacDropdown(false)
+            scrollToSection("about-section")
+          }}
+        >
+          <span style={{ fontSize: "18px", width: "24px", textAlign: "center" }}>🏢</span>À Propos
+        </a>
+      </DropdownPortal>
+
+      <DropdownPortal isOpen={showActionsDropdown} triggerRef={actionsRef}>
+        <a
+          href="#"
+          style={styles.dropdownItem}
+          onClick={(e) => {
+            e.preventDefault()
+            handleJeunesseClick()
+          }}
+        >
+          <span style={{ fontSize: "18px", width: "24px", textAlign: "center" }}>🏀</span>
+          Jeunesse
+        </a>
+
+        <a
+          href="#"
+          style={styles.dropdownItem}
+          onClick={(e) => {
+            e.preventDefault()
+            handleFamilleClick()
+          }}
+        >
+          <span style={{ fontSize: "18px", width: "24px", textAlign: "center" }}>👨‍👩‍👧‍👦</span>
+          Familles et Adultes
+        </a>
+
+        <a
+          href="#"
+          style={{
+            ...styles.dropdownItem,
+            borderBottom: "none",
+          }}
+          onClick={(e) => {
+            e.preventDefault()
+            handleScolariteClick()
+          }}
+        >
+          <span style={{ fontSize: "18px", width: "24px", textAlign: "center" }}>📚</span>
+          Aide à la scolarité
+        </a>
+      </DropdownPortal>
+
+      {/* Style global pour forcer l'absence de défilement horizontal */}
+      <style jsx global>{`
+        * {
+          box-sizing: border-box !important;
+        }
+        
+        html {
+          overflow-x: hidden !important;
+          width: 100% !important;
+          max-width: 100vw !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        
+        html::-webkit-scrollbar-horizontal {
+          display: none !important;
+        }
+        
+        body {
+          overflow-x: hidden !important;
+          width: 100% !important;
+          max-width: 100vw !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          position: relative !important;
+        }
+        
+        #root {
+          overflow-x: hidden !important;
+          width: 100% !important;
+          max-width: 100vw !important;
+        }
+        
+        /* Supprimer complètement les barres de défilement horizontales */
+        ::-webkit-scrollbar-horizontal {
+          width: 0 !important;
+          height: 0 !important;
+          display: none !important;
+        }
+        
+        /* Pour tous les navigateurs */
+        * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        
+        *::-webkit-scrollbar-horizontal {
+          display: none !important;
+        }
+      `}</style>
     </>
   )
 }

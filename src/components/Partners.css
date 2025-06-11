@@ -8,7 +8,7 @@
 .partners-slider {
   display: flex;
   gap: 80px;
-  animation: scroll 30s linear infinite;
+  animation: scroll 30s linear infinite; /* RETOUR à la vitesse originale */
   white-space: nowrap;
   align-items: center;
 }
@@ -16,6 +16,7 @@
 .partner-logo {
   height: 60px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 @keyframes scroll {
@@ -23,6 +24,31 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-150px * 6 - 50px * 6));
+    transform: translateX(-50%);
   }
 }
+
+/* SEULEMENT corriger le mobile - ULTRA lent */
+@media (max-width: 480px) {
+  .partners-slider {
+    animation: scroll 180s linear infinite; /* ULTRA lent sur mobile */
+    gap: 40px;
+  }
+
+  .partner-logo {
+    height: 40px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  .partners-slider {
+    animation: scroll 120s linear infinite; /* Très lent sur tablette */
+    gap: 60px;
+  }
+
+  .partner-logo {
+    height: 50px;
+  }
+}
+
+/* Desktop reste à 30s - comme au tout début ! */

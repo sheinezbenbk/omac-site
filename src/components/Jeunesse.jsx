@@ -1,31 +1,24 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Jeunesse.css';
-
-// Import des composants communs
 import Header from './Header';
 import Footer from './Footer';
 
-// Import des icônes
 import icon1 from '../assets/check.png';
 import icon2 from '../assets/check.png';
 import icon3 from '../assets/check.png';
 import icon4 from '../assets/check.png';
 
-// Import des icônes pour les services
 import sportIcon from '../assets/basket.png';
 import culturelIcon from '../assets/ecole.png';
 import projetIcon from '../assets/famille.png';
 
 const Jeunesse = () => {
   const navigate = useNavigate();
-
-  // Forcer le scroll en haut à chaque chargement de la page
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Fonction pour scroller vers une section
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -36,12 +29,10 @@ const Jeunesse = () => {
     }
   };
 
-  // Retour à l'accueil
   const goToHome = () => {
     navigate('/');
   };
 
-  // Aller vers la section contact
   const goToContact = () => {
     navigate('/');
     setTimeout(() => {
@@ -49,7 +40,7 @@ const Jeunesse = () => {
     }, 100);
   };
 
-  // Points forts du secteur jeunesse
+
   const jeunesseFeatures = [
     { id: 1, text: 'Accueil libre et accompagnement de projets personnalisés', icon: icon1 },
     { id: 2, text: 'Activités ludiques, sportives et culturelles variées', icon: icon2 },
@@ -57,7 +48,6 @@ const Jeunesse = () => {
     { id: 4, text: 'Informations, orientations et échanges bienveillants', icon: icon4 }
   ];
 
-  // Services proposés par le secteur jeunesse
   const jeunesseServices = [
     {
       id: 1,
@@ -111,7 +101,7 @@ const Jeunesse = () => {
             <div className="image-column">
              
               <div className="image-container">
-                <img src="/placeholder-image.jpg" alt="Jeunes en activité à l'OMAC" />
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-vh4FU3rHri3SEY8QH0suUmHrun79_MiGiQ&s" alt="Jeunes en activité à l'OMAC" />
               </div>
             </div>
             

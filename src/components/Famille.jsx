@@ -111,7 +111,7 @@ const Famille = () => {
             <div className="image-column">
            
               <div className="image-container">
-                <img src="/placeholder-image.jpg" alt="Familles en activité à l'OMAC" />
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-vh4FU3rHri3SEY8QH0suUmHrun79_MiGiQ&s" alt="Familles en activité à l'OMAC" />
               </div>
             </div>
             

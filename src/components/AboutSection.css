@@ -1,4 +1,3 @@
-
 .about-section {
   padding: 80px 0;
   background-color: #f9f9f9;
@@ -40,18 +39,16 @@
   width: 75px;
   height: 5px;
   border-radius: 5px;
-  background-color: #8DC540;
+  background-color: #8dc540;
   margin-top: 5px;
 }
-
 
 .about-columns {
   display: flex;
   gap: 40px;
   position: relative;
-  margin-bottom: 80px; 
+  margin-bottom: 80px;
 }
-
 
 .image-column {
   flex: 1;
@@ -76,7 +73,6 @@
   object-fit: cover;
 }
 
-
 .yellow-square {
   position: absolute;
   width: 80px;
@@ -87,7 +83,6 @@
   border-radius: 10px;
   z-index: 1;
 }
-
 
 .text-column {
   flex: 1;
@@ -103,7 +98,6 @@
   z-index: 2;
 }
 
-
 .blue-square {
   position: absolute;
   width: 80px;
@@ -113,6 +107,7 @@
   right: -20px;
   border-radius: 10px;
   z-index: 1;
+  margin-bottom: 100px;
 }
 
 .card-title {
@@ -128,7 +123,6 @@
   line-height: 1.6;
   margin-bottom: 15px;
 }
-
 
 .feature-list {
   margin: 25px 0;
@@ -155,7 +149,6 @@
   color: #555;
 }
 
-
 .btn-learn-more {
   background-color: #3498db;
   color: white;
@@ -174,90 +167,267 @@
   background-color: #2980b9;
 }
 
-/* SECTION SERVICES */
+/* SECTION SERVICES - CENTRÉE ET TRÈS ÉLARGIE */
 .services-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 50px; /* Augmenté de 40px à 50px */
   justify-content: center;
+  align-items: stretch;
   margin-top: 60px;
+  max-width: 1600px; /* Augmenté de 1400px à 1600px */
+  margin-left: auto;
+  margin-right: auto;
 }
-
 
 .service-card {
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  padding: 30px;
-  width: calc(33.333% - 20px);
-  min-width: 280px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  padding: 45px; /* Augmenté de 40px à 45px */
+  width: calc(33.333% - 34px); /* Ajusté pour le nouveau gap */
+  min-width: 420px; /* Augmenté de 350px à 420px */
+  max-width: 500px; /* Augmenté de 420px à 500px */
   display: flex;
   flex-direction: column;
   transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
   overflow: hidden;
   border: 1px solid #f0f0f0;
+  text-align: left; /* Changé de center à left */
 }
 
 .service-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
-
 .service-icon {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   background-color: #e8f4fd;
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 0 0 25px 0; /* Changé de auto à 0 pour aligner à gauche */
 }
 
 .service-icon img {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 }
 
-
 .service-title {
   color: #1e6399;
-  font-size: 22px;
+  font-size: 28px; /* Augmenté de 26px à 28px */
   font-weight: 600;
-  margin: 0 0 15px 0;
+  margin: 0 0 20px 0;
+  text-align: left; /* Changé de center à left */
 }
-
 
 .service-description {
   color: #666;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 18px;
+  line-height: 1.7;
   flex-grow: 1;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  text-align: left; /* Changé de center à left */
 }
 
-
 .card-divider {
-  height: 1px;
+  height: 2px;
   background-color: #eee;
-  margin: 10px 0;
+  margin: 15px 0;
   width: 100%;
 }
 
-
 .service-link {
-  color: #8DC540;
+  color: #8dc540;
   text-decoration: none;
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: 600;
+  font-size: 18px;
   display: inline-block;
-  transition: color 0.3s;
-  margin-top: 10px;
+  transition: color 0.3s, transform 0.3s;
+  margin-top: 15px;
+  text-align: left; /* Changé de center à left */
+  padding: 10px 0;
+  align-self: flex-start; /* Assure l'alignement à gauche */
 }
 
 .service-link:hover {
   color: #7ab431;
+  transform: translateX(5px);
+}
+
+
+/* Ajout des styles pour le bouton admin et le carrousel */
+.about-header {
+  position: relative;
+}
+
+.admin-toggle-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.admin-toggle-btn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Modification du container d'image pour le carrousel */
+.image-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+}
+
+/* Conteneur pour les boutons */
+.buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Style pour le bouton PDF "On vous propose" */
+.btn-pdf-proposal {
+  background-color: #E58484;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-pdf-proposal:hover {
+  background-color: #d16969;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(229, 132, 132, 0.3);
+}
+
+.btn-pdf-proposal:active {
+  transform: translateY(0);
+}
+
+/* Responsive pour le carrousel */
+@media (max-width: 768px) {
+  .image-container {
+    min-height: 250px;
+  }
+}
+
+/* Reste de votre CSS AboutSection existant... */
+
+
+/* Responsive pour mobile - cartes moins larges */
+@media (max-width: 768px) {
+  .services-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+  }
+
+  .service-card {
+    width: 100%;
+    max-width: 320px; /* Augmenté de 300px à 320px */
+    min-width: unset; /* Supprime la contrainte min-width */
+    padding: 25px; /* Réduit de 30px à 25px */
+    text-align: left;
+  }
+
+  .service-icon {
+    width: 60px; /* Réduit de 80px à 60px */
+    height: 60px; /* Réduit de 80px à 60px */
+    margin: 0 0 15px 0; /* Réduit de 20px à 15px */
+  }
+
+  .service-icon img {
+    width: 30px; /* Réduit de 40px à 30px */
+    height: 30px; /* Réduit de 40px à 30px */
+  }
+
+  .service-title {
+    text-align: left;
+    font-size: 22px; /* Réduit de 24px à 22px */
+    margin: 0 0 15px 0; /* Réduit de 20px à 15px */
+  }
+
+  .service-description {
+    text-align: left;
+    font-size: 15px; /* Réduit de 16px à 15px */
+    line-height: 1.6; /* Réduit de 1.7 à 1.6 */
+  }
+
+  .service-link {
+    text-align: left;
+    font-size: 15px; /* Réduit de 16px à 15px */
+  }
+
+  .about-columns {
+    flex-direction: column;
+    gap: 30px;
+  }
+}
+
+/* Très petits écrans */
+@media (max-width: 375px) {
+  .service-card {
+    max-width: 300px; /* Encore plus étroit pour les très petits écrans */
+    padding: 20px; /* Padding encore plus petit */
+  }
+}
+
+@media (max-width: 992px) and (min-width: 769px) {
+  .service-card {
+    width: calc(50% - 20px);
+    max-width: 340px; /* Réduit de 380px à 340px */
+    min-width: unset; /* Supprime la contrainte min-width */
+    padding: 30px; /* Réduit de 35px à 30px */
+  }
+
+  .service-title {
+    font-size: 24px; /* Réduit de 26px à 24px */
+  }
+
+  .service-icon {
+    width: 70px; /* Réduit de 80px à 70px */
+    height: 70px; /* Réduit de 80px à 70px */
+  }
+}
+
+@media (min-width: 1200px) {
+  .services-container {
+    gap: 60px;
+  }
+
+  .service-card {
+    max-width: 520px;
+    padding: 50px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .service-card {
+    max-width: 550px;
+  }
 }

@@ -1,6 +1,4 @@
 
-
-
 /* ===================================
    SYSTÈME RESPONSIVE COMPLET OMAC
    Adapté à TOUS les écrans
@@ -2973,7 +2971,7 @@ section {
 .partners-slider {
   display: flex;
   gap: clamp(40px, 8vw, 80px);
-  animation: scroll 30s linear infinite;
+  animation: scroll 30s linear infinite; /* RETOUR à la vitesse desktop originale */
   white-space: nowrap;
   align-items: center;
 }
@@ -2983,6 +2981,7 @@ section {
   object-fit: contain;
   opacity: 0.8;
   transition: opacity 0.3s ease;
+  flex-shrink: 0;
 }
 
 .partner-logo:hover {
@@ -2994,9 +2993,25 @@ section {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-150px * 6 - 50px * 6));
+    transform: translateX(-50%);
   }
 }
+
+/* SEULEMENT ralentir ÉNORMÉMENT le mobile */
+@media (max-width: 480px) {
+  .partners-slider {
+    animation: scroll 200s linear infinite; /* ULTRA lent sur mobile */
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  .partners-slider {
+    animation: scroll 150s linear infinite; /* Très lent sur tablette */
+  }
+}
+
+/* Desktop reste à 30s comme au début */
+
 
 /* ========================
    UTILITAIRES RESPONSIVE
