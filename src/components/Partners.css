@@ -8,7 +8,7 @@
 .partners-slider {
   display: flex;
   gap: 80px;
-  animation: scroll 30s linear infinite; /* RETOUR à la vitesse originale */
+  animation: scroll 30s linear infinite; /* Vitesse desktop normale */
   white-space: nowrap;
   align-items: center;
 }
@@ -28,10 +28,10 @@
   }
 }
 
-/* SEULEMENT corriger le mobile - ULTRA lent */
+/* Mobile - vitesse modérée */
 @media (max-width: 480px) {
   .partners-slider {
-    animation: scroll 180s linear infinite; /* ULTRA lent sur mobile */
+    animation: scroll 45s linear infinite; /* Plus rapide que 180s mais plus lent que 30s */
     gap: 40px;
   }
 
@@ -40,9 +40,10 @@
   }
 }
 
+/* Tablette - vitesse intermédiaire */
 @media (min-width: 481px) and (max-width: 767px) {
   .partners-slider {
-    animation: scroll 120s linear infinite; /* Très lent sur tablette */
+    animation: scroll 35s linear infinite; /* Légèrement plus lent que desktop */
     gap: 60px;
   }
 
@@ -51,4 +52,14 @@
   }
 }
 
-/* Desktop reste à 30s - comme au tout début ! */
+/* Desktop reste à 30s */
+@media (min-width: 768px) {
+  .partners-slider {
+    animation: scroll 30s linear infinite;
+    gap: 80px;
+  }
+
+  .partner-logo {
+    height: 60px;
+  }
+}

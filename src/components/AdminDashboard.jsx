@@ -11,10 +11,12 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("events")
   const [showEventForm, setShowEventForm] = useState(false)
   const [showMediaForm, setShowMediaForm] = useState(false)
-  const [showCarouselForm, setShowCarouselForm] = useState(false) // ✅ NOUVEAU
+  const [showCarouselForm, setShowCarouselForm] = useState(false)
+  const [showPdfForm, setShowPdfForm] = useState(false) // ✅ NOUVEAU
   const [editingEvent, setEditingEvent] = useState(null)
   const [editingMedia, setEditingMedia] = useState(null)
-  const [editingCarouselImage, setEditingCarouselImage] = useState(null) // ✅ NOUVEAU
+  const [editingCarouselImage, setEditingCarouselImage] = useState(null)
+  const [editingPdf, setEditingPdf] = useState(null) // ✅ NOUVEAU
 
   // États pour la navigation par mois
   const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -29,10 +31,15 @@ const AdminDashboard = () => {
   const [medias, setMedias] = useState([])
   const [loadingMedias, setLoadingMedias] = useState(false)
 
-  // ✅ NOUVEAU : États pour les images du carrousel
+  // États pour les images du carrousel
   const [carouselImages, setCarouselImages] = useState([])
   const [loadingCarousel, setLoadingCarousel] = useState(false)
   const fileInputRef = useRef(null)
+
+  // ✅ NOUVEAU : États pour les PDFs
+  const [pdfs, setPdfs] = useState([])
+  const [loadingPdfs, setLoadingPdfs] = useState(false)
+  const pdfInputRef = useRef(null)
 
   // Formulaire d'événement pour la BDD
   const [eventForm, setEventForm] = useState({
@@ -51,10 +58,17 @@ const AdminDashboard = () => {
     youtubeId: "",
   })
 
-  // ✅ NOUVEAU : Formulaire pour les images du carrousel
+  // Formulaire pour les images du carrousel
   const [carouselForm, setCarouselForm] = useState({
     title: "",
     alt: "",
+    file: null,
+  })
+
+  // ✅ NOUVEAU : Formulaire pour les PDFs
+  const [pdfForm, setPdfForm] = useState({
+    title: "",
+    description: "",
     file: null,
   })
 
@@ -81,10 +95,11 @@ const AdminDashboard = () => {
 
     console.log("✅ Admin connecté:", adminData.username)
 
-    // Charger les événements, médias ET images carrousel
+    // Charger toutes les données
     await loadEvents()
     loadMedias()
-    loadCarouselImages() // ✅ NOUVEAU
+    loadCarouselImages()
+    loadPdfs() // ✅ NOUVEAU
   }
 
   const loadEvents = async () => {
@@ -173,7 +188,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // ✅ NOUVEAU : Fonction pour charger les images du carrousel
+  // Fonction pour charger les images du carrousel
   const loadCarouselImages = () => {
     try {
       setLoadingCarousel(true)
@@ -203,7 +218,43 @@ const AdminDashboard = () => {
     }
   }
 
-  // ✅ NOUVEAU : Fonction pour sauvegarder les images du carrousel
+  // ✅ NOUVEAU : Fonction pour charger les PDFs
+  const loadPdfs = () => {
+    try {
+      setLoadingPdfs(true)
+
+      console.log("🔄 Chargement des PDFs...")
+      const saved = localStorage.getItem("omac_pdfs")
+
+      let pdfsData = []
+      if (saved) {
+        pdfsData = JSON.parse(saved)
+      } else {
+        // Données par défaut
+        pdfsData = [
+          {
+            id: 1,
+            title: "Guide des activités OMAC",
+            description: "Découvrez toutes nos activités et services proposés.",
+            fileName: "guide-activites.pdf",
+            fileData: null, // Sera rempli quand un vrai PDF sera uploadé
+            uploadDate: new Date().toISOString(),
+          },
+        ]
+        localStorage.setItem("omac_pdfs", JSON.stringify(pdfsData))
+      }
+
+      setPdfs(pdfsData)
+      console.log("✅ PDFs chargés:", pdfsData)
+    } catch (err) {
+      console.error("❌ Erreur chargement PDFs:", err)
+      setError("Impossible de charger les PDFs")
+    } finally {
+      setLoadingPdfs(false)
+    }
+  }
+
+  // Fonction pour sauvegarder les images du carrousel
   const saveCarouselImages = (images) => {
     try {
       // Sauvegarder juste les URLs pour compatibilité avec AboutSection
@@ -212,6 +263,16 @@ const AdminDashboard = () => {
       loadCarouselImages() // Recharger
     } catch (error) {
       console.error("❌ Erreur sauvegarde images carrousel:", error)
+    }
+  }
+
+  // ✅ NOUVEAU : Fonction pour sauvegarder les PDFs
+  const savePdfs = (newPdfs) => {
+    try {
+      localStorage.setItem("omac_pdfs", JSON.stringify(newPdfs))
+      loadPdfs() // Recharger
+    } catch (error) {
+      console.error("❌ Erreur sauvegarde PDFs:", error)
     }
   }
 
@@ -467,7 +528,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // ✅ NOUVEAU : Gestion des images du carrousel
+  // Gestion des images du carrousel
   const handleAddCarouselImage = () => {
     setEditingCarouselImage(null)
     setCarouselForm({
@@ -581,6 +642,140 @@ const AdminDashboard = () => {
     }
   }
 
+  // ✅ NOUVEAU : Gestion des PDFs
+  const handleAddPdf = () => {
+    setEditingPdf(null)
+    setPdfForm({
+      title: "",
+      description: "",
+      file: null,
+    })
+    setShowPdfForm(true)
+  }
+
+  const handleEditPdf = (pdf) => {
+    setEditingPdf(pdf)
+    setPdfForm({
+      title: pdf.title || "",
+      description: pdf.description || "",
+      file: null,
+    })
+    setShowPdfForm(true)
+  }
+
+  const handleDeletePdf = (pdfId) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce document ?")) {
+      try {
+        const newPdfs = pdfs.filter((pdf) => pdf.id !== pdfId)
+        savePdfs(newPdfs)
+        console.log("✅ PDF supprimé")
+      } catch (error) {
+        console.error("❌ Erreur suppression:", error)
+        alert("Erreur lors de la suppression du document")
+      }
+    }
+  }
+
+  const handlePdfFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      // Vérifier le type de fichier
+      if (file.type !== "application/pdf") {
+        alert("Veuillez sélectionner un fichier PDF")
+        return
+      }
+
+      // Vérifier la taille (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert("Le fichier est trop volumineux (max 10MB)")
+        return
+      }
+
+      setPdfForm({
+        ...pdfForm,
+        file: file,
+      })
+    }
+  }
+
+  const handleSavePdf = async () => {
+    try {
+      if (!pdfForm.title) {
+        alert("Veuillez remplir le titre")
+        return
+      }
+
+      if (!editingPdf && !pdfForm.file) {
+        alert("Veuillez sélectionner un fichier PDF")
+        return
+      }
+
+      let fileData = editingPdf?.fileData || null
+      let fileName = editingPdf?.fileName || ""
+
+      // Si un nouveau fichier est sélectionné, le convertir en base64
+      if (pdfForm.file) {
+        fileData = await new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = (e) => resolve(e.target.result)
+          reader.onerror = reject
+          reader.readAsDataURL(pdfForm.file)
+        })
+        fileName = pdfForm.file.name
+      }
+
+      let newPdfs
+      if (editingPdf) {
+        // Modifier le PDF existant
+        newPdfs = pdfs.map((pdf) =>
+          pdf.id === editingPdf.id
+            ? {
+                ...pdf,
+                title: pdfForm.title,
+                description: pdfForm.description,
+                fileName: fileName,
+                fileData: fileData,
+                uploadDate: new Date().toISOString(),
+              }
+            : pdf,
+        )
+        console.log("✅ PDF modifié")
+      } else {
+        // Ajouter un nouveau PDF
+        const newPdf = {
+          id: Math.max(...pdfs.map((pdf) => pdf.id), 0) + 1,
+          title: pdfForm.title,
+          description: pdfForm.description,
+          fileName: fileName,
+          fileData: fileData,
+          uploadDate: new Date().toISOString(),
+        }
+        newPdfs = [...pdfs, newPdf]
+        console.log("✅ PDF ajouté")
+      }
+
+      savePdfs(newPdfs)
+      setShowPdfForm(false)
+    } catch (error) {
+      console.error("❌ Erreur sauvegarde PDF:", error)
+      alert("Erreur lors de la sauvegarde du document")
+    }
+  }
+
+  const handleDownloadPdf = (pdf) => {
+    if (pdf.fileData) {
+      // Créer un lien de téléchargement
+      const link = document.createElement("a")
+      link.href = pdf.fileData
+      link.download = pdf.fileName
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } else {
+      alert("Aucun fichier disponible pour ce document")
+    }
+  }
+
   // Affichage de loading
   if (loading) {
     return (
@@ -638,7 +833,7 @@ const AdminDashboard = () => {
 
       {/* Contenu principal */}
       <main className="dashboard-content">
-        {/* ✅ MODIFIÉ : Onglets avec le nouvel onglet Carrousel */}
+        {/* ✅ MODIFIÉ : Onglets avec le nouvel onglet Documents */}
         <div className="dashboard-tabs">
           <button
             className={`tab-button ${activeTab === "events" ? "active" : ""}`}
@@ -657,6 +852,9 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab("carousel")}
           >
             Carrousel d'Accueil ({carouselImages.length})
+          </button>
+          <button className={`tab-button ${activeTab === "pdfs" ? "active" : ""}`} onClick={() => setActiveTab("pdfs")}>
+            Documents PDF ({pdfs.length})
           </button>
         </div>
 
@@ -677,7 +875,8 @@ const AdminDashboard = () => {
               onClick={() => {
                 loadEvents()
                 loadMedias()
-                loadCarouselImages() // ✅ NOUVEAU
+                loadCarouselImages()
+                loadPdfs() // ✅ NOUVEAU
               }}
               style={{
                 marginLeft: "15px",
@@ -843,7 +1042,7 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* ✅ NOUVEAU : Onglet Carrousel */}
+          {/* Onglet Carrousel (inchangé) */}
           {activeTab === "carousel" && (
             <div className="carousel-section">
               <div className="section-header">
@@ -891,6 +1090,53 @@ const AdminDashboard = () => {
                           </button>
                         </div>
                       </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ✅ NOUVEAU : Onglet Documents PDF */}
+          {activeTab === "pdfs" && (
+            <div className="pdfs-section">
+              <div className="section-header">
+                <h2 className="section-title">Gestion du PDF - On vous propose</h2>
+                <button className="btn-add" onClick={handleAddPdf}>
+                  + Ajouter un document
+                </button>
+              </div>
+
+              <div className="items-list">
+                {pdfs.length === 0 ? (
+                  <div className="empty-state">
+                    <h3>Aucun document PDF</h3>
+                    <p>Commencez par ajouter votre premier document</p>
+                    <button className="btn-add" onClick={handleAddPdf}>
+                      + Ajouter un document
+                    </button>
+                  </div>
+                ) : (
+                  pdfs.map((pdf) => (
+                    <div key={pdf.id} className="item-card pdf-card">
+                      <div className="pdf-icon">📄</div>
+                      <div className="item-header">
+                        <div>
+                          <h3 className="item-title">{pdf.title}</h3>
+                          <p className="item-meta">
+                            {pdf.fileName} • Ajouté le {new Date(pdf.uploadDate).toLocaleDateString("fr-FR")}
+                          </p>
+                        </div>
+                        <div className="item-actions">
+                          <button className="btn-edit" onClick={() => handleEditPdf(pdf)}>
+                            Modifier
+                          </button>
+                          <button className="btn-delete" onClick={() => handleDeletePdf(pdf.id)}>
+                            Supprimer
+                          </button>
+                        </div>
+                      </div>
+                      {pdf.description && <p className="item-description">{pdf.description}</p>}
                     </div>
                   ))
                 )}
@@ -1036,7 +1282,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* ✅ NOUVEAU : Formulaire pour les images du carrousel */}
+      {/* Formulaire pour les images du carrousel (inchangé) */}
       {showCarouselForm && (
         <div className="form-overlay">
           <div className="form-modal">
@@ -1118,6 +1364,99 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* ✅ NOUVEAU : Formulaire pour les PDFs */}
+      {showPdfForm && (
+        <div className="form-overlay">
+          <div className="form-modal">
+            <div className="form-header">
+              <h3 className="form-title">{editingPdf ? "Modifier le document" : "Ajouter un document"}</h3>
+              <button className="form-close" onClick={() => setShowPdfForm(false)}>
+                ×
+              </button>
+            </div>
+            <div className="form-body">
+              <div className="form-group">
+                <label className="form-label">Titre *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={pdfForm.title}
+                  onChange={(e) => setPdfForm({ ...pdfForm, title: e.target.value })}
+                  placeholder="Ex: Guide des activités OMAC"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea
+                  className="form-textarea"
+                  value={pdfForm.description}
+                  onChange={(e) => setPdfForm({ ...pdfForm, description: e.target.value })}
+                  placeholder="Description du document..."
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">{editingPdf ? "Nouveau fichier (optionnel)" : "Fichier PDF *"}</label>
+                <div className="file-input-container">
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={handlePdfFileChange}
+                    className="file-input"
+                    id="pdf-file-input"
+                    ref={pdfInputRef}
+                  />
+                  <label htmlFor="pdf-file-input" className="file-input-label">
+                    📄 {pdfForm.file ? pdfForm.file.name : "Choisir un fichier PDF"}
+                  </label>
+                </div>
+                <p style={{ fontSize: "0.875rem", color: "#666", margin: "0.5rem 0 0 0" }}>
+                  Format accepté: PDF (max 10MB)
+                </p>
+              </div>
+
+              {/* Affichage du fichier actuel lors de l'édition */}
+              {editingPdf && (
+                <div className="form-group">
+                  <label className="form-label">Fichier actuel</label>
+                  <div
+                    style={{
+                      padding: "10px",
+                      background: "#f8f9fa",
+                      borderRadius: "4px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <span>📄</span>
+                    <span>{editingPdf.fileName}</span>
+                    {editingPdf.fileData && (
+                      <button
+                        type="button"
+                        className="btn-download"
+                        onClick={() => handleDownloadPdf(editingPdf)}
+                        style={{ marginLeft: "auto" }}
+                      >
+                        Télécharger
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="form-actions">
+              <button className="btn-cancel" onClick={() => setShowPdfForm(false)}>
+                Annuler
+              </button>
+              <button className="btn-save" onClick={handleSavePdf}>
+                {editingPdf ? "Modifier" : "Ajouter"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* CSS pour l'animation et les nouveaux styles */}
       <style jsx>{`
         @keyframes spin {
@@ -1133,6 +1472,24 @@ const AdminDashboard = () => {
         
         .carousel-image-preview {
           flex-shrink: 0;
+        }
+        
+        .pdf-card {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+        
+        .pdf-icon {
+          flex-shrink: 0;
+          font-size: 24px;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f8f9fa;
+          border-radius: 8px;
         }
         
         .file-input-container {
@@ -1162,6 +1519,23 @@ const AdminDashboard = () => {
         .file-input-label:hover {
           border-color: #27ae60;
           background: #f0f8f0;
+        }
+        
+        .btn-download {
+          background: #28a745;
+          color: white;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 3px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+        }
+        
+        .btn-download:hover {
+          background: #218838;
         }
         
         .btn-view {

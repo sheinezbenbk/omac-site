@@ -279,16 +279,14 @@ const EventsCalendar = () => {
         </div>
         
        
-        {/* Modal pour afficher les détails de l'événement (votre code original conservé) */}
+        {/* Modal pour afficher les détails de l'événement*/}
         {showModal && selectedEvent && (
           <div className="event-modal-overlay" onClick={closeModal}>
             <div className="event-modal" onClick={(e) => e.stopPropagation()}>
               <button className="modal-close-btn" onClick={closeModal}>×</button>
               
               <div className="event-modal-content">
-                <div className="event-image">
-                  <img src={selectedEvent.image} alt={selectedEvent.title} />
-                </div>
+                
                 <div className="event-details">
                   <h3 className="event-title">{selectedEvent.title}</h3>
                   

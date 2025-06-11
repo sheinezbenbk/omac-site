@@ -100,10 +100,10 @@
 
 .blue-square {
   position: absolute;
-  width: 80px;
+  width: 90px;
   height: 80px;
   background-color: #3498db;
-  bottom: -20px;
+  bottom: -120px;
   right: -20px;
   border-radius: 10px;
   z-index: 1;
@@ -170,7 +170,7 @@
 /* SECTION SERVICES - CENTRÉE ET TRÈS ÉLARGIE */
 .services-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 50px; /* Augmenté de 40px à 50px */
   justify-content: center;
   align-items: stretch;

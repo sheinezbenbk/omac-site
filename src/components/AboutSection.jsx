@@ -12,50 +12,48 @@ import jeunesseIcon from "../assets/basket.png"
 import famillesIcon from "../assets/famille.png"
 import scolariteIcon from "../assets/ecole.png"
 
-// Import des nouveaux composants
+// Import du carrousel
 import ImageCarousel from "./ImageCarousel.tsx"
-import AdminPanel from "./AdminPanel"
 
 const AboutSection = () => {
   const navigate = useNavigate()
-  const [showAdmin, setShowAdmin] = useState(false)
   const [images, setImages] = useState([])
-  const [pdfUrl, setPdfUrl] = useState("") // État pour l'URL du PDF
+  const [currentPdf, setCurrentPdf] = useState(null)
 
-  // Charger les images et le PDF depuis le localStorage au démarrage
+  // Charger les images depuis le localStorage au démarrage
   useEffect(() => {
     const savedImages = localStorage.getItem("carousel-images")
-    const savedPdfUrl = localStorage.getItem("omac-pdf-url")
-    
     if (savedImages) {
       setImages(JSON.parse(savedImages))
     }
-    if (savedPdfUrl) {
-      setPdfUrl(savedPdfUrl)
-    }
   }, [])
 
-  // Fonction pour mettre à jour les images
-  const handleImagesUpdate = (newImages) => {
-    setImages(newImages)
-    localStorage.setItem("carousel-images", JSON.stringify(newImages))
-  }
+  // Charger le PDF le plus récent depuis le localStorage au démarrage
+  useEffect(() => {
+    const loadLatestPdf = () => {
+      try {
+        const savedPdfs = localStorage.getItem("omac_pdfs")
+        if (savedPdfs) {
+          const pdfsData = JSON.parse(savedPdfs)
+          // Trouver le PDF le plus récent qui a des données
+          if (pdfsData && pdfsData.length > 0) {
+            // Trier par date de mise à jour (du plus récent au plus ancien)
+            const sortedPdfs = pdfsData
+              .filter((pdf) => pdf.fileData) // Seulement les PDFs avec des données
+              .sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate))
 
-  // Fonction pour mettre à jour le PDF
-  const handlePdfUpdate = (newPdfUrl) => {
-    setPdfUrl(newPdfUrl)
-    localStorage.setItem("omac-pdf-url", newPdfUrl)
-  }
-
-  // Fonction pour télécharger/ouvrir le PDF
-  const handlePdfClick = () => {
-    if (pdfUrl) {
-      // Ouvrir le PDF dans un nouvel onglet
-      window.open(pdfUrl, '_blank')
-    } else {
-      alert("Aucun PDF n'a été configuré par l'administrateur.")
+            if (sortedPdfs.length > 0) {
+              setCurrentPdf(sortedPdfs[0])
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement du PDF:", error)
+      }
     }
-  }
+
+    loadLatestPdf()
+  }, [])
 
   // Fonction pour naviguer vers la page Guide
   const handleGuideClick = () => {
@@ -93,6 +91,39 @@ const AboutSection = () => {
     setTimeout(() => {
       window.scrollTo(0, 0)
     }, 100)
+  }
+
+  // Fonction pour ouvrir le PDF
+  const handleOpenPdf = () => {
+    if (currentPdf && currentPdf.fileData) {
+      try {
+        // Convertir le base64 en blob pour l'ouvrir
+        const base64Data = currentPdf.fileData.split(",")[1] // Enlever le préfixe data:application/pdf;base64,
+        const byteCharacters = atob(base64Data)
+        const byteNumbers = new Array(byteCharacters.length)
+
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i)
+        }
+
+        const byteArray = new Uint8Array(byteNumbers)
+        const blob = new Blob([byteArray], { type: "application/pdf" })
+        const blobUrl = URL.createObjectURL(blob)
+
+        // Ouvrir dans un nouvel onglet
+        window.open(blobUrl, "_blank")
+
+        // Nettoyer l'URL après un délai
+        setTimeout(() => {
+          URL.revokeObjectURL(blobUrl)
+        }, 1000)
+      } catch (error) {
+        console.error("Erreur ouverture PDF:", error)
+        alert("Erreur lors de l'ouverture du document.")
+      }
+    } else {
+      alert("Le document n'est pas encore disponible. Contactez l'administration.")
+    }
   }
 
   const items = [
@@ -138,14 +169,10 @@ const AboutSection = () => {
             <p className="about-subtitle">Découvrez notre Histoire et nos Missions</p>
             <div className="green-underline"></div>
           </div>
-          {/* Bouton admin discret */}
-          <button className="admin-toggle-btn" onClick={() => setShowAdmin(!showAdmin)} title="Administration">
-            ⚙️
-          </button>
         </div>
 
         <div className="about-columns">
-          {/* REMPLACEMENT DE L'IMAGE PAR LE CARROUSEL */}
+          {/* CARROUSEL D'IMAGES */}
           <div className="image-column">
             <div className="yellow-square"></div>
             <div className="image-container">
@@ -180,18 +207,15 @@ const AboutSection = () => {
                 ))}
               </ul>
 
-              <div className="buttons-container">
-                <button className="btn-learn-more" onClick={handleGuideClick}>
-                  Guide de l'OMAC
-                </button>
-                <button className="btn-learn-more" onClick={handleProjetSocialClick}>
-                  Projet Social
-                </button>
-                {/* Nouveau bouton PDF */}
-                <button className="btn-pdf-proposal" onClick={handlePdfClick}>
-                  ON VOUS PROPOSE
-                </button>
-              </div>
+              <button className="btn-learn-more" onClick={handleGuideClick}>
+                Guide de l'OMAC
+              </button>
+              <button className="btn-learn-more" onClick={handleProjetSocialClick}>
+                Projet Social
+              </button>
+              <button className="btn-learn-more" onClick={handleOpenPdf}>
+                📄 On vous propose
+              </button>
             </div>
             <div className="blue-square"></div>
           </div>
@@ -221,17 +245,6 @@ const AboutSection = () => {
           ))}
         </div>
       </div>
-
-      {/* Panel d'administration */}
-      {showAdmin && (
-        <AdminPanel 
-          images={images} 
-          pdfUrl={pdfUrl}
-          onImagesUpdate={handleImagesUpdate} 
-          onPdfUpdate={handlePdfUpdate}
-          onClose={() => setShowAdmin(false)} 
-        />
-      )}
     </section>
   )
 }
