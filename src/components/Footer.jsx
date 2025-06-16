@@ -101,7 +101,7 @@ const Footer = () => {
             {/* Réseaux sociaux */}
             <div className="social-links">
               <a 
-                href="https://facebook.com/omactorcy" 
+                href="https://www.facebook.com/people/Omac-Torcy/pfbid02stywG3nQuXqntZJdg7br91VUrmit1GvsuoGRTTcfeEbLSZzR5Mn54xLadD6cnPW3l/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="social-link facebook" 
@@ -110,7 +110,7 @@ const Footer = () => {
                 <img src={fb} alt="Facebook" style={{width: '24px', height: '24px'}} />
               </a>
               <a 
-                href="https://instagram.com/omactorcy" 
+                href="https://www.instagram.com/omac_torcy/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="social-link instagram" 
@@ -119,7 +119,7 @@ const Footer = () => {
                 <img src={insta} alt="Instagram" style={{width: '24px', height: '24px'}} />
               </a>
               <a 
-                href="https://snapchat.com/add/omactorcy" 
+                href="https://www.snapchat.com/add/omac77200" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="social-link snapchat" 

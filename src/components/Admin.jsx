@@ -15,8 +15,176 @@ const Admin = () => {
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [loginError, setLoginError] = useState("")
+  const [apiStatus, setApiStatus] = useState("checking") // checking, online, offline
 
-  // Styles intégrés
+  // Test de connexion API au chargement
+  useEffect(() => {
+    const checkApiConnection = async () => {
+      try {
+        console.log("🔍 Test de connexion à l'API...")
+        const result = await ApiService.testConnection()
+        if (result) {
+          setApiStatus("online")
+          console.log("✅ API accessible")
+        } else {
+          setApiStatus("offline")
+          console.log("❌ API non accessible")
+        }
+      } catch (error) {
+        setApiStatus("offline")
+        console.error("❌ Erreur test API:", error)
+      }
+    }
+
+    checkApiConnection()
+  }, [])
+
+  // Vérification d'authentification au chargement
+  useEffect(() => {
+    console.log("🔍 État de la connexion au chargement:", {
+      hasToken: !!localStorage.getItem("omac_token"),
+      isAuthenticated: ApiService ? ApiService.isAuthenticated() : "ApiService non disponible",
+      currentPath: window.location.pathname,
+    })
+
+    if (ApiService && ApiService.isAuthenticated()) {
+      console.log("👤 Utilisateur déjà connecté, redirection automatique vers dashboard...")
+      navigate("/admin/dashboard", { replace: true })
+    }
+  }, [navigate])
+
+  // Charger les données sauvegardées au chargement
+  useEffect(() => {
+    const rememberedUser = localStorage.getItem("omac_remember_user")
+    if (rememberedUser) {
+      setFormData((prev) => ({
+        ...prev,
+        username: rememberedUser,
+        rememberMe: true,
+      }))
+    }
+  }, [])
+
+  // Gestion du retour à l'accueil
+  const handleBackToHome = () => {
+    console.log("🏠 Retour à l'accueil")
+    navigate("/")
+  }
+
+  // Gestion des changements dans le formulaire
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }))
+
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }))
+    }
+
+    if (loginError) {
+      setLoginError("")
+    }
+  }
+
+  // Validation du formulaire
+  const validateForm = () => {
+    const newErrors = {}
+
+    if (!formData.username.trim()) {
+      newErrors.username = "Le nom d'utilisateur est requis"
+    }
+
+    if (!formData.mot_de_passe) {
+      newErrors.mot_de_passe = "Le mot de passe est requis"
+    } else if (formData.mot_de_passe.length < 6) {
+      newErrors.mot_de_passe = "Le mot de passe doit contenir au moins 6 caractères"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  // Gestion de la soumission avec meilleure gestion d'erreurs
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoginError("")
+
+    console.log("🟡 Début handleSubmit")
+
+    // Vérifier l'état de l'API avant de tenter la connexion
+    if (apiStatus === "offline") {
+      setLoginError("Impossible de se connecter au serveur. Vérifiez votre connexion internet.")
+      return
+    }
+
+    if (!validateForm()) {
+      console.log("❌ Validation échouée")
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      console.log("🔄 Tentative de connexion...", {
+        username: formData.username,
+        password: "***",
+        apiUrl: "https://backend-enq3u5yiw-sheinezbenbks-projects.vercel.app/api",
+      })
+
+      if (!ApiService || !ApiService.login) {
+        throw new Error("ApiService non disponible")
+      }
+
+      const response = await ApiService.login({
+        username: formData.username,
+        mot_de_passe: formData.mot_de_passe,
+      })
+
+      console.log("✅ Connexion réussie:", response)
+
+      if (formData.rememberMe) {
+        localStorage.setItem("omac_remember_user", formData.username)
+      }
+
+      console.log("🔄 Redirection vers dashboard...")
+      navigate("/admin/dashboard")
+    } catch (error) {
+      console.error("❌ Erreur complète de connexion:", error)
+
+      // Gestion d'erreurs plus précise
+      if (error.name === "TypeError" && error.message.includes("fetch")) {
+        setLoginError("Erreur de réseau : Impossible de contacter le serveur")
+      } else if (error.message && error.message.includes("Identifiants invalides")) {
+        setLoginError("Nom d'utilisateur ou mot de passe incorrect")
+      } else if (error.message && error.message.includes("Erreur de connexion")) {
+        setLoginError("Problème de connexion au serveur. Vérifiez votre connexion internet.")
+      } else if (error.message && error.message.includes("ApiService non disponible")) {
+        setLoginError("Erreur technique : Service API non disponible")
+      } else {
+        setLoginError(`Erreur de connexion : ${error.message || "Erreur inconnue"}`)
+      }
+    } finally {
+      setIsLoading(false)
+      console.log("🟡 Fin handleSubmit")
+    }
+  }
+
+  // Gestion du "Mot de passe oublié"
+  const handleForgotPassword = () => {
+    alert(
+      "Pour réinitialiser votre mot de passe, contactez l'administrateur système de l'OMAC.\n\nEmail: omac.torcy77@gmail.com\nTéléphone: 01 60 31 31 01",
+    )
+  }
+
+  // États pour les effets hover
+  const [isBackButtonHovered, setIsBackButtonHovered] = useState(false)
+
+  // Styles intégrés (identiques à votre version)
   const styles = {
     adminPage: {
       minHeight: "100vh",
@@ -75,25 +243,27 @@ const Admin = () => {
       margin: "0",
       fontWeight: "400",
     },
-    defaultCredentials: {
-      background: "#e8f4fd",
-      padding: "15px",
+    apiStatus: {
+      padding: "10px 15px",
       borderRadius: "8px",
       marginBottom: "20px",
-      border: "1px solid #bee5eb",
-    },
-    credentialsTitle: {
-      margin: "0 0 10px 0",
-      color: "#0c5460",
-      fontSize: "16px",
-    },
-    credentialsText: {
-      margin: "5px 0",
       fontSize: "14px",
+      textAlign: "center",
     },
-    credentialsSmall: {
-      color: "#6c757d",
-      fontSize: "12px",
+    apiStatusOnline: {
+      background: "#d4edda",
+      color: "#155724",
+      border: "1px solid #c3e6cb",
+    },
+    apiStatusOffline: {
+      background: "#f8d7da",
+      color: "#721c24",
+      border: "1px solid #f5c6cb",
+    },
+    apiStatusChecking: {
+      background: "#fff3cd",
+      color: "#856404",
+      border: "1px solid #ffeaa7",
     },
     errorMessage: {
       background: "#ffe6e6",
@@ -192,7 +362,6 @@ const Admin = () => {
       borderTopColor: "white",
       animation: "spin 1s linear infinite",
     },
-    // Nouveau style pour le bouton retour à l'accueil
     backToHomeButton: {
       background: "linear-gradient(135deg, #8DC540 0%, #6ab04c 100%)",
       color: "white",
@@ -222,144 +391,8 @@ const Admin = () => {
     },
   }
 
-  // États pour les effets hover
-  const [isBackButtonHovered, setIsBackButtonHovered] = useState(false)
-
-  // Vérification d'authentification au chargement
-  useEffect(() => {
-    console.log("🔍 État de la connexion au chargement:", {
-      hasToken: !!localStorage.getItem("omac_token"),
-      isAuthenticated: ApiService ? ApiService.isAuthenticated() : "ApiService non disponible",
-      currentPath: window.location.pathname,
-    })
-
-    if (ApiService && ApiService.isAuthenticated()) {
-      console.log("👤 Utilisateur déjà connecté, redirection automatique vers dashboard...")
-      navigate("/admin/dashboard", { replace: true })
-    }
-  }, [navigate])
-
-  // Gestion du retour à l'accueil
-  const handleBackToHome = () => {
-    console.log("🏠 Retour à l'accueil")
-    navigate("/")
-  }
-
-  // Gestion des changements dans le formulaire
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }))
-
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }))
-    }
-
-    if (loginError) {
-      setLoginError("")
-    }
-  }
-
-  // Validation du formulaire
-  const validateForm = () => {
-    const newErrors = {}
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Le nom d'utilisateur est requis"
-    }
-
-    if (!formData.mot_de_passe) {
-      newErrors.mot_de_passe = "Le mot de passe est requis"
-    } else if (formData.mot_de_passe.length < 6) {
-      newErrors.mot_de_passe = "Le mot de passe doit contenir au moins 6 caractères"
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  // Gestion de la soumission
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoginError("")
-
-    console.log("🟡 Début handleSubmit")
-
-    if (!validateForm()) {
-      console.log("❌ Validation échouée")
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      console.log("🔄 Tentative de connexion...", {
-        username: formData.username,
-        password: "***",
-      })
-
-      if (!ApiService || !ApiService.login) {
-        throw new Error("ApiService non disponible")
-      }
-
-      const response = await ApiService.login({
-        username: formData.username,
-        mot_de_passe: formData.mot_de_passe,
-      })
-
-      console.log("✅ Connexion réussie:", response)
-
-      if (formData.rememberMe) {
-        localStorage.setItem("omac_remember_user", formData.username)
-      }
-
-      console.log("🔄 Redirection vers dashboard...")
-      navigate("/admin/dashboard")
-    } catch (error) {
-      console.error("❌ Erreur complète de connexion:", error)
-
-      if (error.message && error.message.includes("Identifiants invalides")) {
-        setLoginError("Nom d'utilisateur ou mot de passe incorrect")
-      } else if (error.message && error.message.includes("Erreur de connexion")) {
-        setLoginError("Problème de connexion au serveur. Vérifiez votre connexion internet.")
-      } else if (error.message && error.message.includes("ApiService non disponible")) {
-        setLoginError("Erreur technique : Service API non disponible")
-      } else {
-        setLoginError(`Erreur technique : ${error.message || "Erreur inconnue"}`)
-      }
-    } finally {
-      setIsLoading(false)
-      console.log("🟡 Fin handleSubmit")
-    }
-  }
-
-  // Charger les données sauvegardées au chargement
-  useEffect(() => {
-    const rememberedUser = localStorage.getItem("omac_remember_user")
-    if (rememberedUser) {
-      setFormData((prev) => ({
-        ...prev,
-        username: rememberedUser,
-        rememberMe: true,
-      }))
-    }
-  }, [])
-
-  // Gestion du "Mot de passe oublié"
-  const handleForgotPassword = () => {
-    alert(
-      "Pour réinitialiser votre mot de passe, contactez l'administrateur système de l'OMAC.\n\nEmail: omac.torcy77@gmail.com\nTéléphone: 01 60 31 31 01",
-    )
-  }
-
   return (
     <div style={styles.adminPage}>
-      {/* Conteneur de connexion */}
       <div style={styles.loginContainer}>
         {/* Header */}
         <div style={styles.loginHeader}>
@@ -370,7 +403,22 @@ const Admin = () => {
           <p style={styles.loginSubtitle}>Connectez-vous pour gérer le site</p>
         </div>
 
-        
+        {/* Statut de l'API */}
+        <div
+          style={{
+            ...styles.apiStatus,
+            ...(apiStatus === "online"
+              ? styles.apiStatusOnline
+              : apiStatus === "offline"
+                ? styles.apiStatusOffline
+                : styles.apiStatusChecking),
+          }}
+        >
+          {apiStatus === "checking" && "🔍 Vérification de la connexion..."}
+          {apiStatus === "online" && "✅ Serveur accessible"}
+          {apiStatus === "offline" && "❌ Serveur non accessible"}
+        </div>
+
         {/* Message d'erreur général */}
         {loginError && <div style={styles.errorMessage}>{loginError}</div>}
 
@@ -393,7 +441,7 @@ const Admin = () => {
               }}
               placeholder="admin"
               autoComplete="username"
-              disabled={isLoading}
+              disabled={isLoading || apiStatus === "offline"}
             />
             {errors.username && <span style={styles.errorMessage}>{errors.username}</span>}
           </div>
@@ -415,7 +463,7 @@ const Admin = () => {
               }}
               placeholder="omac77200"
               autoComplete="current-password"
-              disabled={isLoading}
+              disabled={isLoading || apiStatus === "offline"}
             />
             {errors.mot_de_passe && <span style={styles.errorMessage}>{errors.mot_de_passe}</span>}
           </div>
@@ -434,7 +482,9 @@ const Admin = () => {
               Se souvenir de moi
             </label>
 
-            
+            <button type="button" onClick={handleForgotPassword} style={styles.forgotPassword} disabled={isLoading}>
+              Mot de passe oublié ?
+            </button>
           </div>
 
           {/* Conteneur des boutons */}
@@ -444,9 +494,9 @@ const Admin = () => {
               type="submit"
               style={{
                 ...styles.loginButton,
-                ...(isLoading ? styles.loginButtonDisabled : {}),
+                ...(isLoading || apiStatus === "offline" ? styles.loginButtonDisabled : {}),
               }}
-              disabled={isLoading}
+              disabled={isLoading || apiStatus === "offline"}
             >
               {isLoading && <div style={styles.loading}></div>}
               {isLoading ? "Connexion en cours..." : "Se connecter"}
@@ -471,11 +521,11 @@ const Admin = () => {
       </div>
 
       {/* CSS pour l'animation de rotation */}
-      <style jsx>{`
-                @keyframes spin {
-                    to { transform: rotate(360deg); }
-                }
-            `}</style>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   )
 }

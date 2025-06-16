@@ -845,7 +845,7 @@ const Header = () => {
       </DropdownPortal>
 
       {/* Style global pour forcer l'absence de défilement horizontal */}
-      <style jsx global>{`
+      <style>{`
         * {
           box-sizing: border-box !important;
         }
