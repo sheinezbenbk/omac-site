@@ -1,10 +1,11 @@
-// Configuration des URLs selon l'environnement
+
 const API_BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://backend-enq3u5yiw-sheinezbenbks-projects.vercel.app/api" // Production (Vercel)
-    : "http://localhost:3001/api" // Développement (votre backend local)
+    : "http://localhost:3001/api" // Développement (backend en local)
 
-class ApiService {
+class ApiService { 
+  
   // ===============================================
   // GESTION DES ÉVÉNEMENTS
   // ===============================================
