@@ -1,5 +1,3 @@
-/* GuideOMAC.css - Page du Guide OMAC */
-
 .guide-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -10,7 +8,7 @@
 .guide-header {
   background: linear-gradient(135deg, #3498db 0%, #63a0c9 100%);
   color: white;
-  padding: 100px 0 60px 0; /* Plus de padding-top pour compenser le header fixe */
+  padding: 100px 0 60px 0; 
   text-align: center;
   position: relative;
   overflow: hidden;

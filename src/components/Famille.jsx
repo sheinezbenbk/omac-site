@@ -2,17 +2,14 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Famille.css';
 
-// Import des composants communs
 import Header from './Header';
 import Footer from './Footer';
 
-// Import des icônes
 import icon1 from '../assets/check.png';
 import icon2 from '../assets/check.png';
 import icon3 from '../assets/check.png';
 import icon4 from '../assets/check.png';
 
-// Import des icônes pour les services
 import parentaliteIcon from '../assets/famille.png';
 import atelierIcon from '../assets/ecole.png';
 import echangeIcon from '../assets/check.png';
@@ -84,7 +81,6 @@ const Famille = () => {
 
   return (
     <div className="famille-page">
-      {/* Header commun */}
       <Header />
 
       {/* En-tête de la page famille */}
@@ -214,7 +210,6 @@ const Famille = () => {
         </div>
       </section>
 
-      {/* Footer commun */}
       <Footer />
     </div>
   );

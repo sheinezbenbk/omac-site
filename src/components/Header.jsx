@@ -132,7 +132,7 @@ const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Styles CSS intégrés avec corrections pour mobile
+  // Styles CSS pour mobile
   const styles = {
     header: {
       padding: "15px 20px",
@@ -166,7 +166,7 @@ const Header = () => {
       maxHeight: "50px",
     },
     nav: {
-      display: "none", // Caché sur mobile par défaut
+      display: "none",
       gap: "30px",
       alignItems: "center",
     },
@@ -305,7 +305,7 @@ const Header = () => {
       flexShrink: 0,
     },
     admin: {
-      display: "none", // Caché sur mobile
+      display: "none", 
       alignItems: "center",
     },
     adminIcon: {
@@ -328,7 +328,6 @@ const Header = () => {
     },
   }
 
-  // Media queries avec JavaScript pour desktop
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768)
 
   useEffect(() => {
@@ -460,7 +459,7 @@ const Header = () => {
     }
   }, [])
 
-  // Prevent body scroll when mobile menu is open
+  // Empêcher le défilement du corps lorsque le menu mobile est ouvert
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden"
@@ -473,7 +472,7 @@ const Header = () => {
     }
   }, [mobileMenuOpen])
 
-  // Force no horizontal scroll
+  // Ne forcer aucun défilement horizontal
   useEffect(() => {
     const preventHorizontalScroll = () => {
       document.documentElement.style.overflowX = "hidden"

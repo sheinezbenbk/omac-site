@@ -1,32 +1,19 @@
-
-
 .hero {
-  /* Background adaptatif selon l'appareil */
   background-color: #a8b55f;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  
-  /* Height adaptatif mobile */
   height: 100vh;
-  height: 100dvh; /* Dynamic viewport height pour mobiles modernes */
-  min-height: 500px; /* Hauteur minimum sécurisée */
-  max-height: 900px; /* Éviter les très grands écrans */
-  
-  /* Background optimisé mobile */
-  background-attachment: scroll; /* Meilleur performance sur mobile */
-  
-  /* Layout centré */
+  height: 100dvh; 
+  min-height: 500px; 
+  max-height: 900px; 
+  background-attachment: scroll;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  
-  /* Padding adaptatif avec clamp() */
   padding: clamp(80px, 15vh, 120px) clamp(16px, 4vw, 40px) clamp(40px, 8vh, 60px);
-  
-  /* Position et overlay */
   position: relative;
   overflow: hidden;
 }
@@ -44,52 +31,33 @@
 }
 
 .hero-content {
-  /* Largeur adaptive */
   width: 100%;
-  max-width: min(90%, 900px); /* Maximum 90% de la largeur ou 900px */
-  
-  /* Position et espacement */
+  max-width: min(90%, 900px);
   position: relative;
   z-index: 10;
-  
-  /* Éviter le débordement */
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
 .hero-title {
-  /* Taille fluide parfaite avec clamp() */
   font-size: clamp(2rem, 6vw, 3.75rem);
-  
-  /* Espacement adaptatif */
   margin-bottom: clamp(16px, 4vw, 32px);
-  
-  /* Poids et hauteur de ligne */
   font-weight: 700;
   line-height: 1.2;
-  
-  /* Couleur et ombre */
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-  
-  /* Gestion du texte long */
   word-break: break-word;
   hyphens: auto;
 }
 
 .hero-title .highlight {
-  color: #FFD350; /* Votre couleur jaune conservée */
+  color: #FFD350; 
 }
 
 .hero-text {
-  /* Taille fluide */
   font-size: clamp(1rem, 3vw, 1.25rem);
-  
-  /* Largeur optimisée */
   max-width: min(85%, 700px);
   margin: 0 auto clamp(24px, 6vw, 40px);
-  
-  /* Style de texte */
   line-height: 1.6;
   font-weight: 300;
   color: #E2E2E2;
@@ -97,65 +65,42 @@
 }
 
 .hero-buttons {
-  /* Layout adaptatif */
   display: flex;
   gap: clamp(12px, 3vw, 20px);
   justify-content: center;
   align-items: center;
-  
-  /* Responsive layout */
   flex-wrap: wrap;
-  
-  /* Position */
   position: relative;
   z-index: 10;
-  
-  /* Largeur */
   width: 100%;
 }
 
 /* ========================
-   BOUTONS RESPONSIVE (couleurs conservées)
+   BOUTONS RESPONSIVE 
    ====================== */
 
 .btn {
-  /* Taille tactile optimale */
   min-height: 48px;
   min-width: 140px;
-  
-  /* Padding adaptatif */
   padding: clamp(12px, 3vw, 16px) clamp(20px, 5vw, 32px);
-  
-  /* Taille de texte fluide */
   font-size: clamp(14px, 3.5vw, 18px);
   font-weight: 600;
-  
-  /* Apparence */
   border-radius: 6px;
   border: 2px solid transparent;
   cursor: pointer;
   text-decoration: none;
-  
-  /* Layout */
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  
-  /* Transitions optimisées */
   transition: all 0.3s ease;
-  
-  /* Optimisation tactile */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
-  
-  /* Espacement */
   white-space: nowrap;
 }
 
-/* Bouton primaire - VOS couleurs conservées */
 .btn-primary {
   background-color: #dbbc34; 
   color: white;
@@ -163,14 +108,13 @@
 }
 
 .btn-primary:hover {
-  background-color: #dbbc34; /* Votre hover bleu conservé */
+  background-color: #dbbc34; 
   transform: translateY(-2px);
   box-shadow: 0 5px 15px;
   color: white;
   text-decoration: none;
 }
 
-/* Bouton secondaire - VOS couleurs conservées */
 .btn-secondary {
   background-color: transparent;
   color: white;
@@ -179,7 +123,7 @@
 
 .btn-secondary:hover {
   background-color: white;
-  color: #3498db; /* Votre bleu conservé */
+  color: #3498db; 
   transform: translateY(-2px);
   text-decoration: none;
 }
@@ -196,7 +140,7 @@
   }
   
   .hero-title {
-    font-size: 1.8rem; /* Fallback pour très petits écrans */
+    font-size: 1.8rem; 
     margin-bottom: 16px;
   }
   
@@ -280,7 +224,7 @@
   .hero {
     min-height: 600px;
     padding: 100px 30px 50px;
-    background-attachment: scroll; /* Gardé en scroll pour tablettes */
+    background-attachment: scroll; 
   }
   
   .hero-title {
@@ -308,7 +252,7 @@
   .hero {
     min-height: 650px;
     padding: 110px 40px 60px;
-    background-attachment: fixed; /* Fixed OK sur desktop */
+    background-attachment: fixed; 
   }
   
   .hero-title {
@@ -354,7 +298,7 @@
   }
   
   .hero-title {
-    font-size: 3.75rem; /* Taille maximale */
+    font-size: 3.75rem; 
   }
   
   .hero-text {
@@ -434,7 +378,6 @@
   }
   
   .btn:hover {
-    /* Simplifier le hover sur mobile */
     transform: translateY(-1px);
   }
 }

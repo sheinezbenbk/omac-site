@@ -196,12 +196,12 @@
   margin-bottom: 2px;
 }
 
-/* Horaires - Simple et à gauche */
+/* Horaires */
 .hours-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  min-width: 10px; /* ✅ Un peu plus large */
+  min-width: 10px; 
 }
 
 .hours-item {
@@ -218,7 +218,7 @@
 
 .hours-day {
   color: #bdc3c7;
-  text-align: left; /* ✅ Aligné à gauche */
+  text-align: left; 
 }
 
 .hours-time {

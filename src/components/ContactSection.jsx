@@ -42,15 +42,15 @@ const ContactSection = () => {
   // localitation
   const locations = [
     {
-      name: "Leo Lagrange - OMAC",
+      name: "Maison Léo Lagrange - OMAC",
       address: "10 Rue de la Fontaine, 77200 Torcy"
     },
     {
-      name: "Arche Guédon",
+      name: "Arche Guédon - OMAC",
       address: "Place des Rencontres, 77200 Torcy"
     },
     {
-      name: "Beauregard",
+      name: "Beauregard - OMAC",
       address: "Promenade du Galion, 77200 Torcy"
     },
     {

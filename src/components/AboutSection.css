@@ -167,15 +167,15 @@
   background-color: #2980b9;
 }
 
-/* SECTION SERVICES - CENTRÉE ET TRÈS ÉLARGIE */
+/* SECTION SERVICES */
 .services-container {
   display: flex;
   flex-wrap: nowrap;
-  gap: 50px; /* Augmenté de 40px à 50px */
+  gap: 50px;
   justify-content: center;
   align-items: stretch;
   margin-top: 60px;
-  max-width: 1600px; /* Augmenté de 1400px à 1600px */
+  max-width: 1600px; 
   margin-left: auto;
   margin-right: auto;
 }
@@ -184,17 +184,17 @@
   background-color: white;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  padding: 45px; /* Augmenté de 40px à 45px */
-  width: calc(33.333% - 34px); /* Ajusté pour le nouveau gap */
-  min-width: 420px; /* Augmenté de 350px à 420px */
-  max-width: 500px; /* Augmenté de 420px à 500px */
+  padding: 45px; 
+  width: calc(33.333% - 34px); 
+  min-width: 420px; 
+  max-width: 500px; 
   display: flex;
   flex-direction: column;
   transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
   overflow: hidden;
   border: 1px solid #f0f0f0;
-  text-align: left; /* Changé de center à left */
+  text-align: left; 
 }
 
 .service-card:hover {
@@ -210,7 +210,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 0 25px 0; /* Changé de auto à 0 pour aligner à gauche */
+  margin: 0 0 25px 0; 
 }
 
 .service-icon img {
@@ -221,10 +221,10 @@
 
 .service-title {
   color: #1e6399;
-  font-size: 28px; /* Augmenté de 26px à 28px */
+  font-size: 28px;
   font-weight: 600;
   margin: 0 0 20px 0;
-  text-align: left; /* Changé de center à left */
+  text-align: left; 
 }
 
 .service-description {
@@ -233,7 +233,7 @@
   line-height: 1.7;
   flex-grow: 1;
   margin-bottom: 25px;
-  text-align: left; /* Changé de center à left */
+  text-align: left; 
 }
 
 .card-divider {
@@ -251,9 +251,9 @@
   display: inline-block;
   transition: color 0.3s, transform 0.3s;
   margin-top: 15px;
-  text-align: left; /* Changé de center à left */
+  text-align: left; 
   padding: 10px 0;
-  align-self: flex-start; /* Assure l'alignement à gauche */
+  align-self: flex-start; 
 }
 
 .service-link:hover {
@@ -336,9 +336,6 @@
   }
 }
 
-/* Reste de votre CSS AboutSection existant... */
-
-
 /* Responsive pour mobile - cartes moins larges */
 @media (max-width: 768px) {
   .services-container {
@@ -349,38 +346,38 @@
 
   .service-card {
     width: 100%;
-    max-width: 320px; /* Augmenté de 300px à 320px */
-    min-width: unset; /* Supprime la contrainte min-width */
-    padding: 25px; /* Réduit de 30px à 25px */
+    max-width: 320px;
+    min-width: unset; 
+    padding: 25px; 
     text-align: left;
   }
 
   .service-icon {
-    width: 60px; /* Réduit de 80px à 60px */
-    height: 60px; /* Réduit de 80px à 60px */
-    margin: 0 0 15px 0; /* Réduit de 20px à 15px */
+    width: 60px; 
+    height: 60px; 
+    margin: 0 0 15px 0; 
   }
 
   .service-icon img {
-    width: 30px; /* Réduit de 40px à 30px */
-    height: 30px; /* Réduit de 40px à 30px */
+    width: 30px; 
+    height: 30px; 
   }
 
   .service-title {
     text-align: left;
-    font-size: 22px; /* Réduit de 24px à 22px */
-    margin: 0 0 15px 0; /* Réduit de 20px à 15px */
+    font-size: 22px;
+    margin: 0 0 15px 0; 
   }
 
   .service-description {
     text-align: left;
-    font-size: 15px; /* Réduit de 16px à 15px */
-    line-height: 1.6; /* Réduit de 1.7 à 1.6 */
+    font-size: 15px;
+    line-height: 1.6; 
   }
 
   .service-link {
     text-align: left;
-    font-size: 15px; /* Réduit de 16px à 15px */
+    font-size: 15px; 
   }
 
   .about-columns {
@@ -392,26 +389,26 @@
 /* Très petits écrans */
 @media (max-width: 375px) {
   .service-card {
-    max-width: 300px; /* Encore plus étroit pour les très petits écrans */
-    padding: 20px; /* Padding encore plus petit */
+    max-width: 300px; 
+    padding: 20px; 
   }
 }
 
 @media (max-width: 992px) and (min-width: 769px) {
   .service-card {
     width: calc(50% - 20px);
-    max-width: 340px; /* Réduit de 380px à 340px */
-    min-width: unset; /* Supprime la contrainte min-width */
-    padding: 30px; /* Réduit de 35px à 30px */
+    max-width: 340px;
+    min-width: unset; 
+    padding: 30px;
   }
 
   .service-title {
-    font-size: 24px; /* Réduit de 26px à 24px */
+    font-size: 24px; 
   }
 
   .service-icon {
-    width: 70px; /* Réduit de 80px à 70px */
-    height: 70px; /* Réduit de 80px à 70px */
+    width: 70px; 
+    height: 70px; 
   }
 }
 

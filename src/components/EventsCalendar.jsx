@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ApiService from '../services/api'; // ✅ Import du service API
+import ApiService from '../services/api'; 
 import './EventsCalendar.css';
 
 const EventsCalendar = () => {
@@ -7,12 +7,12 @@ const EventsCalendar = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
   
-  // ✅ NOUVEAU : États pour les données de la BDD
+  // États pour les données de la BDD
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ NOUVEAU : Charger les événements depuis la BDD au montage du composant
+  // Charger les événements depuis la BDD au montage du composant
   useEffect(() => {
     loadEventsFromDB();
   }, []);
@@ -24,7 +24,7 @@ const EventsCalendar = () => {
       
       console.log('🔄 Chargement des événements depuis SiteGround...');
       
-      // Appel à votre API
+      // Appel à l'API
       const eventsData = await ApiService.getEvents();
       
       console.log('✅ Événements reçus:', eventsData);
@@ -47,11 +47,10 @@ const EventsCalendar = () => {
         return {
           id: event.id,
           title: event.titre,
-          date: startDate.toISOString().split('T')[0], // Format YYYY-MM-DD pour votre logique existante
+          date: startDate.toISOString().split('T')[0], // Format YYYY-MM-DD 
           time: event.toute_la_journee ? 'Toute la journée' : `${timeStart} - ${timeEnd}`,
-          location: "OMAC Torcy", // Vous pouvez ajouter un champ location dans votre BDD plus tard
+          location: "OMAC Torcy", 
           description: event.description || 'Événement organisé par l\'OMAC Torcy',
-          image: "/api/placeholder/400/300", // Image par défaut, vous pouvez ajouter des vraies images plus tard
           color: event.couleur || '#3498db',
           allDay: event.toute_la_journee === 1
         };
@@ -95,13 +94,13 @@ const EventsCalendar = () => {
     return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   };
   
-  // Vérifier si une date a des événements (utilise maintenant les vraies données)
+  // Vérifier si une date a des événements 
   const hasEvents = (year, month, day) => {
     const formattedDate = formatDate(year, month, day);
     return events.some(event => event.date === formattedDate);
   };
   
-  // Obtenir les événements pour une date spécifique (utilise maintenant les vraies données)
+  // Obtenir les événements pour une date spécifique 
   const getEventsForDate = (year, month, day) => {
     const formattedDate = formatDate(year, month, day);
     return events.filter(event => event.date === formattedDate);
@@ -111,7 +110,7 @@ const EventsCalendar = () => {
   const handleDateClick = (year, month, day) => {
     const eventsForDate = getEventsForDate(year, month, day);
     if (eventsForDate.length > 0) {
-      setSelectedEvent(eventsForDate[0]); // Prendre le premier événement par défaut
+      setSelectedEvent(eventsForDate[0]); 
       setShowModal(true);
     }
   };
@@ -132,10 +131,8 @@ const EventsCalendar = () => {
     setSelectedEvent(null);
   };
   
-  // Noms des mois en français
-  const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
   
-  // Noms des jours de la semaine en français (commençant par Lundi)
+  const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
   const dayNames = ["Lu", "Ma", "Me", "Je", "Ve", "Sa", "Di"];
   
   // Construire le calendrier
@@ -192,14 +189,14 @@ const EventsCalendar = () => {
     return days;
   };
 
-  // ✅ NOUVEAU : Affichage de loading
+  // Affichage de loading
   if (loading) {
     return (
       <section className="events-section">
         <div className="container">
           <div className="events-header">
             <h2 className="section-title">Nos Activités</h2>
-            <p className="events-subtitle">Chargement des événements OMAC...</p>
+            <p className="events-subtitle">OMAC...</p>
             <div className="green-underline"></div>
           </div>
           <div style={{ textAlign: 'center', padding: '50px' }}>
@@ -233,7 +230,7 @@ const EventsCalendar = () => {
           <div className="green-underline"></div>
         </div>
         
-        {/* ✅ NOUVEAU : Affichage d'erreur si besoin */}
+        {/* Affichage d'erreur si besoin */}
         {error && (
           <div style={{ 
             textAlign: 'center', 
@@ -315,7 +312,7 @@ const EventsCalendar = () => {
         )}
       </div>
       
-      {/* ✅ NOUVEAU : CSS pour l'animation de loading */}
+      {/* CSS pour l'animation de loading */}
       <style jsx>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }

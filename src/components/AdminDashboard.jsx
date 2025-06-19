@@ -12,11 +12,11 @@ const AdminDashboard = () => {
   const [showEventForm, setShowEventForm] = useState(false)
   const [showMediaForm, setShowMediaForm] = useState(false)
   const [showCarouselForm, setShowCarouselForm] = useState(false)
-  const [showPdfForm, setShowPdfForm] = useState(false) // ✅ NOUVEAU
+  const [showPdfForm, setShowPdfForm] = useState(false)
   const [editingEvent, setEditingEvent] = useState(null)
   const [editingMedia, setEditingMedia] = useState(null)
   const [editingCarouselImage, setEditingCarouselImage] = useState(null)
-  const [editingPdf, setEditingPdf] = useState(null) // ✅ NOUVEAU
+  const [editingPdf, setEditingPdf] = useState(null)
 
   // États pour la navigation par mois
   const [currentMonth, setCurrentMonth] = useState(new Date())
@@ -36,7 +36,7 @@ const AdminDashboard = () => {
   const [loadingCarousel, setLoadingCarousel] = useState(false)
   const fileInputRef = useRef(null)
 
-  // ✅ NOUVEAU : États pour les PDFs
+  // États pour PDF
   const [pdfs, setPdfs] = useState([])
   const [loadingPdfs, setLoadingPdfs] = useState(false)
   const pdfInputRef = useRef(null)
@@ -65,7 +65,7 @@ const AdminDashboard = () => {
     file: null,
   })
 
-  // ✅ NOUVEAU : Formulaire pour les PDFs
+  // Formulaire pour PDF
   const [pdfForm, setPdfForm] = useState({
     title: "",
     description: "",
@@ -99,7 +99,7 @@ const AdminDashboard = () => {
     await loadEvents()
     loadMedias()
     loadCarouselImages()
-    loadPdfs() // ✅ NOUVEAU
+    loadPdfs()
   }
 
   const loadEvents = async () => {
@@ -126,7 +126,6 @@ const AdminDashboard = () => {
           description: event.description || "Événement OMAC",
           image: "/api/placeholder/400/300",
           couleur: event.couleur,
-          // Données originales pour l'édition
           date_debut: event.date_debut,
           date_fin: event.date_fin,
           toute_la_journee: event.toute_la_journee,
@@ -151,20 +150,10 @@ const AdminDashboard = () => {
       console.log("🔄 Chargement des médias depuis localStorage...")
       const saved = localStorage.getItem("omac_youtube_videos")
 
+      //tableau 
       let mediasData = []
       if (saved) {
         mediasData = JSON.parse(saved)
-      } else {
-        // Données par défaut
-        mediasData = [
-          {
-            id: 1,
-            titre: "Atelier de danse pour enfants",
-            description: "Découvrez nos ateliers de danse créative pour les plus jeunes.",
-            youtubeId: "dQw4w9WgXcQ",
-          },
-        ]
-        localStorage.setItem("omac_youtube_videos", JSON.stringify(mediasData))
       }
 
       // Transformer les données pour votre interface existante
@@ -218,7 +207,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // ✅ NOUVEAU : Fonction pour charger les PDFs
+  // Fonction pour charger PDF
   const loadPdfs = () => {
     try {
       setLoadingPdfs(true)
@@ -260,17 +249,17 @@ const AdminDashboard = () => {
       // Sauvegarder juste les URLs pour compatibilité avec AboutSection
       const imageSrcs = images.map((img) => img.src)
       localStorage.setItem("carousel-images", JSON.stringify(imageSrcs))
-      loadCarouselImages() // Recharger
+      loadCarouselImages() 
     } catch (error) {
       console.error("❌ Erreur sauvegarde images carrousel:", error)
     }
   }
 
-  // ✅ NOUVEAU : Fonction pour sauvegarder les PDFs
+  // Fonction pour sauvegarder PDF
   const savePdfs = (newPdfs) => {
     try {
       localStorage.setItem("omac_pdfs", JSON.stringify(newPdfs))
-      loadPdfs() // Recharger
+      loadPdfs() 
     } catch (error) {
       console.error("❌ Erreur sauvegarde PDFs:", error)
     }
@@ -286,7 +275,7 @@ const AdminDashboard = () => {
         youtubeId: media.youtubeId,
       }))
       localStorage.setItem("omac_youtube_videos", JSON.stringify(dataToSave))
-      loadMedias() // Recharger les données
+      loadMedias() 
     } catch (error) {
       console.error("❌ Erreur sauvegarde médias:", error)
     }
@@ -299,7 +288,7 @@ const AdminDashboard = () => {
     return match && match[2].length === 11 ? match[2] : url
   }
 
-  // FONCTIONS POUR LA GESTION DES MOIS (inchangées)
+  // FONCTIONS POUR LA GESTION DES MOIS 
   const monthNames = [
     "Janvier",
     "Février",
@@ -380,7 +369,7 @@ const AdminDashboard = () => {
     navigate("/admin")
   }
 
-  // Gestion des événements (inchangées)
+  // Gestion des événements
   const handleAddEvent = () => {
     setEditingEvent(null)
     setEventForm({
@@ -495,13 +484,13 @@ const AdminDashboard = () => {
         newMedias = medias.map((media) =>
           media.id === editingMedia.id
             ? {
-                ...media,
-                title: mediaForm.titre,
-                description: mediaForm.description,
-                youtubeId: youtubeId,
-                thumbnail: `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`,
-                url: `https://www.youtube.com/watch?v=${youtubeId}`,
-              }
+              ...media,
+              title: mediaForm.titre,
+              description: mediaForm.description,
+              youtubeId: youtubeId,
+              thumbnail: `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`,
+              url: `https://www.youtube.com/watch?v=${youtubeId}`,
+            }
             : media,
         )
         console.log("✅ Média modifié")
@@ -614,11 +603,11 @@ const AdminDashboard = () => {
         newImages = carouselImages.map((img) =>
           img.id === editingCarouselImage.id
             ? {
-                ...img,
-                title: carouselForm.title,
-                alt: carouselForm.alt,
-                src: imageSrc,
-              }
+              ...img,
+              title: carouselForm.title,
+              alt: carouselForm.alt,
+              src: imageSrc,
+            }
             : img,
         )
         console.log("✅ Image modifiée")
@@ -642,7 +631,7 @@ const AdminDashboard = () => {
     }
   }
 
-  // ✅ NOUVEAU : Gestion des PDFs
+  // Gestion PDF 
   const handleAddPdf = () => {
     setEditingPdf(null)
     setPdfForm({
@@ -730,13 +719,13 @@ const AdminDashboard = () => {
         newPdfs = pdfs.map((pdf) =>
           pdf.id === editingPdf.id
             ? {
-                ...pdf,
-                title: pdfForm.title,
-                description: pdfForm.description,
-                fileName: fileName,
-                fileData: fileData,
-                uploadDate: new Date().toISOString(),
-              }
+              ...pdf,
+              title: pdfForm.title,
+              description: pdfForm.description,
+              fileName: fileName,
+              fileData: fileData,
+              uploadDate: new Date().toISOString(),
+            }
             : pdf,
         )
         console.log("✅ PDF modifié")
@@ -800,7 +789,7 @@ const AdminDashboard = () => {
               marginBottom: "20px",
             }}
           ></div>
-          <p>Chargement du dashboard OMAC...</p>
+          <p>OMAC...</p>
         </div>
       </div>
     )
@@ -833,7 +822,7 @@ const AdminDashboard = () => {
 
       {/* Contenu principal */}
       <main className="dashboard-content">
-        {/* ✅ MODIFIÉ : Onglets avec le nouvel onglet Documents */}
+        {/* Onglets */}
         <div className="dashboard-tabs">
           <button
             className={`tab-button ${activeTab === "events" ? "active" : ""}`}
@@ -876,7 +865,7 @@ const AdminDashboard = () => {
                 loadEvents()
                 loadMedias()
                 loadCarouselImages()
-                loadPdfs() // ✅ NOUVEAU
+                loadPdfs() 
               }}
               style={{
                 marginLeft: "15px",
@@ -893,7 +882,7 @@ const AdminDashboard = () => {
 
         {/* Contenu des onglets */}
         <div className="tab-content">
-          {/* Onglet Events (inchangé) */}
+          {/* Onglet Events */}
           {activeTab === "events" && (
             <div className="events-section">
               <div className="section-header">
@@ -998,7 +987,7 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* Onglet Media (inchangé) */}
+          {/* Onglet Media */}
           {activeTab === "media" && (
             <div className="media-section">
               <div className="section-header">
@@ -1042,7 +1031,7 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* Onglet Carrousel (inchangé) */}
+          {/* Onglet Carrousel */}
           {activeTab === "carousel" && (
             <div className="carousel-section">
               <div className="section-header">
@@ -1097,7 +1086,7 @@ const AdminDashboard = () => {
             </div>
           )}
 
-          {/* ✅ NOUVEAU : Onglet Documents PDF */}
+          {/* Onglet Documents PDF */}
           {activeTab === "pdfs" && (
             <div className="pdfs-section">
               <div className="section-header">
@@ -1146,7 +1135,7 @@ const AdminDashboard = () => {
         </div>
       </main>
 
-      {/* Formulaire d'événement (inchangé) */}
+      {/* Formulaire d'événement */}
       {showEventForm && (
         <div className="form-overlay">
           <div className="form-modal">
@@ -1226,7 +1215,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Formulaire de média pour YouTube (inchangé) */}
+      {/* Formulaire de média pour YouTube */}
       {showMediaForm && (
         <div className="form-overlay">
           <div className="form-modal">
@@ -1282,7 +1271,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Formulaire pour les images du carrousel (inchangé) */}
+      {/* Formulaire pour les images du carrousel */}
       {showCarouselForm && (
         <div className="form-overlay">
           <div className="form-modal">
@@ -1364,7 +1353,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* ✅ NOUVEAU : Formulaire pour les PDFs */}
+      {/* Formulaire pour PDF */}
       {showPdfForm && (
         <div className="form-overlay">
           <div className="form-modal">

@@ -133,7 +133,7 @@ const Admin = () => {
       console.log("🔄 Tentative de connexion...", {
         username: formData.username,
         password: "***",
-        apiUrl: "https://backend-enq3u5yiw-sheinezbenbks-projects.vercel.app/api",
+        apiUrl: "https://backend-enq3u5yiw-sheinezbenbks-projects.vercel.app/api", //A CHANGER ??
       })
 
       if (!ApiService || !ApiService.login) {
@@ -174,17 +174,11 @@ const Admin = () => {
     }
   }
 
-  // Gestion du "Mot de passe oublié"
-  const handleForgotPassword = () => {
-    alert(
-      "Pour réinitialiser votre mot de passe, contactez l'administrateur système de l'OMAC.\n\nEmail: omac.torcy77@gmail.com\nTéléphone: 01 60 31 31 01",
-    )
-  }
-
+  
   // États pour les effets hover
   const [isBackButtonHovered, setIsBackButtonHovered] = useState(false)
 
-  // Styles intégrés (identiques à votre version)
+  // Styles intégrés
   const styles = {
     adminPage: {
       minHeight: "100vh",
@@ -439,7 +433,7 @@ const Admin = () => {
                 ...styles.formInput,
                 ...(errors.username ? styles.formInputError : {}),
               }}
-              placeholder="admin"
+              placeholder="Utilisateur"
               autoComplete="username"
               disabled={isLoading || apiStatus === "offline"}
             />
@@ -461,7 +455,7 @@ const Admin = () => {
                 ...styles.formInput,
                 ...(errors.mot_de_passe ? styles.formInputError : {}),
               }}
-              placeholder="omac77200"
+              placeholder="Mot de passe"
               autoComplete="current-password"
               disabled={isLoading || apiStatus === "offline"}
             />
@@ -481,10 +475,6 @@ const Admin = () => {
               />
               Se souvenir de moi
             </label>
-
-            <button type="button" onClick={handleForgotPassword} style={styles.forgotPassword} disabled={isLoading}>
-              Mot de passe oublié ?
-            </button>
           </div>
 
           {/* Conteneur des boutons */}

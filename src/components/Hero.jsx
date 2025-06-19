@@ -31,7 +31,6 @@ const Hero = () => {
             className="btn btn-primary"
             onClick={(e) => {
               e.preventDefault();
-              // ✅ Navigation vers la page Guide
               navigate('/guide');
             }}
           >

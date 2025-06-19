@@ -39,7 +39,7 @@ const AboutSection = () => {
           if (pdfsData && pdfsData.length > 0) {
             // Trier par date de mise à jour (du plus récent au plus ancien)
             const sortedPdfs = pdfsData
-              .filter((pdf) => pdf.fileData) // Seulement les PDFs avec des données
+              .filter((pdf) => pdf.fileData) // Seulement les PDF avec des données
               .sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate))
 
             if (sortedPdfs.length > 0) {
@@ -132,7 +132,7 @@ const AboutSection = () => {
     { id: 3, text: "Engagement dans l'éducation populaire et la laïcité", icon: icon3 },
   ]
 
-  // SERVICES AVEC NAVIGATION CORRIGÉE
+  // SERVICES 
   const services = [
     {
       id: 1,
@@ -221,7 +221,7 @@ const AboutSection = () => {
           </div>
         </div>
 
-        {/* SECTION SERVICES CORRIGÉE */}
+        {/* SECTION SERVICES */}
         <div className="services-container">
           {services.map((service) => (
             <div className="service-card" key={service.id}>

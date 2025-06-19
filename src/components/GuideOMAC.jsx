@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './GuideOMAC.css';
 
-// Import des composants communs
 import Header from './Header';
 import Footer from './Footer';
 
@@ -31,7 +30,6 @@ const GuideOMAC = () => {
     navigate('/');
   };
 
-  // Aller vers la section contact
   const goToContact = () => {
     navigate('/');
     setTimeout(() => {
@@ -69,10 +67,8 @@ const GuideOMAC = () => {
 
   return (
     <div className="guide-page">
-      {/* Header commun */}
       <Header />
 
-      {/* En-tête de la page guide */}
       <section className="guide-header">
         <div className="guide-header-container">
           <h1 className="guide-title">Guide de l'OMAC</h1>
@@ -163,7 +159,6 @@ const GuideOMAC = () => {
         </div>
       </section>
 
-      {/* Footer commun */}
       <Footer />
     </div>
   );

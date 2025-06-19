@@ -8,7 +8,7 @@ import fb from '../assets/facebook.png';
 import insta from '../assets/instagram.png'; 
 import snap from '../assets/snapchat.png'; 
 
-// Import des logos partenaires (réutilisation depuis Partners)
+// Import des logos partenaires 
 import torcyLogo from '../assets/torcy-logo.png';
 import caf from '../assets/caf.png';
 import republic from '../assets/republic-logo.png';
@@ -44,7 +44,7 @@ const Footer = () => {
     }
   };
 
-  // Liens de navigation avec navigation fonctionnelle
+  // Liens de navigation 
   const navigationLinks = [
     { name: 'Accueil', onClick: () => navigateTo('/') },
     { name: 'À Propos', onClick: () => scrollToSection('about-section') },
@@ -52,7 +52,6 @@ const Footer = () => {
     { name: 'Contact', onClick: () => scrollToSection('contact-section') }
   ];
 
-  // Services proposés avec navigation vers les secteurs
   const services = [
     { name: 'Jeunesse', onClick: () => navigateTo('/jeunesse') },
     { name: 'Familles et Adultes', onClick: () => navigateTo('/famille') },

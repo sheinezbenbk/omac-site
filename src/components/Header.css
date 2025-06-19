@@ -12,6 +12,10 @@
   background-color: transparent;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .header.scrolled {
   background-color: rgba(187, 224, 182, 0.8);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -93,12 +97,12 @@
   color: #f7be00;
 }
 
-/* Conteneur du dropdown Nos Actions */
+/* dropdown Nos Actions */
 .nav-actions-container {
   position: relative;
 }
 
-/* Conteneur du dropdown L'OMAC */
+/* dropdown L'OMAC */
 .nav-omac-container {
   position: relative;
 }
@@ -125,7 +129,7 @@
   transform: rotate(180deg);
 }
 
-/* Dropdown menu - Styles communs */
+/* Dropdown menu */
 .actions-dropdown,
 .omac-dropdown {
   position: absolute;
@@ -154,7 +158,6 @@
   }
 }
 
-/* Flèche du dropdown */
 .actions-dropdown::before,
 .omac-dropdown::before {
   content: "";
@@ -198,12 +201,6 @@
   text-align: center;
 }
 
-/* Smooth scroll behavior */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Animation hover sur les liens */
 .nav-link::after {
   content: "";
   position: absolute;
@@ -219,9 +216,8 @@ html {
   width: 100%;
 }
 
-/* Style pour les sections ciblées */
 section {
-  scroll-margin-top: 80px; /* Compense la hauteur du header fixe */
+  scroll-margin-top: 80px; 
 }
 
 /* Hamburger Menu */
