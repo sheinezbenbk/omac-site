@@ -1,12 +1,10 @@
-/* Scolarite.css - Page Aide à la Scolarité */
-
 .scolarite-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   font-family: 'Poppins', sans-serif;
 }
 
-/* ✅ Header de la page scolarité */
+/* Header de la page scolarité */
 .scolarite-header {
   background: linear-gradient(135deg, #6c5ce7 0%, #5b4fd6 100%);
   color: white;

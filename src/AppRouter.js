@@ -9,7 +9,6 @@ import Scolarite from "./components/Scolarite"
 import Famille from "./components/Famille"
 import App from "./App"
 
-// Composant Layout avec Header
 const Layout = ({ children }) => {
   return (
     <>

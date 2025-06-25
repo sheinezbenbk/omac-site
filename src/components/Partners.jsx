@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import './Partners.css';
 
 import torcyLogo from '../assets/torcy-logo.png';
@@ -24,28 +24,6 @@ const Partners = () => {
     {id:8, src:ferme, alt:'ferme'}
   ];
   
-  useEffect(() => {
-    if (!sliderRef.current) return;
-    
-    // Gérer la pause au survol
-    const handleMouseEnter = () => {
-      sliderRef.current.style.animationPlayState = 'paused';
-    };
-    
-    const handleMouseLeave = () => {
-      sliderRef.current.style.animationPlayState = 'running';
-    };
-    
-    sliderRef.current.addEventListener('mouseenter', handleMouseEnter);
-    sliderRef.current.addEventListener('mouseleave', handleMouseLeave);
-    
-    // Nettoyage
-    return () => {
-      if (!sliderRef.current) return;
-      sliderRef.current.removeEventListener('mouseenter', handleMouseEnter);
-      sliderRef.current.removeEventListener('mouseleave', handleMouseLeave);
-    };
-  }, []);
   
   return (
     <section className="partners">

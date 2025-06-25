@@ -1,12 +1,9 @@
-/* Jeunesse.css - Page Secteur Jeunesse */
-
 .jeunesse-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   font-family: 'Poppins', sans-serif;
 }
 
-/* ✅ Header de la page jeunesse */
 .jeunesse-header {
   background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
   color: white;
@@ -135,7 +132,6 @@
 }
 
 
-
 .text-column {
   flex: 1;
   position: relative;
@@ -256,7 +252,7 @@
   object-fit: contain;
 }
 
-.service-title {
+.service-title1 {
   color: #ff6b35;
   font-size: 22px;
   font-weight: 600;
@@ -278,7 +274,7 @@
   width: 100%;
 }
 
-.service-link {
+.service-link1 {
   color: #ff6b35;
   text-decoration: none;
   font-weight: 500;
@@ -288,7 +284,7 @@
   margin-top: 10px;
 }
 
-.service-link:hover {
+.service-link1:hover {
   color: #e55a2b;
 }
 
@@ -306,7 +302,7 @@
   border: 1px solid #f0f0f0;
 }
 
-.info-title {
+.info-title1 {
   color: #ff6b35;
   font-size: 28px;
   font-weight: 600;
@@ -320,7 +316,7 @@
   gap: 30px;
 }
 
-.info-item {
+.info-item1 {
   text-align: center;
   padding: 20px;
   background: #f8f9fa;
@@ -335,7 +331,7 @@
   margin: 0 0 10px 0;
 }
 
-.info-item p {
+.info-item1 p {
   color: #666;
   font-size: 14px;
   line-height: 1.5;

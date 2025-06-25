@@ -2,17 +2,14 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Scolarite.css';
 
-// Import des composants communs
 import Header from './Header';
 import Footer from './Footer';
 
-// Import des icônes
 import icon1 from '../assets/check.png';
 import icon2 from '../assets/check.png';
 import icon3 from '../assets/check.png';
 import icon4 from '../assets/check.png';
 
-// Import des icônes pour les services
 import devoirIcon from '../assets/ecole.png';
 import methodeIcon from '../assets/check.png';
 import orientationIcon from '../assets/famille.png';
@@ -57,37 +54,12 @@ const Scolarite = () => {
     { id: 4, text: 'Ateliers d\'orientation et de remotivation', icon: icon4 }
   ];
 
-  // Services proposés pour l'aide à la scolarité
-  const scolariteServices = [
-    {
-      id: 1,
-      icon: devoirIcon,
-      title: "Soutien Individualisé",
-      description: "Aide aux devoirs adaptée au niveau de chaque élève. Reprise des fondamentaux et renforcement des compétences de base en français et mathématiques.",
-      link: "#devoirs"
-    },
-    {
-      id: 2,
-      icon: methodeIcon,
-      title: "Techniques d'Apprentissage",
-      description: "Développement de l'autonomie dans le travail scolaire. Méthodes d'organisation, techniques de mémorisation et stratégies de révision efficaces.",
-      link: "#methodologie"
-    },
-    {
-      id: 3,
-      icon: orientationIcon,
-      title: "Projet d'Avenir",
-      description: "Construction progressive du projet scolaire et professionnel. Découverte des filières, des métiers et préparation aux étapes d'orientation.",
-      link: "#orientation"
-    }
-  ];
 
   return (
     <div className="scolarite-page">
-      {/* Header commun */}
       <Header />
 
-      {/* ✅ En-tête de la page scolarité */}
+      {/* En-tête de la page scolarité */}
       <section className="scolarite-header">
         <div className="scolarite-header-container">
           <h1 className="scolarite-title">Aide à la Scolarité</h1>
@@ -133,58 +105,15 @@ const Scolarite = () => {
                     </li>
                   ))}
                 </ul>
-                
-                <button className="btn-learn-more" onClick={goToContact}>
-                  Nous Contacter
-                </button>
               </div>
               
             </div>
           </div>
-          
-          {/* Section des services */}
-          <div className="services-container">
-            {scolariteServices.map(service => (
-              <div className="service-card" key={service.id}>
-                <div className="service-icon">
-                  <img src={service.icon} alt={service.title} />
-                </div>
-                <h3 className="service-title">{service.title}</h3>
-                <p className="service-description">{service.description}</p>
-                <div className="card-divider"></div>
-              </div>
-            ))}
-          </div>
 
-          {/* Section informations pratiques */}
-          <div className="info-pratiques">
-            <div className="info-block">
-              <h3 className="info-title">Informations Pratiques</h3>
-              <div className="info-grid">
-                <div className="info-item">
-                  <h4>Public concerné</h4>
-                  <p>Élèves du CP à la Terminale résidant à Torcy</p>
-                </div>
-                <div className="info-item">
-                  <h4>Modalités d'accueil</h4>
-                  <p>Inscription gratuite - Partenariat avec les écoles</p>
-                </div>
-                <div className="info-item">
-                  <h4>Horaires</h4>
-                  <p>Lundi, Mardi, Vendredi : 16h30 - 18h30<br />Mercredi : 14h - 17h</p>
-                </div>
-                <div className="info-item">
-                  <h4>Approche pédagogique</h4>
-                  <p>Accompagnement personnalisé et bienveillant</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Section partenaires */}
+          {/* infos pratique */}
           <div className="partenaires-scolarite">
             <div className="partenaires-block">
-              <h3 className="partenaires-title">Nos Partenaires Éducatifs</h3>
+              <h3 className="partenaires-title">Informations pratiques</h3>
               <div className="partenaires-grid">
                 <div className="partenaire-item">
                   <h4>Éducation Nationale</h4>
@@ -207,8 +136,6 @@ const Scolarite = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer commun */}
       <Footer />
     </div>
   );

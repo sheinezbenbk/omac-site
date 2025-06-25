@@ -41,7 +41,6 @@ const ImageCarousel = ({ images }) => {
     setCurrentIndex(index)
   }
 
-  // Fonction supprimée - plus besoin de changer le mode d'affichage
 
   if (displayImages.length === 0) {
     return (

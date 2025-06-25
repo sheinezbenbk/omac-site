@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './MediaResources.css';
 
-// 🎯 DONNÉES PAR DÉFAUT (fallback si localStorage vide)
+// DONNÉES PAR DÉFAUT (fallback si localStorage vide)
 const defaultMedias = [
   {
     id: 1,
@@ -25,7 +25,7 @@ const MediaResources = () => {
   const [sampleMedias, setSampleMedias] = useState(defaultMedias);
   const carouselRef = useRef(null);
   
-  // 🎯 CHARGER LES VIDÉOS DEPUIS LE LOCALSTORAGE
+  // CHARGER LES VIDÉOS DEPUIS LE LOCALSTORAGE
   React.useEffect(() => {
     const loadVideosFromStorage = () => {
       try {
@@ -160,7 +160,7 @@ const MediaResources = () => {
                   onClick={() => openMediaPlayer(media)}
                 >
                   <div className="media-thumbnail">
-                    {/* 🎯 MINIATURE YOUTUBE AUTOMATIQUE */}
+                    {/* MINIATURE YOUTUBE AUTOMATIQUE */}
                     <img 
                       src={`https://img.youtube.com/vi/${media.youtubeId}/maxresdefault.jpg`} 
                       alt={media.title} 
@@ -183,7 +183,7 @@ const MediaResources = () => {
           </div>
         </div>
         
-        {/* 🎯 LECTEUR YOUTUBE */}
+        {/* LECTEUR YOUTUBE */}
         {selectedMedia && (
           <div className="media-player-overlay" onClick={closeMediaPlayer}>
             <div className="media-player" onClick={e => e.stopPropagation()}>

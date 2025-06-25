@@ -8,7 +8,7 @@
 .partners-slider {
   display: flex;
   gap: 80px;
-  animation: scroll 30s linear infinite; /* Vitesse desktop normale */
+  animation: scroll 30s linear infinite; 
   white-space: nowrap;
   align-items: center;
 }
@@ -31,7 +31,7 @@
 /* Mobile - vitesse modérée */
 @media (max-width: 480px) {
   .partners-slider {
-    animation: scroll 45s linear infinite; /* Plus rapide que 180s mais plus lent que 30s */
+    animation: scroll 45s linear infinite; 
     gap: 40px;
   }
 
@@ -43,7 +43,7 @@
 /* Tablette - vitesse intermédiaire */
 @media (min-width: 481px) and (max-width: 767px) {
   .partners-slider {
-    animation: scroll 35s linear infinite; /* Légèrement plus lent que desktop */
+    animation: scroll 35s linear infinite; 
     gap: 60px;
   }
 

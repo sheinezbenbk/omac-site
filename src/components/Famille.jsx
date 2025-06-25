@@ -10,9 +10,6 @@ import icon2 from '../assets/check.png';
 import icon3 from '../assets/check.png';
 import icon4 from '../assets/check.png';
 
-import parentaliteIcon from '../assets/famille.png';
-import atelierIcon from '../assets/ecole.png';
-import echangeIcon from '../assets/check.png';
 
 const Famille = () => {
   const navigate = useNavigate();
@@ -54,30 +51,6 @@ const Famille = () => {
     { id: 4, text: 'Espace d\'écoute et d\'entraide pour tous', icon: icon4 }
   ];
 
-  // Services proposés par le secteur famille
-  const familleServices = [
-    {
-      id: 1,
-      icon: parentaliteIcon,
-      title: "Café des Parents",
-      description: "Rencontres conviviales autour de thématiques éducatives. Échanges d'expériences entre parents et conseils de professionnels dans une ambiance détendue.",
-      link: "#parentalite"
-    },
-    {
-      id: 2,
-      icon: atelierIcon,
-      title: "Moments en Famille",
-      description: "Ateliers créatifs parents-enfants pour renforcer les liens familiaux. Cuisine du monde, bricolage récup', jardinage et activités manuelles partagées.",
-      link: "#ateliers"
-    },
-    {
-      id: 3,
-      icon: echangeIcon,
-      title: "Écoute et Médiation",
-      description: "Accompagnement dans les moments difficiles. Soutien aux familles monoparentales, aide aux démarches administratives et médiation en cas de conflits.",
-      link: "#accompagnement"
-    }
-  ];
 
   return (
     <div className="famille-page">
@@ -133,56 +106,12 @@ const Famille = () => {
                 <button className="btn-learn-more" onClick={goToContact}>
                   Nous Contacter
                 </button>
-                <button className="btn-learn-more" onClick={goToHome}>
-                  Retour Accueil
-                </button>
+              
               </div>
              
             </div>
           </div>
-          
-          {/* Section des services */}
-          <div className="services-container">
-            {familleServices.map(service => (
-              <div className="service-card" key={service.id}>
-                <div className="service-icon">
-                  <img src={service.icon} alt={service.title} />
-                </div>
-                <h3 className="service-title">{service.title}</h3>
-                <p className="service-description">{service.description}</p>
-                <div className="card-divider"></div>
-                <a href={service.link} className="service-link">
-                  En Savoir Plus →
-                </a>
-              </div>
-            ))}
-          </div>
-
-          {/* Section informations pratiques */}
-          <div className="info-pratiques">
-            <div className="info-block">
-              <h3 className="info-title">Informations Pratiques</h3>
-              <div className="info-grid">
-                <div className="info-item">
-                  <h4>Public concerné</h4>
-                  <p>Toutes les familles et adultes de Torcy</p>
-                </div>
-                <div className="info-item">
-                  <h4>Modalités d'accueil</h4>
-                  <p>Accueil libre et gratuit - Sur inscription pour les ateliers</p>
-                </div>
-                <div className="info-item">
-                  <h4>Horaires</h4>
-                  <p>Lundi au Vendredi : 10h30 - 12h & 14h - 19h<br />Fermé le Jeudi (hors vacances)</p>
-                </div>
-                <div className="info-item">
-                  <h4>Approche</h4>
-                  <p>Bienveillance, écoute et respect des différences</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
+                  
           {/* Section activités spéciales */}
           <div className="activites-speciales">
             <div className="activites-block">

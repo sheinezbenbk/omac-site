@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProjetSocial.css';
 
-// Import des composants communs
 import Header from './Header';
 import Footer from './Footer';
 
@@ -74,7 +73,6 @@ const ProjetSocial = () => {
 
   return (
     <div className="projet-social-page">
-      {/* Header commun */}
       <Header />
 
       {/* En-tête de la page projet social */}
@@ -167,8 +165,6 @@ const ProjetSocial = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer commun */}
       <Footer />
     </div>
   );

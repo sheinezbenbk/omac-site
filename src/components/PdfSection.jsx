@@ -7,7 +7,7 @@ const PdfSection = () => {
   const [pdfs, setPdfs] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Charger les PDFs depuis le localStorage
+  // Charger PDF depuis le localStorage
   useEffect(() => {
     loadPdfs()
   }, [])
@@ -36,7 +36,7 @@ const PdfSection = () => {
 
       setPdfs(pdfsData)
     } catch (error) {
-      console.error("❌ Erreur chargement PDFs:", error)
+      console.error("❌ Erreur chargement PDF:", error)
     } finally {
       setLoading(false)
     }

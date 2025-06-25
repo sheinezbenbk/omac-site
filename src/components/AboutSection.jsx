@@ -132,7 +132,7 @@ const AboutSection = () => {
     { id: 3, text: "Engagement dans l'éducation populaire et la laïcité", icon: icon3 },
   ]
 
-  // SERVICES 
+  // SERVICES
   const services = [
     {
       id: 1,
@@ -207,15 +207,17 @@ const AboutSection = () => {
                 ))}
               </ul>
 
-              <button className="btn-learn-more" onClick={handleGuideClick}>
-                Guide de l'OMAC
-              </button>
-              <button className="btn-learn-more" onClick={handleProjetSocialClick}>
-                Projet Social
-              </button>
-              <button className="btn-learn-more" onClick={handleOpenPdf}>
-                📄 On vous propose
-              </button>
+              <div className="buttons-container">
+                <button className="btn-about-blue" onClick={handleGuideClick}>
+                  Guide de l'OMAC
+                </button>
+                <button className="btn-about-blue" onClick={handleProjetSocialClick}>
+                  Projet Social
+                </button>
+                <button className="btn-about-blue" onClick={handleOpenPdf}>
+                  📄 On vous propose
+                </button>
+              </div>
             </div>
             <div className="blue-square"></div>
           </div>
@@ -233,7 +235,7 @@ const AboutSection = () => {
               <div className="card-divider"></div>
               <a
                 href="#"
-                className="service-link"
+                className="service-link-about"
                 onClick={(e) => {
                   e.preventDefault()
                   service.onClick()

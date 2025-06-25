@@ -48,7 +48,7 @@ const Footer = () => {
   const navigationLinks = [
     { name: 'Accueil', onClick: () => navigateTo('/') },
     { name: 'À Propos', onClick: () => scrollToSection('about-section') },
-    { name: 'Activités', onClick: () => scrollToSection('events-section') },
+    { name: 'Actualités', onClick: () => scrollToSection('events-section') },
     { name: 'Contact', onClick: () => scrollToSection('contact-section') }
   ];
 

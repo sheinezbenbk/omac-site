@@ -149,7 +149,7 @@
   color: #555;
 }
 
-.btn-learn-more {
+.btn-about-blue {
   background-color: #3498db;
   color: white;
   border: none;
@@ -163,7 +163,7 @@
   margin-left: 10px;
 }
 
-.btn-learn-more:hover {
+.btn-about-blue:hover {
   background-color: #2980b9;
 }
 
@@ -243,7 +243,7 @@
   width: 100%;
 }
 
-.service-link {
+.service-link-about {
   color: #8dc540;
   text-decoration: none;
   font-weight: 600;
@@ -251,12 +251,12 @@
   display: inline-block;
   transition: color 0.3s, transform 0.3s;
   margin-top: 15px;
-  text-align: left; 
+  text-align: left;
   padding: 10px 0;
-  align-self: flex-start; 
+  align-self: flex-start;
 }
 
-.service-link:hover {
+.service-link-about:hover {
   color: #7ab431;
   transform: translateX(5px);
 }
